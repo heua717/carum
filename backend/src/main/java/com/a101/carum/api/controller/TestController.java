@@ -1,5 +1,6 @@
 package com.a101.carum.api.controller;
 
+import com.a101.carum.api.dto.ReqGetTestList;
 import com.a101.carum.api.dto.ReqPatchTest;
 import com.a101.carum.api.dto.ReqPostTest;
 import com.a101.carum.service.TestService;
@@ -35,5 +36,10 @@ public class TestController {
     public ResponseEntity deleteTest(@PathVariable("testId") Long testId){
         testService.deleteTest(testId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping()
+    public ResponseEntity readTestList(@ModelAttribute ReqGetTestList reqGetTestList){
+        return ResponseEntity.ok(testService.readTestList(reqGetTestList));
     }
 }

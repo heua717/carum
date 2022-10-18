@@ -1,19 +1,23 @@
 package com.a101.carum.service;
 
+import com.a101.carum.api.dto.ReqGetTestList;
 import com.a101.carum.api.dto.ReqPatchTest;
 import com.a101.carum.api.dto.ReqPostTest;
 import com.a101.carum.api.dto.ResGetTest;
 import com.a101.carum.domain.test.Test;
+import com.a101.carum.repository.CustomTestRepository;
 import com.a101.carum.repository.TestRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TestService {
     private final TestRepository testRepository;
+    private final CustomTestRepository customTestRepository;
 
     public void createTest(ReqPostTest reqPostTest) {
         Test.TestBuilder testBuilder = Test.builder();
@@ -60,5 +64,9 @@ public class TestService {
         Test test = testRepository.findById(testId)
                 .orElseThrow(() -> new NullPointerException("Test를 찾을 수 없습니다."));
         testRepository.delete(test);
+    }
+
+    public List<ResGetTest> readTestList(ReqGetTestList reqGetTestList) {
+        return customTestRepository.searchTestByDynamicQuery(reqGetTestList);
     }
 }
