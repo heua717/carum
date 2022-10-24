@@ -55,4 +55,10 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping()
+    public ResponseEntity updateUser(@RequestBody ReqPatchUser reqPatchUser, HttpServletRequest request) {
+        Long id = jwtService.getUserId(request);
+        userService.updateUser(reqPatchUser, id);
+        return ResponseEntity.ok().build();
+    }
 }

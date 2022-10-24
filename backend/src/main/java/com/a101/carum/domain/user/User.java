@@ -48,4 +48,8 @@ public class User {
         this.phone = phone;
         this.birth = birth;
     }
+
+    public void updateNickName(String nickName){
+        this.nickName = nickName;
+    }
 }

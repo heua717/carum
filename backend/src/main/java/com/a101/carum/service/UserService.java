@@ -100,4 +100,10 @@ public class UserService {
             throw new SQLIntegrityConstraintViolationException("닉네임 중복입니다.");
         }
     }
+
+    @Transactional
+    public void updateUser(ReqPatchUser reqPatchUser, Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        user.updateNickName(reqPatchUser.getNickName());
+    }
 }
