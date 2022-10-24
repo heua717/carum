@@ -24,7 +24,7 @@ public class User {
     private String userId;
 
     @Column(name = "nickname", nullable = false, unique = true, length = 30)
-    private String nickname;
+    private String nickName;
 
     @Column(name = "password", nullable = false, length = 100)
     private String password;
@@ -39,9 +39,9 @@ public class User {
     private boolean isDeleted = false;
 
     @Builder
-    public User(String userId, String nickname, String password, String phone, LocalDate birth){
+    public User(String userId, String nickName, String password, String phone, LocalDate birth){
         this.userId = userId;
-        this.nickname = nickname;
+        this.nickName = nickName;
         this.password = password;
         this.phone = phone;
         this.birth = birth;

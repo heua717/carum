@@ -2,6 +2,7 @@ package com.a101.carum.service;
 
 import com.a101.carum.api.dto.ReqLoginUser;
 import com.a101.carum.api.dto.ReqPostUser;
+import com.a101.carum.api.dto.ResGetUser;
 import com.a101.carum.api.dto.ResLoginUser;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -29,7 +30,7 @@ public class UserService {
         User user = User.builder()
                 .userId(reqPostUser.getUserId())
                 .birth(reqPostUser.getBirth())
-                .nickname(reqPostUser.getNickname())
+                .nickName(reqPostUser.getNickName())
                 .password(reqPostUser.getPassword())
                 .phone(reqPostUser.getPhone())
                 .build();
@@ -60,5 +61,31 @@ public class UserService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    public void logoutUser(Long id) {
+        // TODO: delete refreshtoken from redis
+    }
+
+    @Transactional
+    public ResGetUser readUser(Long id) {
+        ResGetUser.ResGetUserBuilder resGetUserBuilder = ResGetUser.builder();
+
+        // User Table에서 정보 가져오기
+        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        resGetUserBuilder
+                .userId(user.getUserId())
+                .nickName(user.getNickName())
+                .birth(user.getBirth())
+                .phone(user.getPhone());
+
+        // User Detail에서 정보 가져오기
+        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
+        resGetUserBuilder
+                .money(userDetail.getMoney());
+        
+        // TODO: Main Room 관련 정보 삽입
+        
+        return resGetUserBuilder.build();
     }
 }

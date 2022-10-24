@@ -11,7 +11,8 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReqPostUser {
-    private String userId, nickName, password, phone;
-    private LocalDate birth;
+public class ResGetUser {
+    String userId, nickName, phone;
+    LocalDate birth;
+    Long money;
 }
