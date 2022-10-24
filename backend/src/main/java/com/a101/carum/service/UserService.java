@@ -119,4 +119,11 @@ public class UserService {
 
         user.updatePassword(reqPatchUserPassword.getNewPassword());
     }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+
+        user.updateIsDeleted();
+    }
 }

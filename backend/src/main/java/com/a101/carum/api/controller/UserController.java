@@ -68,4 +68,11 @@ public class UserController {
         userService.updateUserPassword(reqPatchUserPassword, id);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping()
+    public ResponseEntity deleteUser(HttpServletRequest request) {
+        Long id = jwtService.getUserId(request);
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
 }
