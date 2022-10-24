@@ -1,9 +1,6 @@
 package com.a101.carum.service;
 
-import com.a101.carum.api.dto.ReqLoginUser;
-import com.a101.carum.api.dto.ReqPostUser;
-import com.a101.carum.api.dto.ResGetUser;
-import com.a101.carum.api.dto.ResLoginUser;
+import com.a101.carum.api.dto.*;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
 import com.a101.carum.repository.UserDetailRepository;
@@ -13,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 @RequiredArgsConstructor
@@ -87,5 +85,19 @@ public class UserService {
         // TODO: Main Room 관련 정보 삽입
         
         return resGetUserBuilder.build();
+    }
+
+    public void readUserId(ReqGetUserId reqGetUserId) throws SQLIntegrityConstraintViolationException {
+        User user = userRepository.findByUserIdAndIsDeleted(reqGetUserId.getUserId(), false);
+        if (user != null) {
+            throw new SQLIntegrityConstraintViolationException("아이디 중복입니다.");
+        }
+    }
+
+    public void readNickName(ReqGetNickName reqGetNickName) throws SQLIntegrityConstraintViolationException {
+        User user = userRepository.findByNickNameAndIsDeleted(reqGetNickName.getNickName(), false);
+        if (user != null) {
+            throw new SQLIntegrityConstraintViolationException("닉네임 중복입니다.");
+        }
     }
 }

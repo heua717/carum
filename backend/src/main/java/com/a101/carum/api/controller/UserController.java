@@ -1,7 +1,6 @@
 package com.a101.carum.api.controller;
 
-import com.a101.carum.api.dto.ReqLoginUser;
-import com.a101.carum.api.dto.ReqPostUser;
+import com.a101.carum.api.dto.*;
 import com.a101.carum.service.JwtService;
 import com.a101.carum.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
 @RequestMapping("user")
@@ -42,4 +42,17 @@ public class UserController {
         Long id = jwtService.getUserId(request);
         return ResponseEntity.ok(userService.readUser(id));
     }
+
+    @GetMapping("userid")
+    public ResponseEntity readUserId(ReqGetUserId reqGetUserId) throws SQLIntegrityConstraintViolationException {
+        userService.readUserId(reqGetUserId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("nickname")
+    public ResponseEntity readNickName(ReqGetNickName reqGetNickName) throws SQLIntegrityConstraintViolationException {
+        userService.readNickName(reqGetNickName);
+        return ResponseEntity.ok().build();
+    }
+
 }

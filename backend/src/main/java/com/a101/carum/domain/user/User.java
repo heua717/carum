@@ -3,6 +3,7 @@ package com.a101.carum.domain.user;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @DynamicInsert
 @DynamicUpdate
 @Getter
+@ToString
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
