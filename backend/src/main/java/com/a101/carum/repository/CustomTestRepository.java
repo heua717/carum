@@ -33,7 +33,7 @@ public class CustomTestRepository extends QuerydslRepositorySupport {
         if(reqGetTestList.getType() != null) {
             booleanBuilder.and(test.type.eq(reqGetTestList.getType()));
         }
-        System.out.println(reqGetTestList);
+
         List<ResGetTest> testList = queryFactory
                 .select(Projections.constructor(ResGetTest.class, test.id, test.string, test.date, test.type))
                 .from(test)

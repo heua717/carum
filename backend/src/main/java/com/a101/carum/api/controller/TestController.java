@@ -2,6 +2,7 @@ package com.a101.carum.api.controller;
 
 import com.a101.carum.api.dto.ReqGetTestList;
 import com.a101.carum.api.dto.ReqPatchTest;
+import com.a101.carum.api.dto.ReqPostRedisTest;
 import com.a101.carum.api.dto.ReqPostTest;
 import com.a101.carum.service.TestService;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,27 @@ public class TestController {
     @GetMapping()
     public ResponseEntity readTestList(@ModelAttribute ReqGetTestList reqGetTestList){
         return ResponseEntity.ok(testService.readTestList(reqGetTestList));
+    }
+
+    @PostMapping("redis")
+    public ResponseEntity createRedisTest(@RequestBody ReqPostRedisTest reqPostRedisTest){
+        testService.createRedisTest(reqPostRedisTest);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("redis/{testId}")
+    public ResponseEntity readRedisTest(@PathVariable("testId") Long testId){
+        return ResponseEntity.ok(testService.readRedisTest(testId));
+    }
+
+    @PostMapping("redis/template/{testId}")
+    public ResponseEntity createRedisTemplate(@PathVariable("testId") Long testId){
+        testService.createRedisTemplate(testId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("redis/template/{testId}")
+    public ResponseEntity readRedisTemplate(@PathVariable("testId") Long testId){
+        return ResponseEntity.ok(testService.readRedisTemplate(testId));
     }
 }
