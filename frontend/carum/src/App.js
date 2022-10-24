@@ -1,14 +1,12 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App" style={{ width: "100%" }}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" />
+      </Routes>
+    </Router>
   );
 }
 
