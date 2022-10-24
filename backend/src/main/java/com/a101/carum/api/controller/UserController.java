@@ -61,4 +61,11 @@ public class UserController {
         userService.updateUser(reqPatchUser, id);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("password")
+    public ResponseEntity updateUserPassword(@RequestBody ReqPatchUserPassword reqPatchUserPassword, HttpServletRequest request) {
+        Long id = jwtService.getUserId(request);
+        userService.updateUserPassword(reqPatchUserPassword, id);
+        return ResponseEntity.ok().build();
+    }
 }

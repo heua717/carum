@@ -52,4 +52,8 @@ public class User {
     public void updateNickName(String nickName){
         this.nickName = nickName;
     }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

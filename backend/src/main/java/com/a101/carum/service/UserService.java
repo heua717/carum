@@ -1,6 +1,7 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
 import com.a101.carum.repository.UserDetailRepository;
@@ -105,5 +106,17 @@ public class UserService {
     public void updateUser(ReqPatchUser reqPatchUser, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         user.updateNickName(reqPatchUser.getNickName());
+    }
+
+    @Transactional
+    public void updateUserPassword(ReqPatchUserPassword reqPatchUserPassword, Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+
+        // TODO: 비밀번호 암호화해서 체크하는 과정 추가
+        if(!user.getPassword().equals(reqPatchUserPassword.getOldPassword())) {
+            throw new UnAuthorizedException("이전 비밀번호를 똑바로 입력해주시길 바랍니다.");
+        }
+
+        user.updatePassword(reqPatchUserPassword.getNewPassword());
     }
 }
