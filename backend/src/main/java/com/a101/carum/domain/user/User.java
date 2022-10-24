@@ -1,5 +1,6 @@
 package com.a101.carum.domain.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -36,4 +37,13 @@ public class User {
 
     @Column(name="is_deleted")
     private boolean isDeleted = false;
+
+    @Builder
+    public User(String userId, String nickname, String password, String phone, LocalDate birth){
+        this.userId = userId;
+        this.nickname = nickname;
+        this.password = password;
+        this.phone = phone;
+        this.birth = birth;
+    }
 }

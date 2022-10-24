@@ -1,5 +1,6 @@
 package com.a101.carum.domain.user;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
@@ -27,5 +28,8 @@ public class UserDetail {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    //private Room mainRoom;
+    @Builder
+    public UserDetail(User user) {
+        this.user = user;
+    }
 }
