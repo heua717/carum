@@ -122,7 +122,6 @@ public class UserService {
 
         String oldPassword = encryptPassword(user.getUserId(), reqPatchUserPassword.getOldPassword());
 
-        // TODO: 비밀번호 암호화해서 체크하는 과정 추가
         if(!user.getPassword().equals(oldPassword)) {
             throw new UnAuthorizedException("이전 비밀번호를 똑바로 입력해주시길 바랍니다.");
         }
