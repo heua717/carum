@@ -24,7 +24,7 @@ public class UserDetail {
     @Column(name = "money")
     private Long money = 0L;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
