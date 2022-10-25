@@ -14,10 +14,10 @@
   height: 188px;
   border: 1px solid #8682ce;
   border-radius: 8px;
-  padding: 4px;
+  padding: 14px 8px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   margin: 12px 0;
 }
 
@@ -47,6 +47,31 @@
 
 .emotionExplainBox {
   height: 68px;
+  border-radius: 4px;
+}
+
+.angryBg {
+  background-color: #FFE0E0;
+}
+
+.sadBg {
+  background-color: #D8E4FF;
+}
+
+.happyBg {
+  background-color: #FFF6D1;
+}
+
+.worryBg {
+  background-color: #EBE3FF;
+}
+
+.peaceBg {
+  background-color: #d5f3e4;
+}
+
+.surpriseBg {
+  background-color: #FFDFEC;
 }
 
 .emotionExplainRow {
@@ -55,6 +80,11 @@
 }
 
 .emotionExplain {
+}
+
+.checked {
+  box-sizing: content-box;
+  border: 3px solid #00C2FF;
 }
 
 .btn {
