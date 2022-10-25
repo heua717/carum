@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
@@ -20,13 +21,13 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping()
-    public ResponseEntity createUser(@RequestBody ReqPostUser reqPostUser){
+    public ResponseEntity createUser(@RequestBody ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
         userService.createUser(reqPostUser);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("login")
-    public ResponseEntity loginUser(@RequestBody ReqLoginUser reqLoginUser) throws UnsupportedEncodingException {
+    public ResponseEntity loginUser(@RequestBody ReqLoginUser reqLoginUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return ResponseEntity.ok(userService.loginUser(reqLoginUser));
     }
 
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PatchMapping("password")
-    public ResponseEntity updateUserPassword(@RequestBody ReqPatchUserPassword reqPatchUserPassword, HttpServletRequest request) {
+    public ResponseEntity updateUserPassword(@RequestBody ReqPatchUserPassword reqPatchUserPassword, HttpServletRequest request) throws NoSuchAlgorithmException {
         Long id = jwtService.getUserId(request);
         userService.updateUserPassword(reqPatchUserPassword, id);
         return ResponseEntity.ok().build();
