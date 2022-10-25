@@ -24,12 +24,12 @@ function Main() {
           <Route path="write" element={<DiaryWrite />} />
           <Route path="diary" element={<Diary />} />
           <Route path="calendar" element={<Calendar />} />
-          <Route path="weeklyDiary" element={<WeeklyDiary />} />
+          <Route path="weekly-diary" element={<WeeklyDiary />} />
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="yearlyPet" element={<YearlyPet />} />
-          <Route path="monthlyPet" element={<MonthlyPet />} />
+          <Route path="yearly-pet" element={<YearlyPet />} />
+          <Route path="monthly-pet" element={<MonthlyPet />} />
         </Routes>
         {location.pathname === "/main" ? <Menu /> : null}
       </div>

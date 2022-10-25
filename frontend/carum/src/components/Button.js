@@ -34,6 +34,8 @@ function getTextColor(variant) {
   switch (variant) {
     case "primary":
       return "white";
+    case "light":
+      return 'white';
     default:
       return "black";
   }
