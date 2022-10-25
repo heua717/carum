@@ -1,0 +1,62 @@
+.container {
+  padding: 12px 0;
+}
+
+.editor {
+  width: 300px;
+  border: 1px solid #8682ce;
+  padding: 2px;
+  border-radius: 8px;
+}
+
+.emotionCheckBox {
+  width: 300px;
+  height: 188px;
+  border: 1px solid #8682ce;
+  border-radius: 8px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 12px 0;
+}
+
+.emotionCheckHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkSwitch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emotions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emotionImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.emotionExplainBox {
+  height: 68px;
+}
+
+.emotionExplainRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.emotionExplain {
+}
+
+.btn {
+  margin-bottom: 12px;
+}
