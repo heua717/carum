@@ -1,5 +1,6 @@
 package com.a101.carum.common.interceptor;
 
+import com.a101.carum.common.exception.AccessFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         if(jwtService.checkJwtToken(token)){
             return true;
         } else {
-            throw new UnAuthorizedException("access token을 재 발급 받으십시오");
+            throw new AccessFailException("access token을 재발급 받으십시오");
         }
 
     }

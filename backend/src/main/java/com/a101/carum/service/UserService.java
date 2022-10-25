@@ -148,7 +148,7 @@ public class UserService {
         String redisRefreshToken = tokenRedisTemplate.opsForValue().get(accessToken);
 
         if(redisRefreshToken == null || !jwtService.checkJwtToken(refreshToken) || !redisRefreshToken.equals(redisRefreshToken)){
-            throw new RefreshFailException("refresh token이 유효하지 않습니다.");
+            throw new RefreshFailException("다시 로그인 하십시오");
         }
 
         Long id = jwtService.getUserId(accessToken);
