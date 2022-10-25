@@ -1,5 +1,7 @@
 package com.a101.carum.common.advice;
 
+import com.a101.carum.common.exception.AccessFailException;
+import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,13 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
 public class ExceptionAdvice {
 
-    @ExceptionHandler(SQLException.class)
+    @ExceptionHandler({SQLException.class, NoSuchAlgorithmException.class})
     public ResponseEntity handleSQLException(SQLException e) {
         e.printStackTrace();
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -38,5 +41,10 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler({AccessFailException.class, RefreshFailException.class})
+    public ResponseEntity refreshFailException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
+    }
 
 }

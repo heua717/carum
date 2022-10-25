@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestController
@@ -20,20 +21,20 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping()
-    public ResponseEntity createUser(@RequestBody ReqPostUser reqPostUser){
+    public ResponseEntity createUser(@RequestBody ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
         userService.createUser(reqPostUser);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("login")
-    public ResponseEntity loginUser(@RequestBody ReqLoginUser reqLoginUser) throws UnsupportedEncodingException {
+    public ResponseEntity loginUser(@RequestBody ReqLoginUser reqLoginUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         return ResponseEntity.ok(userService.loginUser(reqLoginUser));
     }
 
     @PostMapping("logout")
     public ResponseEntity logoutUser(HttpServletRequest request) {
-        Long id = jwtService.getUserId(request);
-        userService.logoutUser(id);
+        String accessToken = jwtService.getJwtToken(request);
+        userService.logoutUser(accessToken);
         return ResponseEntity.ok().build();
     }
 
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PatchMapping("password")
-    public ResponseEntity updateUserPassword(@RequestBody ReqPatchUserPassword reqPatchUserPassword, HttpServletRequest request) {
+    public ResponseEntity updateUserPassword(@RequestBody ReqPatchUserPassword reqPatchUserPassword, HttpServletRequest request) throws NoSuchAlgorithmException {
         Long id = jwtService.getUserId(request);
         userService.updateUserPassword(reqPatchUserPassword, id);
         return ResponseEntity.ok().build();
@@ -74,5 +75,12 @@ public class UserController {
         Long id = jwtService.getUserId(request);
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("token")
+    public ResponseEntity updateAccessToken(HttpServletRequest request) throws UnsupportedEncodingException {
+        String accessToken = jwtService.getJwtToken(request);
+        String refreshToken = jwtService.getrefreshToken(request);
+        return ResponseEntity.ok(userService.updateAccessToken(accessToken, refreshToken));
     }
 }

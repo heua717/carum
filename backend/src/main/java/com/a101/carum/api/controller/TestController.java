@@ -7,6 +7,7 @@ import com.a101.carum.api.dto.ReqPostTest;
 import com.a101.carum.service.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class TestController {
     private final TestService testService;
+    private final RedisTemplate redisTemplate;
 
     @PostMapping()
     public ResponseEntity createTest(@RequestBody ReqPostTest reqPostTest) {
@@ -64,5 +66,10 @@ public class TestController {
     @GetMapping("redis/template/{testId}")
     public ResponseEntity readRedisTemplate(@PathVariable("testId") Long testId){
         return ResponseEntity.ok(testService.readRedisTemplate(testId));
+    }
+
+    @GetMapping("redis")
+    public ResponseEntity readRedis(String key){
+        return ResponseEntity.ok(redisTemplate.opsForValue().get(key));
     }
 }
