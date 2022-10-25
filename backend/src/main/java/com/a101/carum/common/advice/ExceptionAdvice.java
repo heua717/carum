@@ -1,5 +1,6 @@
 package com.a101.carum.common.advice;
 
+import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,5 +40,10 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(RefreshFailException.class)
+    public ResponseEntity refreshFailException(Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
+    }
 
 }

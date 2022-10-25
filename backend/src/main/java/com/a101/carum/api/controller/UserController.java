@@ -33,8 +33,8 @@ public class UserController {
 
     @PostMapping("logout")
     public ResponseEntity logoutUser(HttpServletRequest request) {
-        Long id = jwtService.getUserId(request);
-        userService.logoutUser(id);
+        String accessToken = jwtService.getJwtToken(request);
+        userService.logoutUser(accessToken);
         return ResponseEntity.ok().build();
     }
 
@@ -75,5 +75,12 @@ public class UserController {
         Long id = jwtService.getUserId(request);
         userService.deleteUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("token")
+    public ResponseEntity updateAccessToken(HttpServletRequest request) throws UnsupportedEncodingException {
+        String accessToken = jwtService.getJwtToken(request);
+        String refreshToken = jwtService.getrefreshToken(request);
+        return ResponseEntity.ok(userService.updateAccessToken(accessToken, refreshToken));
     }
 }

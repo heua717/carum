@@ -30,6 +30,9 @@ public class JwtService {
         return request.getHeader("access-token");
     }
 
+    public String getrefreshToken(HttpServletRequest request) {
+        return request.getHeader("refresh-token");
+    }
     /**
      * user 정보를 기반으로 jwt token을 생성함
      *
@@ -91,6 +94,14 @@ public class JwtService {
     public Long getUserId(HttpServletRequest request){
         try {
             return Long.parseLong(String.valueOf(getClaims(getJwtToken(request)).get("userId")));
+        } catch (Exception e){
+            throw new UnAuthorizedException("잘못된 토큰입니다.");
+        }
+    }
+
+    public Long getUserId(String accessToken){
+        try {
+            return Long.parseLong(String.valueOf(getClaims(accessToken).get("userId")));
         } catch (Exception e){
             throw new UnAuthorizedException("잘못된 토큰입니다.");
         }

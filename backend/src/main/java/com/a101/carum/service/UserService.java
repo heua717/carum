@@ -1,20 +1,23 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
 import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
 import com.a101.carum.util.EncryptUtils;
-import com.a101.carum.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +27,10 @@ public class UserService {
     private final UserDetailRepository userDetailRepository;
     private final JwtService jwtService;
     private final EncryptUtils encryptUtils;
-    private final StringUtils stringUtils;
+
+    private final RedisTemplate<String, String> tokenRedisTemplate;
+
+    private final int REFRESH_MINUTES = 60 * 24 * 7;
 
     @Transactional
     public void createUser(ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
@@ -51,7 +57,6 @@ public class UserService {
     }
 
     public ResLoginUser loginUser(ReqLoginUser reqLoginUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-
         String password = encryptPassword(reqLoginUser.getUserId(), reqLoginUser.getPassword());
 
         User user = userRepository.findByUserIdAndPasswordAndIsDeleted(
@@ -62,7 +67,7 @@ public class UserService {
         String accessToken = jwtService.createToken(user);
         String refreshToken = jwtService.createRefreshToken();
 
-        // TODO: refresh token redis에 저장
+        setTokenInRedis(accessToken, refreshToken);
 
         return ResLoginUser.builder()
                 .accessToken(accessToken)
@@ -70,8 +75,8 @@ public class UserService {
                 .build();
     }
 
-    public void logoutUser(Long id) {
-        // TODO: delete refreshtoken from redis
+    public void logoutUser(String accessToken) {
+        tokenRedisTemplate.delete(accessToken);
     }
 
     @Transactional
@@ -79,7 +84,8 @@ public class UserService {
         ResGetUser.ResGetUserBuilder resGetUserBuilder = ResGetUser.builder();
 
         // User Table에서 정보 가져오기
-        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         resGetUserBuilder
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
@@ -137,9 +143,38 @@ public class UserService {
         user.updateIsDeleted();
     }
 
+    public ResLoginUser updateAccessToken(String accessToken, String refreshToken) throws UnsupportedEncodingException {
+
+        String redisRefreshToken = tokenRedisTemplate.opsForValue().get(accessToken);
+
+        if(redisRefreshToken == null || !jwtService.checkJwtToken(refreshToken) || !redisRefreshToken.equals(redisRefreshToken)){
+            throw new RefreshFailException("refresh token이 유효하지 않습니다.");
+        }
+
+        Long id = jwtService.getUserId(accessToken);
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+
+        String newAccessToken = jwtService.createToken(user);
+        String newRefreshToken = jwtService.createRefreshToken();
+
+        tokenRedisTemplate.rename(accessToken, newAccessToken);
+        setTokenInRedis(newAccessToken, newRefreshToken);
+
+        return ResLoginUser.builder()
+                .accessToken(newAccessToken)
+                .refreshToken(newRefreshToken)
+                .build();
+    }
+
     public String encryptPassword(String userId, String password) throws NoSuchAlgorithmException {
         StringBuilder sb = new StringBuilder();
         sb.append(password).append(encryptUtils.getSalt(userId));
         return encryptUtils.encrypt(sb.toString());
+    }
+
+    public void setTokenInRedis(String accessToken, String refreshToken) {
+        tokenRedisTemplate.opsForValue().set(accessToken, refreshToken);
+        tokenRedisTemplate.expire(accessToken, REFRESH_MINUTES * 60 ,TimeUnit.SECONDS);
     }
 }
