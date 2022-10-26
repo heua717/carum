@@ -8,8 +8,7 @@ import Shop from "../Shop/Shop";
 import MonthlyPet from "../Profile/Pet/MonthlyPet";
 import YearlyPet from "../Profile/Pet/YearlyPet";
 import Profile from "../Profile/Profile";
-import Calendar from "../Diary/Calendar";
-import WeeklyDiary from "../Diary/WeeklyDiary";
+import CalendarDiary from "../Diary/CalendarDiary/CalendarDiary";
 import Menu from "./Menu";
 
 function Main() {
@@ -23,8 +22,7 @@ function Main() {
         <Routes>
           <Route path="write" element={<DiaryWrite />} />
           <Route path="diary" element={<Diary />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="weekly-diary" element={<WeeklyDiary />} />
+          <Route path="calendar" element={<CalendarDiary />} />
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />

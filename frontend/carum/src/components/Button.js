@@ -50,7 +50,7 @@ function getWidth(size) {
     case "small":
       return "140px";
     case "extraSmall":
-      return "72px";
+      return "64px";
     default:
       return "300px";
   }
