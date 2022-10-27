@@ -42,7 +42,7 @@ public class CustomFurnitureRepository extends QuerydslRepositorySupport {
                         furniture.name,
                         furniture.resource,
                         furniture.price,
-                        furniture.type,
+                        furniture.type
                         ))
                 .from(furniture)
                 .where(booleanBuilder)
