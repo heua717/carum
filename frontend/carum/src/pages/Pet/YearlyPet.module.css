@@ -7,6 +7,10 @@
   padding: 12px 0;
 }
 
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
 .navigationBar {
   display: flex;
   justify-content: space-between;
