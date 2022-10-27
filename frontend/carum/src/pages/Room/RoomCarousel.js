@@ -40,9 +40,13 @@ function RoomCarousel(props){
                         emotionTag: element.emotionTag,
                     }
                 )
+
+                openModal();
             }
-            openModal();
+            
         });
+
+
     },[selectedRoom,props.roomInfo])
     return  (
         <div className={styles.carousel}>
