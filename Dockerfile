@@ -1,5 +1,5 @@
 # 기반 이미지 작성, 멀티스테이징 빌드 시작
-FROM openjdk:11-jdk-alpine as builder
+FROM openjdk:11-jdk as builder
 
 # workdirectory 설정
 WORKDIR /app
@@ -11,7 +11,7 @@ RUN chmod +x ./gradlew
 RUN ./gradlew bootJAR
 
 # 멀티스테이징 2단계
-FROM openjdk:11-jdk-alpine
+FROM openjdk:11-jdk
 
 # 만들어진 jar 파일 복사해오기
 COPY --from=builder app/build/libs/*.jar ./app.jar
