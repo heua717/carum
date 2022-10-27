@@ -2,6 +2,19 @@
   padding: 12px 0;
 }
 
+.contentContainer {
+  width: 300px;
+  height: 50vh;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 0;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
 .editor {
   width: 300px;
   border: 1px solid #8682ce;
@@ -51,19 +64,19 @@
 }
 
 .angryBg {
-  background-color: #FFE0E0;
+  background-color: #ffe0e0;
 }
 
 .sadBg {
-  background-color: #D8E4FF;
+  background-color: #d8e4ff;
 }
 
 .happyBg {
-  background-color: #FFF6D1;
+  background-color: #fff6d1;
 }
 
 .worryBg {
-  background-color: #EBE3FF;
+  background-color: #ebe3ff;
 }
 
 .peaceBg {
@@ -71,7 +84,7 @@
 }
 
 .surpriseBg {
-  background-color: #FFDFEC;
+  background-color: #ffdfec;
 }
 
 .emotionExplainRow {
@@ -84,7 +97,7 @@
 
 .checked {
   box-sizing: content-box;
-  border: 3px solid #00C2FF;
+  border: 3px solid #00c2ff;
 }
 
 .btn {
