@@ -67,6 +67,19 @@ function DiaryWrite() {
   const navigate = useNavigate();
   const editorRef = useRef();
 
+  // 이미지 업로드 로직
+  const uploadImage = async (blob) => {
+    const formData = new FormData();
+    formData.append("multipartFiles", blob);
+  };
+
+  const onUploadImage = async (blob, callback) => {
+    // const url = await uploadImage(blob);
+    // callback(url, "alt text");
+    // return false;
+    console.log(blob);
+  };
+
   return (
     <div className={styles.container}>
       <TopNav text="다이어리 작성" />
@@ -85,6 +98,9 @@ function DiaryWrite() {
             ]}
             plugins={[colorSyntax]}
             useCommandShortcut={false}
+            hooks={{
+              addImageBlobHook: onUploadImage,
+            }}
           />
         </div>
         <div className={styles.emotionCheckBox}>

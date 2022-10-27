@@ -1,0 +1,34 @@
+.searchBox {
+  display: flex;
+  justify-content: space-around;
+}
+
+.inputBox {
+}
+
+.contentBox {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.furnitureRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.pagination {
+  margin-left: auto;
+  margin-right: auto;
+  width: 260px;
+}
+
+.pointBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.pointText {
+}
