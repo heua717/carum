@@ -2,6 +2,7 @@ package com.a101.carum.domain.inventory;
 
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -30,4 +31,10 @@ public class Inventory {
     @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "furniture_id", referencedColumnName = "id")
     private Furniture furniture;
+
+    @Builder
+    public Inventory(User user, Furniture furniture){
+        this.user = user;
+        this.furniture = furniture;
+    }
 }

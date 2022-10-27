@@ -10,8 +10,7 @@ import lombok.*;
 public class ResGetFurniture {
     Long id;
     String name,resource;
-    Integer price;
+    Long price;
     FurnitureType type;
     boolean have;
-
 }

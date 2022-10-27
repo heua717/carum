@@ -32,4 +32,15 @@ public class UserDetail {
     public UserDetail(User user) {
         this.user = user;
     }
+
+    public void updateMoney(Long money, char type){
+        switch (type) {
+            case '+':
+                this.money += money;
+                break;
+            case '-':
+                this.money -= money;
+                break;
+        }
+    }
 }

@@ -27,7 +27,7 @@ public class Furniture {
     private String resource;
 
     @Column(name = "price", nullable = false)
-    private Integer price = 0;
+    private Long price = 0L;
 
     @Column(name = "type", length = 20)
     @Enumerated(EnumType.STRING)
