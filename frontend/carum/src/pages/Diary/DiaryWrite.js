@@ -1,7 +1,7 @@
 import styles from "./DiaryWrite.module.css";
 import TopNav from "../../components/TopNav";
 import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
+import "./Editor.css";
 import Button from "../../components/Button";
 import "tui-color-picker/dist/tui-color-picker.css";
 import "@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css";
@@ -14,7 +14,7 @@ import worryImg from "../../assets/worry.svg";
 import happyImg from "../../assets/happy.svg";
 import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function DiaryWrite() {
@@ -24,6 +24,7 @@ function DiaryWrite() {
     selectedEmotionList: [],
   });
 
+  // 감정 이모티콘 클릭 시
   const clickEmotion = (emotion) => {
     if (values.isSelecting) {
       const idx = values.selectedEmotionList.indexOf(emotion);
@@ -42,6 +43,7 @@ function DiaryWrite() {
     setValues({ ...values, selectedEmotion: emotion });
   };
 
+  // 감정이 체크 되었는지 파악
   const isChecked = (emotion) => {
     const idx = values.selectedEmotionList.indexOf(emotion);
 
@@ -52,11 +54,18 @@ function DiaryWrite() {
     return false;
   };
 
+  // 감정 선택, 설명 상태 변경
   const handleChange = (event) => {
     setValues({ ...values, isSelecting: event.target.checked });
   };
 
+  const saveDiary = () => {
+    navigate("/main/diary");
+    console.log(editorRef.current?.getInstance().getHTML());
+  };
+
   const navigate = useNavigate();
+  const editorRef = useRef();
 
   return (
     <div className={styles.container}>
@@ -64,12 +73,18 @@ function DiaryWrite() {
       <div className={styles.contentContainer}>
         <div className={styles.editor}>
           <Editor
+            ref={editorRef}
+            initialValue=" "
             initialEditType="wysiwyg"
             previewStyle="vertical"
-            height="200px"
+            height="260px"
             hideModeSwitch="true"
-            toolbarItems={[["heading", "bold", "italic", "strike"]]}
+            toolbarItems={[
+              ["heading", "bold", "italic", "strike"],
+              ["table", "image"],
+            ]}
             plugins={[colorSyntax]}
+            useCommandShortcut={false}
           />
         </div>
         <div className={styles.emotionCheckBox}>
@@ -160,7 +175,7 @@ function DiaryWrite() {
           </div>
         </div>
         <Button
-          onClick={() => navigate("/main/diary")}
+          onClick={() => saveDiary()}
           size="big"
           variant="primary"
           text="일기 저장하기"
