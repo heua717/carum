@@ -29,7 +29,7 @@ function Menu() {
             menuText="내일기"
           />
           <MenuBtn
-            onClick={() => openPage("yearlyPet")}
+            onClick={() => openPage("yearly-pet")}
             icon={<PetsIcon />}
             menuText="펫조회"
           />

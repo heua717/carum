@@ -18,7 +18,7 @@ function Main() {
     <div className={styles.container}>
       <div className={styles.unity}></div>
       <Header />
-      <div className={styles.contentBox}>
+      <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
           <Route path="write" element={<DiaryWrite />} />
           <Route path="diary" element={<Diary />} />
