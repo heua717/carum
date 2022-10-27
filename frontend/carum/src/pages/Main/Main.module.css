@@ -1,0 +1,15 @@
+.container {
+}
+
+.unity {
+  height: 300px;
+  background-color: bisque;
+}
+
+.contentBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}

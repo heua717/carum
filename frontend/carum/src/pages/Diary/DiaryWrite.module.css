@@ -1,0 +1,105 @@
+.container {
+  padding: 12px 0;
+}
+
+.contentContainer {
+  width: 300px;
+  height: 46vh;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 0;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.editor {
+  width: 300px;
+  border: 1px solid #8682ce;
+  padding: 2px;
+  border-radius: 8px;
+}
+
+.emotionCheckBox {
+  width: 300px;
+  height: 188px;
+  border: 1px solid #8682ce;
+  border-radius: 8px;
+  padding: 14px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.emotionCheckHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.checkSwitch {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emotions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emotionImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+}
+
+.emotionExplainBox {
+  height: 68px;
+  border-radius: 4px;
+}
+
+.angryBg {
+  background-color: #ffe0e0;
+}
+
+.sadBg {
+  background-color: #d8e4ff;
+}
+
+.happyBg {
+  background-color: #fff6d1;
+}
+
+.worryBg {
+  background-color: #ebe3ff;
+}
+
+.peaceBg {
+  background-color: #d5f3e4;
+}
+
+.surpriseBg {
+  background-color: #ffdfec;
+}
+
+.emotionExplainRow {
+  display: flex;
+  justify-content: space-around;
+}
+
+.emotionExplain {
+}
+
+.checked {
+  box-sizing: content-box;
+  border: 3px solid #00c2ff;
+}
+
+.btn {
+  margin-bottom: 12px;
+}
