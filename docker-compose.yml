@@ -7,23 +7,23 @@ services:
             - 80:80
             - 443:443
         volumes:
-            - ../data/nginx/conf:/etc/nginx/conf.d
-            - ../data/certbot/conf:/etc/letsencrypt
-            - ../data/certbot/www:/var/www/certbot
+            - ./data/nginx/conf:/etc/nginx/conf.d
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www:/var/www/certbot
         restart: always
     certbot:
         container_name: carum-certbot
         image: certbot/certbot
         volumes:
-            - ../data/certbot/conf:/etc/letsencrypt
-            - ../data/certbot/www:/var/www/certbot
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www:/var/www/certbot
     mysql:
         container_name: carum-mysql
         image: mysql:5.7
         ports:
             - 3306:3306
         volumes:
-            - ../data/mysql:/var/lib/mysql
+            - ./data/mysql:/var/lib/mysql
         environment:
             - MYSQL_ROOT_PASSWORD=dbslxlzkfnaA101
             - MYSQL_DATABASE=carum
@@ -37,5 +37,5 @@ services:
         ports:
             - "6379:6379"
         volumes:
-            - ../data/redis:/data
+            - ./data/redis:/data
         restart: on-failure
