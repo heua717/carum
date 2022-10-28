@@ -30,7 +30,7 @@ public class ShopService {
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
-        return customFurnitureRepository.readFurnitureList(reqGetFurnitureList, pageable, user);
+        return customFurnitureRepository.readFurnitureList(reqGetFurnitureList, pageable, user, userDetail);
     }
 
     @Transactional
