@@ -12,9 +12,10 @@ import happyImg from "../../../assets/happy.svg";
 import surpriseImg from "../../../assets/surprise.svg";
 import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
+import { useNavigate } from "react-router-dom";
 
 function CalendarDiary() {
-  const [value, onChange] = useState(new Date());
+  const [value, setValue] = useState(new Date());
   const [isMonthly, setIsMonthly] = useState(true);
   const [changingEmotionIdx, setChangingEmotionIdx] = useState(0);
   const diary = [
@@ -27,8 +28,16 @@ function CalendarDiary() {
     { emotion: ["peace"], createAt: "2022-10-27" },
   ];
 
+  const navigate = useNavigate();
+
+  const onChange = (e) => {
+    setValue(e);
+    navigate("/main/diary");
+  };
+
   const emotionIdx = 0;
 
+  // 감정이 두개일 때 1.5초마다 바꾸며 보는 데 사용하는 함수
   function useInterval(callback, delay) {
     const savedCallback = useRef(); // 최근에 들어온 callback을 저장할 ref를 하나 만든다.
 
