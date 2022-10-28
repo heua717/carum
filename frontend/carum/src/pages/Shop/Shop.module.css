@@ -1,15 +1,33 @@
 .searchBox {
   display: flex;
   justify-content: space-around;
+  padding: 4px 0;
 }
 
 .inputBox {
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+  width: 280px;
+  height: 28px;
+  border-radius: 8px;
 }
 
 .contentBox {
   width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  margin: 4px auto;
+  overflow: auto;
+}
+
+.contentBox::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryName {
+  text-align: center;
+  font-size: 16px;
 }
 
 .furnitureRow {
@@ -21,14 +39,46 @@
 .pagination {
   margin-left: auto;
   margin-right: auto;
-  width: 260px;
 }
 
-.pointBox {
+.dialog {
+  padding: 12px;
+  min-width: 272px;
+  min-height: 440px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
-.pointText {
+.closeBtn {
+  align-self: flex-end;
+}
+
+.detailPriceTag {
+  background-color: #48367d;
+  width: 40%;
+  color: white;
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 10px;
+}
+
+.furniture {
+  height: 160px;
+}
+
+.detailPriceText {
+  color: white;
+}
+
+.myPointBox {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  align-items: center;
+}
+
+.myPointText {
 }

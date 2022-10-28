@@ -5,7 +5,7 @@ function Header() {
     <div
       style={{
         width: "100%",
-        height: "40px",
+        height: "32px",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -14,7 +14,7 @@ function Header() {
     >
       <img
         src={logo}
-        style={{ width: "40px", height: "40px" }}
+        style={{ width: "32px", height: "32px" }}
         alt="logo"
       ></img>
     </div>

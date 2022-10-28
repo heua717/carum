@@ -1,0 +1,30 @@
+.emotionImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  
+  .carousel{
+    text-align: center;
+  }
+
+  .roomInfo{
+    background-color: #E7E9FD;
+  }
+
+  .roomDiv{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .roomName{
+    font-size: 25px;
+    font-weight: 900;
+    margin-left: 80px;
+  }
+
+  .button{
+  }

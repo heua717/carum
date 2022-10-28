@@ -36,3 +36,7 @@
   align-items: center;
   padding-right: 6px;
 }
+
+.large {
+  font-size: 36px;
+}

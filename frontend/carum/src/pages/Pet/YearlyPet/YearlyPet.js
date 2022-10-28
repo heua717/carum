@@ -1,5 +1,5 @@
 import styles from "./YearlyPet.module.css";
-import TopNav from "../../components/TopNav";
+import TopNav from "components/TopNav";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import MonthlyPetButton from "./MonthlyPetButton";
@@ -9,7 +9,7 @@ function YearlyPet() {
   const [year, setYear] = useState(2022);
 
   return (
-    <div className={styles.container}>
+    <div>
       <TopNav text="펫 조회" />
       <div className={styles.contentContainer}>
         <div className={styles.navigationBar}>

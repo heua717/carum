@@ -1,15 +1,15 @@
 import styles from "./MonthlyPet.module.css";
-import TopNav from "../../components/TopNav";
+import TopNav from "components/TopNav";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { useState } from "react";
 import EmotionProgressBar from "./EmotionProgressBar";
-import sadImg from "../../assets/sad.svg";
-import angryImg from "../../assets/angry.svg";
-import worryImg from "../../assets/worry.svg";
-import happyImg from "../../assets/happy.svg";
-import surpriseImg from "../../assets/surprise.svg";
-import peaceImg from "../../assets/peace.svg";
+import sadImg from "assets/sad.svg";
+import angryImg from "assets/angry.svg";
+import worryImg from "assets/worry.svg";
+import happyImg from "assets/happy.svg";
+import surpriseImg from "assets/surprise.svg";
+import peaceImg from "assets/peace.svg";
 
 function MonthlyPet() {
   const [values, setValues] = useState({
