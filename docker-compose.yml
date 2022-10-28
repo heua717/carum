@@ -11,12 +11,12 @@ services:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
         restart: always
-#    certbot:
-#        container_name: carum-certbot
-#        image: certbot/certbot
-#        volumes:
-#            - ./data/certbot/conf:/etc/letsencrypt
-#            - ./data/certbot/www:/var/www/certbot
+    certbot:
+        container_name: carum-certbot
+        image: certbot/certbot
+        volumes:
+            - ./data/certbot/conf:/etc/letsencrypt
+            - ./data/certbot/www:/var/www/certbot
 #    mysql:
 #        container_name: carum-mysql
 #        image: mysql:5.7
