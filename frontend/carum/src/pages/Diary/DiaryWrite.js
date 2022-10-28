@@ -81,7 +81,7 @@ function DiaryWrite() {
   };
 
   return (
-    <div className={styles.container}>
+    <div>
       <TopNav text="다이어리 작성" />
       <div className={styles.contentContainer}>
         <div className={styles.editor}>
