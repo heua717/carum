@@ -4,7 +4,7 @@
   overflow: auto;
   margin-left: auto;
   margin-right: auto;
-  padding: 12px 0;
+  padding: 8px 0;
 }
 
 .contentContainer::-webkit-scrollbar {

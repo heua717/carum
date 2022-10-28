@@ -1,10 +1,10 @@
 import styles from "./EmotionProgressBar.module.css";
-import sadImg from "../../assets/sad.svg";
-import angryImg from "../../assets/angry.svg";
-import worryImg from "../../assets/worry.svg";
-import happyImg from "../../assets/happy.svg";
-import surpriseImg from "../../assets/surprise.svg";
-import peaceImg from "../../assets/peace.svg";
+import sadImg from "assets/sad.svg";
+import angryImg from "assets/angry.svg";
+import worryImg from "assets/worry.svg";
+import happyImg from "assets/happy.svg";
+import surpriseImg from "assets/surprise.svg";
+import peaceImg from "assets/peace.svg";
 
 function EmotionProgressBar({ emotion, count, maxCount }) {
   return (
