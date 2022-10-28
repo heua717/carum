@@ -1,0 +1,38 @@
+.container {
+  width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.id {
+  font-size: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.nickname {
+}
+
+.nicknameSettingBox {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.nicknameEditbox {
+  align-items: center;
+}
+
+.settingTag {
+  align-self: flex-start;
+  margin: 8px 0;
+}
+
+.inputBox {
+  width: 300px;
+}
+
+.editButton {
+  margin: 12px 0;
+  width: 32px;
+}

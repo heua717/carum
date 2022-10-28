@@ -1,0 +1,60 @@
+.container {
+  padding: 12px 0;
+}
+
+.contentContainer {
+  width: 300px;
+  height: 45vh;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 0;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.thisMonthEmotionBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  width: 300px;
+  height: 136px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 8px 0;
+  margin-top: 12px;
+}
+
+.boxText {
+}
+
+.emotionBox {
+  display: flex;
+  width: 96%;
+  justify-content: space-between;
+}
+
+.emotionImageBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.emotionImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.emotionCount {
+  margin-top: 4px;
+}
+
+.calendarEmotion {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
