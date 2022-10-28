@@ -1,6 +1,5 @@
 package com.a101.carum.domain.funiture;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -15,7 +14,7 @@ import javax.persistence.*;
 @DynamicUpdate
 @Getter
 @ToString
-public class Funiture {
+public class Furniture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
@@ -32,5 +31,5 @@ public class Funiture {
 
     @Column(name = "type", length = 20)
     @Enumerated(EnumType.STRING)
-    private FunitureType type;
+    private FurnitureType type;
 }

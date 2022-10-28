@@ -1,6 +1,6 @@
 package com.a101.carum.domain.funiture;
 
-public enum FunitureType {
+public enum FurnitureType {
     BACKGROUND,
     BED,
     MATTRESS,
