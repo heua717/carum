@@ -4,7 +4,9 @@ import RoomCarousel from "./RoomCarousel";
 import { useState } from "react";
 
 function Room() {
-  const [roomInfo,setRoomInfo]=useState([
+  const [roomInfo,setRoomInfo]=useState({
+    mainRoomId: 1,
+    rooms : [
     {
       roomId:1,
       roomName:"안식처",
@@ -33,11 +35,11 @@ function Room() {
       emotionTag:["sad","happy","peace"],
       isDefault: false,
     },
-  ]);
+  ]});
   return (
   <div>
     <TopNav text="방 이동" />
-    <RoomCarousel roomInfo={roomInfo}/>
+    <RoomCarousel roomInfo={roomInfo} setRoomInfo={setRoomInfo}/>
   </div>)
 }
 

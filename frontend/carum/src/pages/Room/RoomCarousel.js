@@ -16,6 +16,7 @@ import Modal from "components/modal/Modal"
 import RoomSetting from "./RoomSetting"
 
 function RoomCarousel(props){
+  //console.log(props.mainRoomId);
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedRoom, setSelectedRoom]=useState(0);
     const [selectedRoomInfo, setSelectedRoomInfo]=useState(
@@ -32,7 +33,7 @@ function RoomCarousel(props){
     }
 
     useEffect(()=>{
-        props.roomInfo.forEach(element => {
+        props.roomInfo.rooms.forEach(element => {
             if(element.roomId===selectedRoom){
                 setSelectedRoomInfo(
                     {
@@ -47,7 +48,7 @@ function RoomCarousel(props){
         });
 
 
-    },[selectedRoom,props.roomInfo])
+    },[selectedRoom,props.roomInfo.rooms])
     return  (
         <div className={styles.carousel}>
       <Carousel  
@@ -57,11 +58,11 @@ function RoomCarousel(props){
       autoPlay={false}
       fullHeightHover={false}
       >
-        {props.roomInfo.map((item, i) => (
-          <Item key={i} item={item} openModal={openModal} setSelectedRoom={setSelectedRoom} />
+        {props.roomInfo.rooms.map((item, i) => (
+          <Item key={i} item={item} openModal={openModal} setSelectedRoom={setSelectedRoom} mainRoomId={props.roomInfo.mainRoomId} setRoomInfo={props.setRoomInfo} roomInfo={props.roomInfo} />
         ))}
       </Carousel>
-      <Modal open={modalOpen} close={closeModal} header="방 설정" ><RoomSetting roomId={selectedRoom} roomInfo={selectedRoomInfo}/></Modal>
+      <Modal open={modalOpen} close={closeModal} header="방 설정" ><RoomSetting roomId={selectedRoom} selectedRoomInfo={selectedRoomInfo} roomInfo={props.roomInfo} setRoomInfo={props.setRoomInfo}/></Modal>
     </div>
     )
 }
@@ -75,13 +76,17 @@ function Item(props) {
         navigate(`/main`)
       };
     
+      const mainRoomChange=()=>{
+        props.setRoomInfo({...props.roomInfo, mainRoomId:props.item.roomId})
+      }
     return (
       <div >
         <div>
         <img
           className={styles.starImage}
-          src={props.item.isDefault? starImg:starOutlineImg}
+          src={props.item.roomId===props.mainRoomId? starImg:starOutlineImg}
           alt={props.item.roomName}
+          onClick={mainRoomChange}
         />
         </div>
         <img
