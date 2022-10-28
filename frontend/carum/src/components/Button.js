@@ -35,7 +35,7 @@ function getTextColor(variant) {
     case "primary":
       return "white";
     case "light":
-      return 'white';
+      return "white";
     default:
       return "black";
   }
@@ -50,7 +50,7 @@ function getWidth(size) {
     case "small":
       return "140px";
     case "extraSmall":
-      return "64px";
+      return "76px";
     default:
       return "300px";
   }
