@@ -11,9 +11,11 @@ import worryImg from "../../../assets/worry.svg";
 import happyImg from "../../../assets/happy.svg";
 import surpriseImg from "../../../assets/surprise.svg";
 import peaceImg from "../../../assets/peace.svg";
+import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
+import { useNavigate } from "react-router-dom";
 
 function CalendarDiary() {
-  const [value, onChange] = useState(new Date());
+  const [value, setValue] = useState(new Date());
   const [isMonthly, setIsMonthly] = useState(true);
   const [changingEmotionIdx, setChangingEmotionIdx] = useState(0);
   const diary = [
@@ -21,11 +23,21 @@ function CalendarDiary() {
     { emotion: ["happy"], createAt: "2022-10-04" },
     { emotion: ["peace"], createAt: "2022-10-07" },
     { emotion: ["worry", "surprise"], createAt: "2022-10-10" },
-    { emotion: ["peace"], createAt: "2022-10-21" },
+    { emotion: ["peace"], createAt: "2022-10-22" },
+    { emotion: ["peace"], createAt: "2022-10-26" },
+    { emotion: ["peace"], createAt: "2022-10-27" },
   ];
+
+  const navigate = useNavigate();
+
+  const onChange = (e) => {
+    setValue(e);
+    navigate("/main/diary");
+  };
 
   const emotionIdx = 0;
 
+  // 감정이 두개일 때 1.5초마다 바꾸며 보는 데 사용하는 함수
   function useInterval(callback, delay) {
     const savedCallback = useRef(); // 최근에 들어온 callback을 저장할 ref를 하나 만든다.
 
@@ -54,7 +66,7 @@ function CalendarDiary() {
   }, 1500);
 
   return (
-    <div className={styles.container}>
+    <div>
       <TopNav
         text="내 일기"
         buttonComponent={
@@ -116,6 +128,7 @@ function CalendarDiary() {
               calendarType="US"
               maxDate={new Date()}
             />
+            {/* 월별 감정 수치 */}
             <div className={styles.thisMonthEmotionBox}>
               <span className={styles.boxText}>이달의 감정들</span>
               <div className={styles.emotionBox}>
@@ -170,7 +183,9 @@ function CalendarDiary() {
               </div>
             </div>
           </div>
-        ) : null}
+        ) : (
+          <WeeklyDiary diaryList={diary} />
+        )}
       </div>
     </div>
   );
