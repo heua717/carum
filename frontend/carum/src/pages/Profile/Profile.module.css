@@ -6,8 +6,7 @@
 
 .id {
   font-size: 20px;
-  margin-left: auto;
-  margin-right: auto;
+  text-align: center;
 }
 
 .nickname {
@@ -34,5 +33,21 @@
 
 .editButton {
   margin: 12px 0;
-  width: 32px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttonBox {
+  display: flex;
+  justify-content: space-between;
+  margin: 8px 0;
+}
+
+.deleteDialog {
+  min-height: 160px;
+}
+
+.dialogBtnBox {
+  display: flex;
+  justify-content: space-around;
 }

@@ -20,34 +20,34 @@ function Menu() {
         <div className={styles.menuRow}>
           <MenuBtn
             onClick={() => openPage("write")}
-            icon={<i className="bx bxs-book"></i>}
+            icon={<i className={`bx bxs-book ${styles.large}`}></i>}
             menuText="다이어리"
           />
           <MenuBtn
             onClick={() => openPage("calendar")}
-            icon={<i className="bx bx-calendar"></i>}
+            icon={<i className={`bx bx-calendar ${styles.large}`}></i>}
             menuText="내일기"
           />
           <MenuBtn
             onClick={() => openPage("yearly-pet")}
-            icon={<PetsIcon />}
+            icon={<PetsIcon fontSize="large" />}
             menuText="펫조회"
           />
         </div>
         <div className={styles.menuRow}>
           <MenuBtn
             onClick={() => openPage("room")}
-            icon={<MeetingRoomIcon />}
+            icon={<MeetingRoomIcon fontSize="large" />}
             menuText="방이동"
           />
           <MenuBtn
             onClick={() => openPage("shop")}
-            icon={<StoreIcon />}
+            icon={<StoreIcon fontSize="large" />}
             menuText="상점"
           />
           <MenuBtn
             onClick={() => openPage("profile")}
-            icon={<PersonIcon />}
+            icon={<PersonIcon fontSize="large" />}
             menuText="내정보"
           />
         </div>
