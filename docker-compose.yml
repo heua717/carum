@@ -2,7 +2,7 @@ version: "3.7"
 services:
     nginx:
         container_name: carum-nginx
-        image: nginx:latest
+        image: nginx
         ports:
             - 80:80
             - 443:443
@@ -17,20 +17,20 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
-#    mysql:
-#        container_name: carum-mysql
-#        image: mysql:5.7
-#        ports:
-#            - 3306:3306
-#        volumes:
-#            - ./data/mysql:/var/lib/mysql
-#        environment:
-#            - MYSQL_ROOT_PASSWORD=dbslxlzkfnaA101
-#            - MYSQL_DATABASE=carum
-#        command:
-#            - --character-set-server=utf8
-#            - --collation-server=utf8_general_ci
-#        restart: always
+    mysql:
+        container_name: carum-mysql
+        image: mysql:5.7
+        ports:
+            - 3306:3306
+        volumes:
+            - ./data/mysql:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=dbslxlzkfnaA101
+            - MYSQL_DATABASE=carum
+        command:
+            - --character-set-server=utf8
+            - --collation-server=utf8_general_ci
+        restart: always
     redis:
         container_name: carum-redis
         image: redis
