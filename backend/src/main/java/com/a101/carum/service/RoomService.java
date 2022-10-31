@@ -1,8 +1,10 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
+import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -24,6 +26,7 @@ public class RoomService {
     private final CustomRoomRepository customRoomRepository;
     private final InteriorRepository interiorRepository;
     private final FurnitureRepository furnitureRepository;
+    private final InventoryRepository inventoryRepository;
 
     private final String BACKGROUND = "WHITE,BLACK";
 
@@ -105,6 +108,8 @@ public class RoomService {
                     case ADD:
                         Furniture furniture = furnitureRepository.findById(reqPutRoomDetail.getFurnitureId())
                                 .orElseThrow(() -> new NullPointerException("Furniture를 찾을 수 없습니다."));
+                        inventoryRepository.findByUserAndFurniture(user, furniture)
+                                .orElseThrow(() -> new UnAuthorizedException("가구를 구매한적 없습니다"));
                         interiorRepository.save(Interior.builder()
                                 .room(room)
                                 .furniture(furniture)
