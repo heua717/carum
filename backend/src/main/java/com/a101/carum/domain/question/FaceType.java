@@ -1,5 +1,5 @@
 package com.a101.carum.domain.question;
 
 public enum FaceType {
-    SMILE, ANGRY, SAD, WORRY
+    NORMAL, ANGRY, WORRY, PEACE, SURPRISE, HAPPY, SAD, HEART, STUN
 }

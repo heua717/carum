@@ -4,7 +4,6 @@ import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
-import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
