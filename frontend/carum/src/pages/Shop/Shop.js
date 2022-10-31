@@ -8,8 +8,6 @@ import Pagination from "@mui/material/Pagination";
 import FurnitureComponent from "./FurnitureComponent";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Button as MUIButton } from "@mui/material";
-import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import CloseIcon from "@material-ui/icons/Close";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";

@@ -38,7 +38,7 @@ function Menu() {
           <MenuBtn
             onClick={() => openPage("room")}
             icon={<MeetingRoomIcon fontSize="large" />}
-            menuText="방이동"
+            menuText="방 이동"
           />
           <MenuBtn
             onClick={() => openPage("shop")}
