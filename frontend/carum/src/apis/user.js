@@ -3,7 +3,9 @@ import api from "./api";
 const checkValidId = (id, success, fail) => {
   api
     .get(`/user/userid`, {
-      userid: id,
+      params: {
+        userId: id,
+      },
     })
     .then(success)
     .catch(fail);
@@ -12,7 +14,9 @@ const checkValidId = (id, success, fail) => {
 const checkValidNickname = (nickname, success, fail) => {
   api
     .get(`/user/nickname`, {
-      nickname: nickname,
+      params: {
+        nickName: nickname,
+      },
     })
     .then(success)
     .catch(fail);
@@ -40,4 +44,25 @@ const signup = (payload, success, fail) => {
     .catch(fail);
 };
 
-export { checkValidId, checkValidNickname, phoneCertificate, signup };
+const login = (payload, success, fail) => {
+  api
+    .post("user/login", {
+      userId: payload.id,
+      password: payload.password,
+    })
+    .then(success)
+    .catch(fail);
+};
+
+const logout = (success, fail) => {
+  api.post("/user/logout").then(success).catch(fail);
+};
+
+export {
+  checkValidId,
+  checkValidNickname,
+  phoneCertificate,
+  signup,
+  login,
+  logout,
+};

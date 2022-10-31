@@ -8,6 +8,7 @@ import { Button as MUIButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "@mui/material";
 import { DialogTitle } from "@mui/material";
+import { logout } from "apis/user";
 
 function Profile() {
   const [values, setValues] = useState({
@@ -25,8 +26,16 @@ function Profile() {
     setValues({ ...values, isEditing: false });
   };
 
-  const logout = () => {
+  const logoutSuccess = (res) => {
     navigate("/");
+  };
+
+  const logoutFail = (err) => {
+    console.log(err);
+  };
+
+  const handleLogout = () => {
+    logout(logoutSuccess, logoutFail);
   };
 
   const deleteAccount = () => {
@@ -88,7 +97,7 @@ function Profile() {
           >
             회원탈퇴
           </MUIButton>
-          <MUIButton onClick={logout} variant="contained" color="info">
+          <MUIButton onClick={handleLogout} variant="contained" color="info">
             로그아웃
           </MUIButton>
         </div>

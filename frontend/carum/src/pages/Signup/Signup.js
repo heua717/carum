@@ -33,6 +33,7 @@ function Signup() {
   };
 
   const checkValidIdSuccess = (res) => {
+    console.log(res);
     if (res.status === 200) {
       setValues({
         ...values,
@@ -139,6 +140,7 @@ function Signup() {
             checkValidNicknameFail
           )
         }
+        error={values.isNicknameInvalid}
       />
       <input
         type="date"

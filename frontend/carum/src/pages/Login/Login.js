@@ -3,6 +3,7 @@ import logoWithName from "../../assets/logoWithName.png";
 import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "apis/user";
 
 function Login() {
   const [values, setValues] = useState({
@@ -12,8 +13,24 @@ function Login() {
 
   const navigate = useNavigate();
 
-  const login = () => {
+  const loginSuccess = (res) => {
+    sessionStorage.setItem("access-token", res.data["accessToken"]);
+    sessionStorage.setItem("refresh-token", res.data["refreshToken"]);
     navigate("/main");
+  };
+
+  const loginFail = (err) => {
+    console.log(err);
+  };
+
+  const handleLogin = () => {
+    if (values.id && values.password) {
+      const payload = {
+        id: values.id,
+        password: values.password,
+      };
+      login(payload, loginSuccess, loginFail);
+    }
   };
 
   const goToSignup = () => {
@@ -64,7 +81,7 @@ function Login() {
             text="로그인"
             variant="extraLight"
             size="small"
-            onClick={() => login()}
+            onClick={() => handleLogin()}
           />
         </div>
       </div>
