@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -143,5 +144,33 @@ public class RoomService {
                 interiorRepository.flush();
             }
         }
+    }
+
+    @Transactional
+    public ResGetInteriorList readInterior(Long id, Long roomId) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Room room = roomRepository.findByIdAndUser(roomId, user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        List<Interior> interiors = interiorRepository.findByRoom(room);
+
+        List<ResGetInterior> interiorList = new ArrayList<>();
+
+        for(Interior interior: interiors){
+            interiorList.add(ResGetInterior.builder()
+                            .interiorId(interior.getId())
+                            .furnitureId(interior.getFurniture().getId())
+                            .resource(interior.getFurniture().getResource())
+                            .x(interior.getX())
+                            .xRot(interior.getXRot())
+                            .y(interior.getY())
+                            .yRot(interior.getYRot())
+                            .z(interior.getZ())
+                            .zRot(interior.getZRot())
+                            .build());
+        }
+        return ResGetInteriorList.builder()
+                .interiorList(interiorList)
+                .build();
     }
 }
