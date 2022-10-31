@@ -26,9 +26,9 @@ public class ShopController {
    }
 
    @PostMapping()
-   public ResponseEntity postInventory(@RequestBody ReqPostInventory reqPostInventory, HttpServletRequest request){
+   public ResponseEntity createInventory(@RequestBody ReqPostInventory reqPostInventory, HttpServletRequest request){
       Long id = jwtService.getUserId(request);
-      shopService.postInventory(reqPostInventory, id);
+      shopService.createInventory(reqPostInventory, id);
       return ResponseEntity.ok().build();
    }
 }
