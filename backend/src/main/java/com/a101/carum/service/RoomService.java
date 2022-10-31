@@ -182,5 +182,6 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
 
         interiorRepository.deleteByRoom(room);
+        //TODO: 기본 인테리어로 다시 설정
     }
 }
