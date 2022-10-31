@@ -101,8 +101,8 @@ public class RoomService {
             room.updateBackground(sb.toString());
         }
 
-        if(reqPutRoom.getInteriors() != null) {
-            for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriors()){
+        if(reqPutRoom.getInteriorList() != null) {
+            for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriorList()){
                 switch (reqPutRoomDetail.getAction()){
                     case ADD:
                         Furniture furniture = furnitureRepository.findById(reqPutRoomDetail.getFurnitureId())
@@ -115,9 +115,9 @@ public class RoomService {
                                 .x(reqPutRoomDetail.getX())
                                 .y(reqPutRoomDetail.getY())
                                 .z(reqPutRoomDetail.getZ())
-                                .xRot(reqPutRoomDetail.getRotX())
-                                .yRot(reqPutRoomDetail.getRotY())
-                                .zRot(reqPutRoomDetail.getRotZ())
+                                .rotX(reqPutRoomDetail.getRotX())
+                                .rotY(reqPutRoomDetail.getRotY())
+                                .rotZ(reqPutRoomDetail.getRotZ())
                                 .build()
                         );
                         break;
@@ -139,7 +139,6 @@ public class RoomService {
                         );
                         break;
                 }
-                interiorRepository.flush();
             }
         }
     }
@@ -160,14 +159,16 @@ public class RoomService {
                             .furnitureId(interior.getFurniture().getId())
                             .resource(interior.getFurniture().getResource())
                             .x(interior.getX())
-                            .xRot(interior.getXRot())
+                            .xRot(interior.getRotX())
                             .y(interior.getY())
-                            .yRot(interior.getYRot())
+                            .yRot(interior.getRotY())
                             .z(interior.getZ())
-                            .zRot(interior.getZRot())
+                            .zRot(interior.getRotZ())
                             .build());
         }
+
         return ResGetInteriorList.builder()
+                .background(List.of(room.getBackground().split(",")))
                 .interiorList(interiorList)
                 .build();
     }

@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 public class ReqPutRoom {
     List<String> background;
-    List<ReqPutRoomDetail> interiors;
+    List<ReqPutRoomDetail> interiorList;
 }

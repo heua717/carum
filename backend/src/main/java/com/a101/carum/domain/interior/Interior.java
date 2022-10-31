@@ -41,32 +41,32 @@ public class Interior {
     private Float z;
 
     @Column(name = "x_rot", nullable = false)
-    private Float xRot;
+    private Float rotX;
 
     @Column(name = "y_rot", nullable = false)
-    private Float yRot;
+    private Float rotY;
 
     @Column(name = "z_rot", nullable = false)
-    private Float zRot;
+    private Float rotZ;
 
     @Builder
-    public Interior(Room room, Furniture furniture, Float x, Float y, Float z, Float xRot, Float yRot, Float zRot){
+    public Interior(Room room, Furniture furniture, Float x, Float y, Float z, Float rotX, Float rotY, Float rotZ){
         this.room = room;
         this.furniture = furniture;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.xRot = xRot;
-        this.yRot = yRot;
-        this.zRot = zRot;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
     }
 
-    public void updatePlace(Float x, Float y, Float z, Float xRot, Float yRot, Float  zRot){
+    public void updatePlace(Float x, Float y, Float z, Float rotX, Float rotY, Float  rotZ){
         this.x = x;
         this.y = y;
         this.z = z;
-        this.xRot = xRot;
-        this.yRot = yRot;
-        this.zRot = zRot;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
     }
 }
