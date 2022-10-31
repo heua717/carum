@@ -173,4 +173,14 @@ public class RoomService {
                 .interiorList(interiorList)
                 .build();
     }
+
+    @Transactional
+    public void deleteInterior(Long id, Long roomId) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Room room = roomRepository.findByIdAndUser(roomId, user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        interiorRepository.deleteByRoom(room);
+    }
 }

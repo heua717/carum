@@ -52,4 +52,11 @@ public class RoomController {
         Long id = jwtService.getUserId(request);
         return ResponseEntity.ok(roomService.readInterior(id, roomId));
     }
+
+    @DeleteMapping("{roomId}")
+    public ResponseEntity deleteInterior(@PathVariable Long roomId, HttpServletRequest request){
+        Long id = jwtService.getUserId(request);
+        roomService.deleteInterior(id, roomId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface InteriorRepository extends JpaRepository<Interior, Long> {
     List<Interior> findByRoom(Room room);
+
+    void deleteByRoom(Room room);
 }
