@@ -1,4 +1,4 @@
-package com.a101.carum.domain.funiture;
+package com.a101.carum.domain.furniture;
 
 public enum FurnitureType {
     BACKGROUND,
