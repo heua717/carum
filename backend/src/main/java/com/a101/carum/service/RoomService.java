@@ -1,13 +1,12 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.domain.furniture.Furniture;
+import com.a101.carum.domain.interior.Interior;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
-import com.a101.carum.repository.CustomRoomRepository;
-import com.a101.carum.repository.RoomRepository;
-import com.a101.carum.repository.UserDetailRepository;
-import com.a101.carum.repository.UserRepository;
+import com.a101.carum.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +22,8 @@ public class RoomService {
     private final UserDetailRepository userDetailRepository;
     private final RoomRepository roomRepository;
     private final CustomRoomRepository customRoomRepository;
+    private final InteriorRepository interiorRepository;
+    private final FurnitureRepository furnitureRepository;
 
     private final String BACKGROUND = "WHITE,BLACK";
 
@@ -66,6 +67,7 @@ public class RoomService {
         //TODO: Background 처리
     }
 
+    @Transactional
     public ResGetRoomList readRoomList(ReqGetRoomList reqGetRoomList, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
@@ -80,5 +82,61 @@ public class RoomService {
         List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags());
         resGetRoomListBuilder.roomList(roomList);
         return resGetRoomListBuilder.build();
+    }
+
+    @Transactional
+    public void updateInterior(ReqPutRoom reqPutRoom, Long id, Long roomId) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Room room = roomRepository.findByIdAndUser(roomId, user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        if(reqPutRoom.getBackground() != null) {
+            StringBuilder sb = new StringBuilder();
+            for(String color: reqPutRoom.getBackground()){
+                sb.append(color).append(",");
+            }
+            room.updateBackground(sb.toString());
+        }
+
+        if(reqPutRoom.getInteriors() != null) {
+            for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriors()){
+                switch (reqPutRoomDetail.getAction()){
+                    case ADD:
+                        Furniture furniture = furnitureRepository.findById(reqPutRoomDetail.getFurnitureId())
+                                .orElseThrow(() -> new NullPointerException("Furniture를 찾을 수 없습니다."));
+                        interiorRepository.save(Interior.builder()
+                                .room(room)
+                                .furniture(furniture)
+                                .x(reqPutRoomDetail.getX())
+                                .y(reqPutRoomDetail.getY())
+                                .z(reqPutRoomDetail.getZ())
+                                .xRot(reqPutRoomDetail.getRotX())
+                                .yRot(reqPutRoomDetail.getRotY())
+                                .zRot(reqPutRoomDetail.getRotZ())
+                                .build()
+                        );
+                        break;
+                    case DEL:
+                        Interior interiorDelete = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                        interiorRepository.delete(interiorDelete);
+                        break;
+                    case MOD:
+                        Interior interiorUpdate = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                        interiorUpdate.updatePlace(
+                                reqPutRoomDetail.getX(),
+                                reqPutRoomDetail.getY(),
+                                reqPutRoomDetail.getZ(),
+                                reqPutRoomDetail.getRotX(),
+                                reqPutRoomDetail.getRotY(),
+                                reqPutRoomDetail.getRotZ()
+                        );
+                        break;
+                }
+                interiorRepository.flush();
+            }
+        }
     }
 }

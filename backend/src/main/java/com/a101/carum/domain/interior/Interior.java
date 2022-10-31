@@ -2,6 +2,7 @@ package com.a101.carum.domain.interior;
 
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.room.Room;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,36 +17,56 @@ import javax.persistence.*;
 @DynamicUpdate
 @Getter
 @ToString
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "room_id", "furniture_id" }) })
 public class Interior {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 
-    @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "furniture_id", referencedColumnName = "id")
     private Furniture furniture;
 
     @Column(name = "x", nullable = false)
-    private double x;
+    private Float x;
 
     @Column(name = "y", nullable = false)
-    private double y;
+    private Float y;
 
     @Column(name = "z", nullable = false)
-    private double z;
+    private Float z;
 
     @Column(name = "x_rot", nullable = false)
-    private double xRot;
+    private Float xRot;
 
     @Column(name = "y_rot", nullable = false)
-    private double yRot;
+    private Float yRot;
 
     @Column(name = "z_rot", nullable = false)
-    private double zRot;
+    private Float zRot;
+
+    @Builder
+    public Interior(Room room, Furniture furniture, Float x, Float y, Float z, Float xRot, Float yRot, Float zRot){
+        this.room = room;
+        this.furniture = furniture;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.xRot = xRot;
+        this.yRot = yRot;
+        this.zRot = zRot;
+    }
+
+    public void updatePlace(Float x, Float y, Float z, Float xRot, Float yRot, Float  zRot){
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.xRot = xRot;
+        this.yRot = yRot;
+        this.zRot = zRot;
+    }
 }

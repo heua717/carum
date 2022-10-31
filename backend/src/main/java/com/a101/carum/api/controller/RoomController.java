@@ -3,6 +3,7 @@ package com.a101.carum.api.controller;
 import com.a101.carum.api.dto.ReqGetRoomList;
 import com.a101.carum.api.dto.ReqPatchRoom;
 import com.a101.carum.api.dto.ReqPostRoom;
+import com.a101.carum.api.dto.ReqPutRoom;
 import com.a101.carum.service.JwtService;
 import com.a101.carum.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,12 @@ public class RoomController {
     public ResponseEntity readRoom(@ModelAttribute ReqGetRoomList reqGetRoomList, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
         return ResponseEntity.ok(roomService.readRoomList(reqGetRoomList, id));
+    }
+
+    @PutMapping("{roomId}")
+    public ResponseEntity updateInterior(@PathVariable Long roomId, @RequestBody ReqPutRoom reqPutRoom, HttpServletRequest request){
+        Long id = jwtService.getUserId(request);
+        roomService.updateInterior(reqPutRoom, id, roomId);
+        return ResponseEntity.ok().build();
     }
 }
