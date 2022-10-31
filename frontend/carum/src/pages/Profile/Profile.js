@@ -2,17 +2,22 @@ import styles from "./Profile.module.css";
 import TopNav from "../../components/TopNav";
 import Button from "../../components/Button";
 import { TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { Button as MUIButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "@mui/material";
 import { DialogTitle } from "@mui/material";
-import { logout } from "apis/user";
+import {
+  logout,
+  deleteAccount,
+  fetchProfile,
+  checkValidNickname,
+} from "apis/user";
 
 function Profile() {
   const [values, setValues] = useState({
-    userInfo: "",
+    userInfo: null,
     isEditing: false,
     newNickname: "",
     newPassword: "",
@@ -26,7 +31,43 @@ function Profile() {
     setValues({ ...values, isEditing: false });
   };
 
+  // 회원 정보 조회
+
+  const fetchProfileSuccess = (res) => {
+    console.log(res);
+    const userInfo = {
+      nickname: res.data.nickName,
+      id: res.data.userId,
+      birth: res.data.birth,
+      phone: res.data.phone,
+      money: res.data.money,
+      mainRoom: res.data.mainRoom,
+    };
+    setValues({ ...values, userInfo });
+  };
+
+  const fetchProfileFail = (err) => {
+    console.log(err);
+  };
+
+  useEffect(() => {
+    fetchProfile(fetchProfileSuccess, fetchProfileFail);
+  }, []);
+
+  // 닉네임 수정
+  const editNicknameSuccess = (res) => {
+    console.log(res);
+    setValues({ ...values });
+  };
+
+  const editNicknameFail = () => {};
+
+  const handleEditNickname = () => {};
+
+  // 로그아웃
   const logoutSuccess = (res) => {
+    sessionStorage.removeItem("access-token");
+    sessionStorage.removeItem("refresh-token");
     navigate("/");
   };
 
@@ -38,10 +79,22 @@ function Profile() {
     logout(logoutSuccess, logoutFail);
   };
 
-  const deleteAccount = () => {
+  // 회원 탈퇴
+  const deleteAccountSuccess = (res) => {
+    console.log(res);
+    sessionStorage.removeItem("access-token");
+    sessionStorage.removeItem("refresh-token");
     navigate("/");
   };
 
+  const deleteAccountFail = (err) => {
+    console.log(err);
+  };
+  const handleDeleteAccount = () => {
+    deleteAccount(deleteAccountSuccess, deleteAccountFail);
+  };
+
+  // 회원 탈퇴 dialog 열고 닫기
   const deleteDialogOpen = () => {
     setValues({ ...values, isDeleting: true });
   };
@@ -54,11 +107,15 @@ function Profile() {
     <div>
       <TopNav text="내 정보" />
       <div className={styles.container}>
-        <p className={styles.id}>아이디</p>
+        <p className={styles.id}>{values.userInfo.id}</p>
         <p className={styles.settingTag}>닉네임</p>
         {values.isEditing ? (
           <div className={styles.nicknameEditbox}>
-            <TextField size="small" className={styles.inputBox} />
+            <TextField
+              size="small"
+              className={styles.inputBox}
+              value={values.userInfo.nickname}
+            />
             <div className={styles.editButton}>
               <div></div>
               <Button
@@ -71,7 +128,7 @@ function Profile() {
           </div>
         ) : (
           <div className={styles.nicknameSettingBox}>
-            <span className={styles.nickname}>닉네임</span>
+            <span className={styles.nickname}>{values.userInfo.nickname}</span>
             <EditIcon
               onClick={() => setValues({ ...values, isEditing: true })}
             />
@@ -108,7 +165,7 @@ function Profile() {
           <div className={styles.dialogBtnBox}>
             <MUIButton
               variant="contained"
-              onClick={deleteAccount}
+              onClick={handleDeleteAccount}
               color="error"
             >
               예

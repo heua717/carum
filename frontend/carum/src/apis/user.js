@@ -58,6 +58,23 @@ const logout = (success, fail) => {
   api.post("/user/logout").then(success).catch(fail);
 };
 
+const deleteAccount = (success, fail) => {
+  api.delete("/user").then(success).catch(fail);
+};
+
+const fetchProfile = (success, fail) => {
+  api.get("/user").then(success).catch(fail);
+};
+
+const editNickname = (newNickname, success, fail) => {
+  api
+    .patch("/user", {
+      nickName: newNickname,
+    })
+    .then(success)
+    .catch(fail);
+};
+
 export {
   checkValidId,
   checkValidNickname,
@@ -65,4 +82,7 @@ export {
   signup,
   login,
   logout,
+  deleteAccount,
+  fetchProfile,
+  editNickname,
 };
