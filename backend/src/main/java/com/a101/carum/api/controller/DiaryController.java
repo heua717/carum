@@ -47,6 +47,8 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getDiaryList(reqGetDiaryList, userId));
     }
 
+
+
     @DeleteMapping("{diaryId}")
     public ResponseEntity deleteDiary(@PathVariable Long diaryId, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);

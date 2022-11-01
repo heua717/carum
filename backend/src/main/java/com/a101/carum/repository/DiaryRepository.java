@@ -10,5 +10,7 @@ import java.util.List;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     List<Diary> findAllByUser(User user);
-    Diary findByCreateDateBetween(LocalDateTime start, LocalDateTime end);
+    Diary findByCreateDateBetweenAndUser(LocalDateTime start, LocalDateTime end, User user);
+
+    List<Diary> findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(LocalDateTime start, LocalDateTime end, User user);
 }
