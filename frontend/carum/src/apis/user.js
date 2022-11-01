@@ -75,6 +75,16 @@ const editNickname = (newNickname, success, fail) => {
     .catch(fail);
 };
 
+const changePassword = ({ oldPassword, newPassword }, success, fail) => {
+  api
+    .patch("/user/password", {
+      oldPassword,
+      newPassword,
+    })
+    .then(success)
+    .catch(fail);
+};
+
 export {
   checkValidId,
   checkValidNickname,
@@ -85,4 +95,5 @@ export {
   deleteAccount,
   fetchProfile,
   editNickname,
+  changePassword,
 };

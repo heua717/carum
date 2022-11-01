@@ -14,7 +14,9 @@ import {
   fetchProfile,
   checkValidNickname,
   editNickname,
+  changePassword,
 } from "apis/user";
+import Swal from "sweetalert2";
 
 function Profile() {
   const [values, setValues] = useState({
@@ -22,6 +24,8 @@ function Profile() {
     isEditing: false,
     newNickname: "",
     isValidNickname: null,
+    oldPassword: "",
+    isOldPasswordValid: null,
     newPassword: "",
     newPasswordConfirm: "",
     isDeleting: false,
@@ -98,6 +102,43 @@ function Profile() {
         isValidNickname: null,
         newNickname: values.userInfo.nickname,
       });
+    }
+  };
+
+  // 비밀번호 수정
+  const changePasswordSuccess = (res) => {
+    setValues({
+      ...values,
+      oldPassword: "",
+      newPassword: "",
+      newPasswordConfirm: "",
+      isOldPasswordValid: null,
+    });
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "비밀번호가 변경되었습니다.",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  };
+
+  const changePasswordFail = (err) => {
+    console.log(err);
+    setValues({ ...values, isOldPasswordValid: false });
+  };
+
+  const handleChangePassword = () => {
+    if (
+      values.oldPassword &&
+      values.newPassword &&
+      values.newPassword === values.newPasswordConfirm
+    ) {
+      const payload = {
+        oldPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      };
+      changePassword(payload, changePasswordSuccess, changePasswordFail);
     }
   };
 
@@ -202,16 +243,79 @@ function Profile() {
           </div>
         )}
         <div>
+          <p className={styles.settingTag}>이전 비밀번호</p>
+          <TextField
+            onChange={(e) =>
+              setValues({ ...values, oldPassword: e.target.value })
+            }
+            size="small"
+            className={styles.inputBox}
+            type="password"
+            value={values.oldPassword}
+            error={values.isOldPasswordValid === false}
+            helperText={
+              values.isOldPasswordValid === false
+                ? "비밀번호가 틀렸습니다."
+                : null
+            }
+          />
+        </div>
+        <div>
           <p className={styles.settingTag}>새 비밀번호</p>
-          <TextField size="small" className={styles.inputBox} />
+          <TextField
+            onChange={(e) =>
+              setValues({ ...values, newPassword: e.target.value })
+            }
+            size="small"
+            className={styles.inputBox}
+            type="password"
+            value={values.newPassword}
+            error={Boolean(
+              values.oldPassword &&
+                values.newPassword &&
+                values.newPassword === values.oldPassword
+            )}
+            helperText={
+              values.oldPassword &&
+              values.newPassword &&
+              values.newPassword === values.oldPassword
+                ? "이전 비밀번호와 같습니다."
+                : null
+            }
+          />
         </div>
         <div>
           <p className={styles.settingTag}>새 비밀번호 확인</p>
-          <TextField size="small" className={styles.inputBox} />
+          <TextField
+            onChange={(e) =>
+              setValues({ ...values, newPasswordConfirm: e.target.value })
+            }
+            size="small"
+            className={styles.inputBox}
+            type="password"
+            value={values.newPasswordConfirm}
+            error={Boolean(
+              values.newPassword &&
+                values.newPasswordConfirm &&
+                values.newPassword !== values.newPasswordConfirm
+            )}
+            helperText={
+              values.newPassword &&
+              values.newPasswordConfirm &&
+              values.newPassword !== values.newPasswordConfirm
+                ? "비밀번호가 다릅니다"
+                : null
+            }
+          />
         </div>
         <div className={styles.editButton}>
           <div></div>
-          <Button text="비밀번호 수정" variant="primary" size="small" />
+          <Button
+            text="비밀번호 수정"
+            variant="primary"
+            size="small"
+            onClick={() => handleChangePassword()}
+          />
         </div>
         <div className={styles.buttonBox}>
           <MUIButton
