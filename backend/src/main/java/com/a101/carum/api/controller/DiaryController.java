@@ -1,5 +1,6 @@
 package com.a101.carum.api.controller;
 
+import com.a101.carum.api.dto.ReqGetDiaryList;
 import com.a101.carum.api.dto.ReqPostDiary;
 import com.a101.carum.service.DiaryService;
 import com.a101.carum.service.JwtService;
@@ -15,9 +16,9 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("diary")
 public class DiaryController {
 
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    private DiaryService diaryService;
+    private final DiaryService diaryService;
 
     @PostMapping("")
     public ResponseEntity createDiary(@RequestBody ReqPostDiary reqPostDiary, HttpServletRequest request) {
@@ -26,10 +27,24 @@ public class DiaryController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("{diary_id}")
+    @PatchMapping("{diaryId}")
     public ResponseEntity updateDiary(@RequestBody ReqPostDiary reqPostDiary,@PathVariable Long diaryId, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
         diaryService.updateDiary(reqPostDiary, userId, diaryId);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("{diaryId}")
+    public ResponseEntity getDiary(@PathVariable Long diaryId, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+
+        return ResponseEntity.ok(diaryService.getDiary(diaryId, userId));
+    }
+    @GetMapping("")
+    public ResponseEntity getDiaryList(@RequestBody ReqGetDiaryList reqGetDiaryList, HttpServletRequest request) {
+        Long userId = jwtService.getUserId(request);
+
+        return ResponseEntity.ok(diaryService.getDiaryList(reqGetDiaryList, userId));
+    }
+
 }
