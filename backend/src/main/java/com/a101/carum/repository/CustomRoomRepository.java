@@ -31,8 +31,6 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
 
         booleanBuilder.and(room.user.eq(user));
 
-        System.out.println(tags);
-
         if(tags != null){
             for(String tag:tags){
                 booleanBuilder.and(room.emotionTag.contains(tag));
