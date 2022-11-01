@@ -18,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -30,7 +31,7 @@ public class DiaryService {
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
-        Diary diary = diaryRepository.findByCreateDateBetween(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)));
+        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user);
         if(diary!=null){
             throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
         }
@@ -97,25 +98,39 @@ public class DiaryService {
     @Transactional
     public ResGetDiaryList getDiaryList(ReqGetDiaryList reqGetDiaryList, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-
-        List<Diary> diaryList = diaryRepository.findAllByUser(user);
-        ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
-        for (Diary diarys : diaryList) {
-            if(diarys.getCreateDate().getYear()==reqGetDiaryList.getYear() && diarys.getCreateDate().getMonthValue() == reqGetDiaryList.getMonth()){
-                List<String> emotionList = new ArrayList<>();
-                for(String emotion : diarys.getEmotionTag().split(",")) {
-                    emotionList.add(emotion);
-                }
-                resGetDiaryList.getDiaryList().add(ResGetDiary.builder()
-                                .id(diarys.getId())
-                                .createDate(diarys.getCreateDate())
-                                .content(diarys.getContent())
-                                .emotionTag(emotionList)
-                                .background(diarys.getBackground())
-                                .build());
-            }
-
+        List<Diary> diaryList;
+        // request Day 값이 0이면 월간조회
+        if(reqGetDiaryList.getDay()==0){
+             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
+                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),1)
+                            , LocalTime.of(0,0,0))
+                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),Calendar.getInstance().getMaximum(reqGetDiaryList.getMonth()))
+                            , LocalTime.of(23,59,59)),user);
+        } else { // Day의 값이 0보다 크면 day로부터 7일간 조회
+            diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
+                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
+                            , LocalTime.of(0,0,0))
+                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay()+6)
+                            , LocalTime.of(23,59,59)),user);
         }
+
+        ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
+        for(Diary diarys : diaryList) {
+            List<String> emotionList = new ArrayList<>();
+            for(String emotion : diarys.getEmotionTag().split(",")){
+                emotionList.add(emotion);
+            }
+            resGetDiaryList.getDiaryList().add(
+                   ResGetDiary.builder()
+                           .id(diarys.getId())
+                           .content(diarys.getContent())
+                           .createDate(diarys.getCreateDate())
+                           .background(diarys.getBackground())
+                           .emotionTag(emotionList)
+                           .build()
+            );
+        }
+
         return resGetDiaryList;
     }
 
