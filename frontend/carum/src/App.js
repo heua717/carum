@@ -1,46 +1,26 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import { useNavigate } from "react-router-dom";
-import { Unity, useUnityContext } from "react-unity-webgl";
-import React, { useEffect, useCallback} from "react";
-
+import Login from "./pages/Login/Login";
+import Signup from "./pages/Signup/Signup";
+import Main from "./pages/Main/Main";
+import CheckAuth from "components/CheckAuth";
 
 function App() {
-  const { unityProvider, sendMessage, addEventListener, removeEventListener } = useUnityContext({
-    loaderUrl: "build/build2.loader.js",
-    dataUrl: "build/build2.data",
-    frameworkUrl: "build/build2.framework.js",
-    codeUrl: "build/build2.wasm",
-  });
-  const navigate = useNavigate();
-  function handleSceneTransition(sceneName) {
-    console.log("move to "+sceneName)
-    sendMessage("TestCanvas", "MoveSceneTo", sceneName);
-  }
-
-  const handleReactRouting = useCallback((to) => {
-    console.log("move to :"+to);
-    navigate(to)
-  }, []);
-
-  useEffect(() => {
-    addEventListener("ReactRouting", handleReactRouting);
-    return() => {
-      removeEventListener("ReactRouting", handleReactRouting);
-      console.log("remove")
-    }
-  }, [addEventListener, removeEventListener, handleReactRouting]);
-
   return (
-  <div className="App">
-      <Unity style={{
-        width:'100%',
-        height:'35vh',
-        justifySelf:'center'
-      }} unityProvider={unityProvider} />
-      <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
-      <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
-
-  </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route
+          path="/main/*"
+          element={
+            <CheckAuth>
+              <Main />
+            </CheckAuth>
+          }
+        />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
+    </Router>
   );
 }
 // function App() {

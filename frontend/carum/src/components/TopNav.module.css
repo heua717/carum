@@ -1,0 +1,20 @@
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+}
+
+.goBack {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  border: 0;
+  background-color: white;
+}
+
+.buttonBox {
+  min-width: 64px;
+}

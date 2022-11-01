@@ -1,0 +1,32 @@
+.dialog {
+  min-width: 280px;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.phoneNumberInput {
+  width: 90%;
+  height: 40px;
+}
+
+.helpText {
+  text-align: center;
+  padding: 0 12px;
+}
+
+.codeChecking {
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  width: 90%;
+  justify-content: space-around;
+}
+
+.codeCheckBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
