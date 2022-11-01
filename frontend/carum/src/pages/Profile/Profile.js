@@ -13,6 +13,7 @@ import {
   deleteAccount,
   fetchProfile,
   checkValidNickname,
+  editNickname,
 } from "apis/user";
 
 function Profile() {
@@ -20,16 +21,13 @@ function Profile() {
     userInfo: null,
     isEditing: false,
     newNickname: "",
+    isValidNickname: null,
     newPassword: "",
     newPasswordConfirm: "",
     isDeleting: false,
   });
 
   const navigate = useNavigate();
-
-  const editNickname = () => {
-    setValues({ ...values, isEditing: false });
-  };
 
   // 회원 정보 조회
 
@@ -43,7 +41,7 @@ function Profile() {
       money: res.data.money,
       mainRoom: res.data.mainRoom,
     };
-    setValues({ ...values, userInfo });
+    setValues({ ...values, userInfo, newNickname: res.data.nickName });
   };
 
   const fetchProfileFail = (err) => {
@@ -54,15 +52,54 @@ function Profile() {
     fetchProfile(fetchProfileSuccess, fetchProfileFail);
   }, []);
 
-  // 닉네임 수정
-  const editNicknameSuccess = (res) => {
-    console.log(res);
-    setValues({ ...values });
+  // 닉네임 중복 확인
+  const handleValidCheck = () => {
+    if (values.userInfo.nickname !== values.newNickname) {
+      checkValidNickname(
+        values.newNickname,
+        () => {
+          setValues({ ...values, isValidNickname: true });
+        },
+        () => {
+          setValues({ ...values, isValidNickname: false });
+        }
+      );
+    }
   };
 
-  const editNicknameFail = () => {};
+  // 닉네임 수정
+  const editNicknameSuccess = (res) => {
+    console.log("수정수정");
+    const newUserInfo = values.userInfo;
+    newUserInfo.nickname = values.newNickname;
+    setValues({
+      ...values,
+      userInfo: newUserInfo,
+      isEditing: false,
+      isValidNickname: null,
+    });
+  };
 
-  const handleEditNickname = () => {};
+  const editNicknameFail = (err) => {
+    console.log(err);
+  };
+
+  const handleEditNickname = (state) => {
+    if (
+      state === "edit" &&
+      values.isValidNickname === true &&
+      values.userInfo.nickname !== values.newNickname
+    ) {
+      editNickname(values.newNickname, editNicknameSuccess, editNicknameFail);
+    } else {
+      setValues({
+        ...values,
+        isEditing: false,
+        isValidNickname: null,
+        newNickname: values.userInfo.nickname,
+      });
+    }
+  };
 
   // 로그아웃
   const logoutSuccess = (res) => {
@@ -107,28 +144,58 @@ function Profile() {
     <div>
       <TopNav text="내 정보" />
       <div className={styles.container}>
-        <p className={styles.id}>{values.userInfo.id}</p>
+        <p className={styles.id}>{values.userInfo?.id}</p>
         <p className={styles.settingTag}>닉네임</p>
         {values.isEditing ? (
           <div className={styles.nicknameEditbox}>
-            <TextField
-              size="small"
-              className={styles.inputBox}
-              value={values.userInfo.nickname}
-            />
-            <div className={styles.editButton}>
-              <div></div>
-              <Button
-                text="닉네임 수정"
-                variant="primary"
+            <div className={styles.editRow}>
+              <TextField
+                helperText={
+                  values.isValidNickname === true
+                    ? "사용 가능한 닉네임입니다."
+                    : values.isValidNickname === false
+                    ? "중복된 닉네임입니다."
+                    : null
+                }
+                error={
+                  values.isValidNickname === true
+                    ? false
+                    : values.isValidNickname === false
+                    ? true
+                    : null
+                }
                 size="small"
-                onClick={() => editNickname()}
+                value={values.newNickname}
+                onChange={(e) =>
+                  setValues({ ...values, newNickname: e.target.value })
+                }
               />
+              <button onClick={handleValidCheck} className={styles.validButton}>
+                중복 확인
+              </button>
+            </div>
+            <div className={styles.editButton}>
+              <MUIButton
+                onClick={() => handleEditNickname("close")}
+                size="small"
+                variant="contained"
+                color="error"
+              >
+                취소
+              </MUIButton>
+              <MUIButton
+                onClick={() => handleEditNickname("edit")}
+                size="small"
+                variant="contained"
+                color="primary"
+              >
+                수정
+              </MUIButton>
             </div>
           </div>
         ) : (
           <div className={styles.nicknameSettingBox}>
-            <span className={styles.nickname}>{values.userInfo.nickname}</span>
+            <span className={styles.nickname}>{values.userInfo?.nickname}</span>
             <EditIcon
               onClick={() => setValues({ ...values, isEditing: true })}
             />
