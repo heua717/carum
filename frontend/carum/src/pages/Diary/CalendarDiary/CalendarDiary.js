@@ -13,26 +13,56 @@ import surpriseImg from "../../../assets/surprise.svg";
 import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
+import { fetchCalendar } from "apis/diary";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
   const [isMonthly, setIsMonthly] = useState(true);
+  const [tmpValue, setTmpValue] = useState(new Date());
   const [changingEmotionIdx, setChangingEmotionIdx] = useState(0);
-  const diary = [
-    { emotion: ["angry", "sad"], createAt: "2022-10-01" },
-    { emotion: ["happy"], createAt: "2022-10-04" },
-    { emotion: ["peace"], createAt: "2022-10-07" },
-    { emotion: ["worry", "surprise"], createAt: "2022-10-10" },
-    { emotion: ["peace"], createAt: "2022-10-22" },
-    { emotion: ["peace"], createAt: "2022-10-26" },
-    { emotion: ["peace"], createAt: "2022-10-27" },
-  ];
+  const [diary, setDiary] = useState([]);
 
   const navigate = useNavigate();
 
+  // 달력 조회
+  const fetchCalendarSuccess = (res) => {
+    console.log(res.data);
+  };
+
+  const fetchCalendarFail = (err) => {
+    console.log(err);
+  };
+
+  // 월간 조회
+  useEffect(() => {
+    const payload = {};
+    // fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+  }, []);
+
+  // 주간 조회
+  useEffect(() => {}, []);
+
+  // 달력 일 클릭 시
   const onChange = (e) => {
     setValue(e);
-    navigate("/main/diary");
+    console.log(e);
+  };
+
+  // 달력 월 클릭 시
+  const onClickMonth = (e) => {
+    console.log(e);
+    setTmpValue(e);
+  };
+
+  // 달력 navigation 화살표 버튼 클릭 시
+  const onActiveStartDateChange = ({ action, activeStartDate }) => {
+    if (
+      action === "prev" ||
+      action === "prev2" ||
+      action === "next" ||
+      action === "next2"
+    ) {
+    }
   };
 
   const emotionIdx = 0;
@@ -65,6 +95,12 @@ function CalendarDiary() {
     }
   }, 1500);
 
+  const handleToggleButton = () => {
+    if (!isMonthly) {
+    }
+    setIsMonthly(!isMonthly);
+  };
+
   return (
     <div>
       <TopNav
@@ -74,7 +110,7 @@ function CalendarDiary() {
             text={isMonthly ? "주간" : "월간"}
             size="extraSmall"
             variant="primary"
-            onClick={() => setIsMonthly(!isMonthly)}
+            onClick={handleToggleButton}
           />
         }
       />
@@ -127,6 +163,8 @@ function CalendarDiary() {
               }}
               calendarType="US"
               maxDate={new Date()}
+              onClickMonth={onClickMonth}
+              onActiveStartDateChange={onActiveStartDateChange}
             />
             {/* 월별 감정 수치 */}
             <div className={styles.thisMonthEmotionBox}>
