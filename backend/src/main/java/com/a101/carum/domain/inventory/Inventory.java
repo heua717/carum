@@ -24,11 +24,11 @@ public class Inventory {
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "furniture_id", referencedColumnName = "id")
     private Furniture furniture;
 

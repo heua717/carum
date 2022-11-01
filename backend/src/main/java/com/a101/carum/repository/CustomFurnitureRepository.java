@@ -25,7 +25,6 @@ import java.util.List;
 import static com.a101.carum.domain.furniture.QFurniture.furniture;
 import static com.a101.carum.domain.inventory.QInventory.inventory;
 import static com.querydsl.core.types.ExpressionUtils.count;
-import static com.querydsl.jpa.JPAExpressions.select;
 
 @Repository
 public class CustomFurnitureRepository extends QuerydslRepositorySupport {
