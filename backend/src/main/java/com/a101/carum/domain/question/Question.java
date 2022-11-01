@@ -21,7 +21,7 @@ public class Question {
     @Column(name = "content", nullable = false, unique = true)
     private String content;
 
-    @Column(name = "face", length = 10)
+    @Column(name = "face", length = 20)
     @Enumerated(EnumType.STRING)
     private FaceType face;
 }

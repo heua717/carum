@@ -3,19 +3,15 @@ package com.a101.carum.api.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Setter
 @Getter
+@Builder
 @AllArgsConstructor
-public class ReqPostDiary {
-
-    private String content;
-
-    private List<String> emotionTag;
-
-    private String background;
-
+@NoArgsConstructor
+public class ResGetRoomList {
+    Long mainRoomId;
+    List<ResGetRoom> roomList;
 }

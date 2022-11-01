@@ -1,5 +1,6 @@
 package com.a101.carum.domain.user;
 
+import com.a101.carum.domain.room.Room;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 @Getter
-//@Table(uniqueConstraints = {@UniqueConstraint(name = "main_room_constraint", columnNames = {"room_id", "user_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(name = "main_room_constraint", columnNames = {"main_room", "user_id"})})
 public class UserDetail {
 
     @Id
@@ -24,13 +25,18 @@ public class UserDetail {
     @Column(name = "money")
     private Long money = 0L;
 
+    @OneToOne(targetEntity = Room.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "main_room", referencedColumnName = "id")
+    private Room mainRoom;
+
     @OneToOne(targetEntity = User.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Builder
-    public UserDetail(User user) {
+    public UserDetail(User user, Room room) {
         this.user = user;
+        this.mainRoom = room;
     }
 
     public void updateMoney(Long money, char type){

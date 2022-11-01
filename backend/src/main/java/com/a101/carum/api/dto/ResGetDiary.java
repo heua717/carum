@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -18,6 +19,6 @@ public class ResGetDiary {
     private String content;
     private LocalDateTime createDate;
     private String background;
-    private String emotionTag;
+    private List<String> emotionTag;
 
 }

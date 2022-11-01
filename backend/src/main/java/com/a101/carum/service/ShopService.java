@@ -34,7 +34,7 @@ public class ShopService {
     }
 
     @Transactional
-    public void postInventory(ReqPostInventory reqPostInventory, Long id) {
+    public void createInventory(ReqPostInventory reqPostInventory, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id,false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
