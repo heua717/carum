@@ -55,4 +55,7 @@ public class Diary {
         this.background = background;
     }
 
+    public void deleteDiary(String content) {
+        this.content = content;
+    }
 }

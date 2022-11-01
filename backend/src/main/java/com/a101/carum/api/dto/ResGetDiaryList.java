@@ -2,6 +2,7 @@ package com.a101.carum.api.dto;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -9,5 +10,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetDiaryList {
-    private List<ResGetDiary> DiaryList;
+    private List<ResGetDiary> DiaryList = new ArrayList<>();
 }
