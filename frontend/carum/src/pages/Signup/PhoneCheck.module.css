@@ -7,6 +7,23 @@
   align-items: center;
 }
 
+.privacyPolicyCheckBox {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.privacyPolicyBox {
+  max-height: 80px;
+  max-width: 90%;
+  overflow: auto;
+  padding: 8px 0;
+}
+
+.privacyPolicyText {
+  font-size: 14px;
+}
+
 .phoneNumberInput {
   width: 90%;
   height: 40px;

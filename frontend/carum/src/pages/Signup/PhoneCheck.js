@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { phoneCertificate } from "apis/user";
 import { TextField } from "@mui/material";
 import styles from "./PhoneCheck.module.css";
+import { Checkbox } from "@mui/material";
 
 function PhoneCheck({
   open,
@@ -17,6 +18,8 @@ function PhoneCheck({
   const [checkTime, setCheckTime] = useState(180);
   const [codeInput, setCodeInput] = useState("");
   const [codeError, setCodeError] = useState(false);
+  const [isPrivacyPolicyAgreed, setIsPrivacyPolicyAgreed] = useState(null);
+  const [isPrivacyPolicyShowing, setIsPrivacyPolicyShowing] = useState(false);
 
   const handleChange = (event) => {
     setPhoneNumber(event.target.value);
@@ -52,7 +55,7 @@ function PhoneCheck({
 
   // 폰 인증 확인
   const phoneCheck = () => {
-    if (checkCode && checkCode === codeInput) {
+    if (checkCode && checkCode === codeInput && isPrivacyPolicyAgreed) {
       setIsPhoneChecked(true);
       setCheckTime(180);
       setCheckCode(null);
@@ -66,6 +69,39 @@ function PhoneCheck({
     <Dialog open={open}>
       <div className={styles.dialog}>
         <DialogTitle>문자(SMS)로 인증</DialogTitle>
+        <div className={styles.privacyPolicyCheckBox}>
+          <Checkbox
+            onChange={(e) => setIsPrivacyPolicyAgreed(e.target.checked)}
+          />
+          <p
+            onClick={() => setIsPrivacyPolicyShowing(!isPrivacyPolicyShowing)}
+            className={styles.privacyPolicyText}
+          >
+            개인정보 수집 및 이용 동의(필수)
+          </p>
+        </div>
+        {isPrivacyPolicyShowing ? (
+          <div className={styles.privacyPolicyBox}>
+            <p className={styles.privacyPolicyText}>
+              회원 가입을 위해서 아래와 같이 개인 정보를 수집 및 이용합니다.
+            </p>
+            <br />
+            <p className={styles.privacyPolicyText}>
+              1. 개인정보 수집 목적: 회원 관리
+            </p>
+            <p className={styles.privacyPolicyText}>
+              2. 개인정보 수집 항목: 생년월일, 전화번호
+            </p>
+            <p className={styles.privacyPolicyText}>
+              3. 보유 및 이용기간: 회원 탈퇴시까지
+            </p>
+            <br />
+            <p className={styles.privacyPolicyText}>
+              * 개인정보 수집 및 이용에 동의하지 않을 권리가 있으며, 동의를
+              거부할 경우에는 회원가입이 불가합니다.
+            </p>
+          </div>
+        ) : null}
         <p className={styles.helpText}>
           문자를 받지 못했다면 재인증을 눌러주세요.
         </p>
