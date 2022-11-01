@@ -10,5 +10,5 @@ import lombok.*;
 public class ResGetInterior {
     Long interiorId, furnitureId;
     String resource;
-    Float x,y,z,xRot,yRot,zRot;
+    Float x,y,z,rotX,rotY,rotZ;
 }
