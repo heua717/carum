@@ -1,9 +1,6 @@
 package com.a101.carum.api.controller;
 
-import com.a101.carum.api.dto.ReqGetRoomList;
-import com.a101.carum.api.dto.ReqPatchRoom;
-import com.a101.carum.api.dto.ReqPostRoom;
-import com.a101.carum.api.dto.ReqPutRoom;
+import com.a101.carum.api.dto.*;
 import com.a101.carum.service.JwtService;
 import com.a101.carum.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +55,18 @@ public class RoomController {
         Long id = jwtService.getUserId(request);
         roomService.deleteInterior(id, roomId);
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("{roomId}/playlist")
+    public ResponseEntity updatePlaylist(@PathVariable Long roomId, @RequestBody ReqPutPlaylist reqPutPlaylist, HttpServletRequest request){
+        Long id = jwtService.getUserId(request);
+        roomService.updatePlaylist(reqPutPlaylist, id, roomId);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("{roomId}/playlist")
+    public ResponseEntity readPlaylist(@PathVariable Long roomId, HttpServletRequest request){
+        Long id = jwtService.getUserId(request);
+        return ResponseEntity.ok(roomService.readPlaylist(id, roomId));
     }
 }

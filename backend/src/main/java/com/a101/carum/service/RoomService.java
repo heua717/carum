@@ -4,11 +4,14 @@ import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
+import com.a101.carum.domain.music.Music;
+import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
 import com.a101.carum.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ public class RoomService {
     private final InteriorRepository interiorRepository;
     private final FurnitureRepository furnitureRepository;
     private final InventoryRepository inventoryRepository;
+    private final PlaylistRepository playlistRepository;
+    private final MusicRepository musicRepository;
 
     private final String BACKGROUND = "WHITE,BLACK";
 
@@ -182,5 +187,52 @@ public class RoomService {
 
         interiorRepository.deleteByRoom(room);
         //TODO: 기본 인테리어로 다시 설정
+    }
+
+    @Transactional
+    public void updatePlaylist(ReqPutPlaylist reqPutPlaylist, Long id, Long roomId) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Room room = roomRepository.findByIdAndUser(roomId, user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        playlistRepository.deleteByRoom(room);
+        playlistRepository.flush();
+
+        List<Long> musicList = reqPutPlaylist.getPlaylist();
+
+        for(Long musicId: musicList) {
+            Music music = musicRepository.findById(musicId)
+                    .orElseThrow(() -> new NullPointerException("Music을 찾을 수 없습니다."));
+
+            playlistRepository.save(Playlist.builder()
+                            .room(room)
+                            .music(music)
+                            .build());
+        }
+    }
+
+    public ResGetPlaylist readPlaylist(Long id, Long roomId) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Room room = roomRepository.findByIdAndUser(roomId, user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        List<Playlist> playlistList = playlistRepository.findByRoom(room, Sort.by(Sort.Direction.ASC, "id"));
+        List<ResGetMusic> musicList = new ArrayList<>();
+
+        for(Playlist playlist: playlistList){
+            Music music = playlist.getMusic();
+            musicList.add(ResGetMusic.builder()
+                            .title(music.getTitle())
+                            .artist(music.getArtist())
+                            .resource(music.getResource())
+                            .id(music.getId())
+                            .build());
+        }
+
+        return ResGetPlaylist.builder()
+                .playlist(musicList)
+                .build();
     }
 }
