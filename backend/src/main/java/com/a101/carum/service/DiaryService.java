@@ -110,8 +110,8 @@ public class DiaryService {
             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
                     LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
                             , LocalTime.of(0,0,0))
-                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay()+6)
-                            , LocalTime.of(23,59,59)),user);
+                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
+                            , LocalTime.of(23,59,59)).plusDays(6),user);
         }
 
         ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
