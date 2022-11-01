@@ -17,17 +17,18 @@ import javax.persistence.*;
 @DynamicUpdate
 @Getter
 @ToString
+@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "room_id", "music_id" }) })
 public class Playlist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 
-    @ManyToOne(targetEntity = Music.class, fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToOne(targetEntity = Music.class)
     @JoinColumn(name = "music_id", referencedColumnName = "id")
     private Music music;
 
@@ -36,4 +37,5 @@ public class Playlist {
         this.room = room;
         this.music = music;
     }
+
 }
