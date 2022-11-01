@@ -164,11 +164,11 @@ public class RoomService {
                             .furnitureId(interior.getFurniture().getId())
                             .resource(interior.getFurniture().getResource())
                             .x(interior.getX())
-                            .xRot(interior.getRotX())
+                            .rotX(interior.getRotX())
                             .y(interior.getY())
-                            .yRot(interior.getRotY())
+                            .rotY(interior.getRotY())
                             .z(interior.getZ())
-                            .zRot(interior.getRotZ())
+                            .rotZ(interior.getRotZ())
                             .build());
         }
 
