@@ -71,9 +71,14 @@ function getHeight(size) {
   }
 }
 
-function Button({ text, size, variant, onClick }) {
+function Button({ text, size, variant, onClick, disabled }) {
   return (
-    <StyledButton size={size} variant={variant} onClick={onClick}>
+    <StyledButton
+      size={size}
+      variant={variant}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {text}
     </StyledButton>
   );

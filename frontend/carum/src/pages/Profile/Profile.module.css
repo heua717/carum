@@ -31,6 +31,18 @@
   width: 300px;
 }
 
+.editRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.validButton {
+  border: 0;
+  height: 36px;
+  border-radius: 4px;
+}
+
 .editButton {
   margin: 12px 0;
   display: flex;
