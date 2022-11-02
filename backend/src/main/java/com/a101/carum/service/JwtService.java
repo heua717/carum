@@ -45,6 +45,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRE_MINUTES))
                 .claim("userId", user.getId())
+                .claim("userType", user.getUserType())
                 .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
         return jwt;
     }
@@ -104,6 +105,16 @@ public class JwtService {
             return Long.parseLong(String.valueOf(getClaims(accessToken).get("userId")));
         } catch (Exception e){
             throw new UnAuthorizedException("잘못된 토큰입니다.");
+        }
+    }
+
+    public String getUserType(HttpServletRequest request){
+        try {
+            String type = (String) getClaims(getJwtToken(request)).get("userType");
+            return type;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new UnAuthorizedException("권한 없음");
         }
     }
 
