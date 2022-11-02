@@ -14,7 +14,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -27,11 +31,22 @@ public class DiaryService {
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
-        Diary diary = Diary.builder()
+        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user);
+        if(diary!=null){
+            throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
+        }
+        StringBuilder sb = new StringBuilder();
+        if(reqPostDiary.getEmotionTag().size()!=0){
+            for (String a: reqPostDiary.getEmotionTag()) {
+                System.out.println(a);
+                sb.append(a).append(",");
+            }
+        }
+        diary = Diary.builder()
                 .content(reqPostDiary.getContent())
                 .user(user)
                 .background(reqPostDiary.getBackground())
-                .emotionTag(reqPostDiary.getEmotionTag())
+                .emotionTag(sb.toString())
                 .createDate(LocalDateTime.now())
                 .build();
         diaryRepository.save(diary);
@@ -46,7 +61,14 @@ public class DiaryService {
         } else if(diary.getCreateDate().getDayOfMonth() != LocalDateTime.now().getDayOfMonth()){
             throw new UnAuthorizedException("일기는 당일 수정만 가능합니다.");
         }
-        diary.updateDiary(reqPostDiary.getContent(), reqPostDiary.getEmotionTag(), reqPostDiary.getBackground());
+        StringBuilder sb = new StringBuilder();
+        if(reqPostDiary.getEmotionTag().size()!=0){
+            for (String a: reqPostDiary.getEmotionTag()) {
+                System.out.println(a);
+                sb.append(a).append(",");
+            }
+        }
+        diary.updateDiary(reqPostDiary.getContent(), sb.toString() , reqPostDiary.getBackground());
         diaryRepository.save(diary);
 
 
@@ -56,37 +78,72 @@ public class DiaryService {
     public ResGetDiary getDiary(Long diaryId, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다."));
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
-        System.out.println(user.getNickName());
-        System.out.println(diary.getUser().getNickName());
         if(!user.equals(diary.getUser())) {
             throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
+        }
+        List<String> emotionTag = new ArrayList<>();
+        String[] emotionList = diary.getEmotionTag().split(",");
+        for (String emotion: emotionList) {
+            emotionTag.add(emotion);
         }
         return ResGetDiary.builder()
                 .content(diary.getContent())
                 .createDate(diary.getCreateDate())
                 .background(diary.getBackground())
-                .emotionTag(diary.getEmotionTag())
+                .emotionTag(emotionTag)
                 .build();
     }
 
 
+    @Transactional
     public ResGetDiaryList getDiaryList(ReqGetDiaryList reqGetDiaryList, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-
-        List<Diary> diaryList = diaryRepository.findAllByUser(user);
-        ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
-        for (Diary diarys : diaryList) {
-            if(diarys.getCreateDate().getYear()==reqGetDiaryList.getYear() && diarys.getCreateDate().getMonthValue() == reqGetDiaryList.getMonth()){
-                resGetDiaryList.getDiaryList().add(ResGetDiary.builder()
-                                .id(diarys.getId())
-                                .createDate(diarys.getCreateDate())
-                                .content(diarys.getContent())
-                                .emotionTag(diarys.getEmotionTag())
-                                .background(diarys.getBackground())
-                                .build());
-            }
-
+        List<Diary> diaryList;
+        // request Day 값이 0이면 월간조회
+        if(reqGetDiaryList.getDay()==0){
+             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
+                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),1)
+                            , LocalTime.of(0,0,0))
+                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),Calendar.getInstance().getMaximum(reqGetDiaryList.getMonth()))
+                            , LocalTime.of(23,59,59)),user);
+        } else { // Day의 값이 0보다 크면 day로부터 7일간 조회
+            diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
+                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
+                            , LocalTime.of(0,0,0))
+                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
+                            , LocalTime.of(23,59,59)).plusDays(6),user);
         }
-        return null;
+
+        ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
+        for(Diary diarys : diaryList) {
+            List<String> emotionList = new ArrayList<>();
+            for(String emotion : diarys.getEmotionTag().split(",")){
+                emotionList.add(emotion);
+            }
+            resGetDiaryList.getDiaryList().add(
+                   ResGetDiary.builder()
+                           .id(diarys.getId())
+                           .content(diarys.getContent())
+                           .createDate(diarys.getCreateDate())
+                           .background(diarys.getBackground())
+                           .emotionTag(emotionList)
+                           .build()
+            );
+        }
+
+        return resGetDiaryList;
+    }
+
+    @Transactional
+    public void deleteDiary(Long diaryId, Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
+        if(!diary.getUser().equals(user)) {
+            throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
+        }
+        diary.deleteDiary("");
+        diaryRepository.save(diary);
+
+
     }
 }
