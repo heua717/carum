@@ -101,4 +101,30 @@ function changeWeeklyDate(targetDay, state, num) {
   return `${year}-${month}-${day}`;
 }
 
-export { useInterval, calWeeklyStartDate, changeWeeklyDate };
+const furnitureCategory = [
+  { name: "바닥, 배경, 벽", type: "BACKGROUND" },
+  { name: "침대, 이불", type: "BED" },
+  { name: "매트리스", type: "MATTRESS" },
+  { name: "소파", type: "SOFA" },
+  { name: "테이블", type: "TABLE" },
+  { name: "장", type: "DRAWER" },
+  { name: "선반", type: "SHELF" },
+  { name: "행거,옷장", type: "CLOSET" },
+  { name: "의자", type: "CHAIR" },
+  { name: "거울", type: "MIRROR" },
+  { name: "전자기기", type: "ELECTRIC" },
+  { name: "음식", type: "FOOD" },
+  { name: "식물", type: "PLANT" },
+  { name: "운동", type: "GYM_PROP" },
+  { name: "외부", type: "OUTSIDE_PROP" },
+  { name: "부엌", type: "KITCHEN_PROP" },
+  { name: "침실", type: "BEDROOM_PROP" },
+  { name: "화장실", type: "BATHROOM_PROP" },
+  { name: "빨래", type: "LAUNDRY_PROP" },
+  { name: "놀이", type: "PLAY_PROP" },
+  { name: "장식", type: "DECO_PROP" },
+  { name: "생활", type: "LIFE_PROP" },
+  { name: "기타", type: "ETC" },
+];
+
+export { useInterval, calWeeklyStartDate, changeWeeklyDate, furnitureCategory };

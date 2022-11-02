@@ -1,6 +1,6 @@
 import styles from "./Shop.module.css";
 import TopNav from "components/TopNav";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "components/Button";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
@@ -11,43 +11,49 @@ import DialogTitle from "@mui/material/DialogTitle";
 import CloseIcon from "@material-ui/icons/Close";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import { furnitureCategory } from "utils/utils";
+import { fetchShopItem, purchaseFurniture } from "apis/furniture";
 
 function Shop() {
   const [place, setPlace] = useState("shop");
   const [isOpened, setIsOpened] = useState(false);
-  const [category, setCategory] = useState("");
+  const [categoryIndex, setCategoryIndex] = useState(0);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
+  const [money, setMoney] = useState(0);
   const [currentFurnitureIndex, setCurrentFurnitureIndex] = useState(0);
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpened = Boolean(anchorEl);
   const [searchText, setSearchText] = useState("");
-  const [furnitureList, setFurnitureList] = useState([
-    {
-      funitureId: 2,
-      name: "엄청 편안한 의자",
-      price: 6,
-      have: false,
-    },
-    {
-      funitureId: 1,
-      name: "플레이스테이션",
-      price: 7,
-      have: true,
-    },
-    {
-      funitureId: 1,
-      name: "미끄럼틀",
-      price: 100,
-      have: true,
-    },
-    {
-      funitureId: 1,
-      name: "겁나 푹신한 쿠션",
-      price: 9,
-      have: false,
-    },
-  ]);
+  const [furnitureList, setFurnitureList] = useState([]);
+
+  // 처음 가구 불러오기
+  const fetchShopItemSuccess = (res) => {
+    console.log(res.data);
+    setFurnitureList(res.data.furnitureList);
+    setMoney(res.data.money);
+
+    let tmpTotalPage = parseInt(res.data.furnitureCount / 4);
+    if (res.data.furnitureCount % 4) {
+      tmpTotalPage += 1;
+    }
+    setTotalPage(tmpTotalPage);
+  };
+
+  const fetchShopItemFail = (err) => {
+    console.log(err);
+  };
+
+  //페이지 이동 시, 카테고리 변경 시 가구 검색
+  useEffect(() => {
+    const payload = {
+      keyword: null,
+      type: furnitureCategory[categoryIndex].type,
+      page: page - 1,
+      size: 4,
+    };
+    fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+  }, [page, categoryIndex]);
 
   // 가구점, 내 가구 이동
   const movePlace = () => {
@@ -71,13 +77,37 @@ function Shop() {
     setIsOpened(false);
   };
 
+  // 카테고리 메뉴 열고 닫기
   const handleMenuClick = (event, menu) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMenuClose = (menu) => {
+  const handleMenuClose = (index) => {
     setAnchorEl(null);
-    setCategory(menu);
+    setCategoryIndex(index);
+    setPage(1);
+  };
+
+  // 페이지 이동
+  const handlePageChange = (e, p) => {
+    setPage(p);
+  };
+
+  // 가구 구매
+  const purchaseFurnitureSuccess = (res) => {
+    console.log(res);
+  };
+
+  const purchaseFurnitureFail = (err) => {
+    console.log(err);
+  };
+
+  const handlePurchaseFurniture = (furnitureId) => {
+    purchaseFurniture(
+      furnitureId,
+      purchaseFurnitureSuccess,
+      purchaseFurnitureFail
+    );
   };
 
   return (
@@ -100,8 +130,15 @@ function Shop() {
           open={isMenuOpened}
           onClose={handleMenuClose}
           MenuListProps={{ "aria-labelledby": "menu-btn" }}
+          sx={{ maxHeight: "200px" }}
         >
-          <MenuItem onClick={() => handleMenuClose("의자")}>의자</MenuItem>
+          {furnitureCategory.map((el, idx) => {
+            return (
+              <MenuItem onClick={() => handleMenuClose(idx)} key={idx}>
+                {el.name}
+              </MenuItem>
+            );
+          })}
         </Menu>
         <input
           className={styles.inputBox}
@@ -111,59 +148,73 @@ function Shop() {
         <SearchIcon />
       </div>
       <div className={styles.contentBox}>
-        <p className={styles.categoryName}>{category}</p>
+        <p className={styles.categoryName}>
+          {furnitureCategory[categoryIndex].name}
+        </p>
         <div className={styles.furnitureRow}>
-          <FurnitureComponent
-            name={furnitureList[0].name}
-            have={furnitureList[0].have}
-            place={place}
-            point={furnitureList[0].price}
-            onClick={() => handleOpen(0)}
-          />
-          <FurnitureComponent
-            name={furnitureList[1].name}
-            have={furnitureList[1].have}
-            place={place}
-            point={furnitureList[1].price}
-            onClick={() => handleOpen(1)}
-          />
+          {furnitureList?.map((el, idx) => {
+            if (idx < 2) {
+              return (
+                <FurnitureComponent
+                  name={el.name}
+                  have={el.have}
+                  place={place}
+                  point={el.price}
+                  onClick={() => handleOpen(idx)}
+                  key={idx}
+                />
+              );
+            }
+          })}
         </div>
         <div className={styles.furnitureRow}>
-          <FurnitureComponent
-            name={furnitureList[2].name}
-            have={furnitureList[2].have}
-            place={place}
-            point={furnitureList[2].price}
-            onClick={() => handleOpen(2)}
-          />
-          <FurnitureComponent
-            name={furnitureList[3].name}
-            have={furnitureList[3].have}
-            place={place}
-            point={furnitureList[3].price}
-            onClick={() => handleOpen(3)}
-          />
+          {furnitureList?.map((el, idx) => {
+            if (idx > 1) {
+              return (
+                <FurnitureComponent
+                  name={el.name}
+                  have={el.have}
+                  place={place}
+                  point={el.price}
+                  onClick={() => handleOpen(idx)}
+                  key={idx}
+                />
+              );
+            }
+          })}
         </div>
         <Pagination
           size="small"
           count={totalPage}
           className={styles.pagination}
+          onChange={handlePageChange}
+          defaultPage={1}
+          page={page}
         />
       </div>
       {/* 가구 dialog */}
       <Dialog className={styles.dialog} open={isOpened} onClose={handleClose}>
         <div className={styles.dialog}>
           <CloseIcon onClick={handleClose} className={styles.closeBtn} />
-          <DialogTitle>{furnitureList[currentFurnitureIndex].name}</DialogTitle>
+          <DialogTitle>
+            {furnitureList[currentFurnitureIndex]?.name}
+          </DialogTitle>
           <div className={styles.furniture}>가구</div>
           <p className={styles.detailPriceTag}>
-            {furnitureList[currentFurnitureIndex].price}
+            {furnitureList[currentFurnitureIndex]?.price}
           </p>
           <div className={styles.myPointBox}>
             <p className={styles.myPointText}>내 포인트</p>
-            <p className={styles.myPointText}> point</p>
+            <p className={styles.myPointText}>{money} point</p>
           </div>
-          <Button text="구매" variant="light" size="small" />
+          <Button
+            text="구매"
+            variant="light"
+            size="small"
+            onClick={() =>
+              handlePurchaseFurniture(furnitureList[currentFurnitureIndex]?.id)
+            }
+          />
         </div>
       </Dialog>
     </div>
