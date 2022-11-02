@@ -31,7 +31,7 @@ function DayComponent({ emotion, date, id, onClick }) {
             }
             alt="emotion"
             className={styles.emotionImage}
-            key={id}
+            key={e}
           />
         ))}
       </div>

@@ -16,15 +16,15 @@ import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { writeDiary } from "apis/diary";
+import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-function DiaryWrite() {
+function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const [values, setValues] = useState({
     isSelecting: false,
     selectedEmotion: "angry",
-    selectedEmotionList: [],
+    selectedEmotionList: diary ? diary.emotionTag : [],
   });
 
   // 감정 이모티콘 클릭 시
@@ -72,6 +72,17 @@ function DiaryWrite() {
     console.log(err);
   };
 
+  // 다이어리 수정
+  const editDiarySuccess = (res) => {
+    console.log(res);
+    setDiary(null);
+    setCurState("read");
+  };
+
+  const editDiaryFail = (err) => {
+    console.log(err);
+  };
+
   const handleWriteDiary = () => {
     // 감정 하나도 선택하지 않았을 때
     if (values.selectedEmotionList.length === 0) {
@@ -84,12 +95,17 @@ function DiaryWrite() {
       });
     } else {
       const payload = {
+        diaryId: diaryId ? diaryId : null,
         content: editorRef.current?.getInstance().getHTML(),
         emotionTag: values.selectedEmotionList,
         background: "purple",
       };
 
-      writeDiary(payload, writeDiarySuccess, writeDiaryFail);
+      if (state === "edit") {
+        editDiary(payload, editDiarySuccess, editDiaryFail);
+      } else {
+        writeDiary(payload, writeDiarySuccess, writeDiaryFail);
+      }
     }
   };
 
@@ -124,7 +140,7 @@ function DiaryWrite() {
         <div className={styles.editor}>
           <Editor
             ref={editorRef}
-            initialValue=" "
+            initialValue={diary ? diary.content : " "}
             initialEditType="wysiwyg"
             previewStyle="vertical"
             height="260px"
