@@ -49,16 +49,19 @@ public class TemplateConversionService {
     private final FurnitureRepository furnitureRepository;
 
     @Transactional
-    public void creatNewRoom(User user, ReqPostRoom reqPostRoom){
+    public void createNewRoom(User user, ReqPostRoom reqPostRoom){
         templateToRoom(user, TEMPLATE_BASE, reqPostRoom);
+    }
+
+    @Transactional
+    public void initializeRoom(Room room){
+        initializeRoom(room, TEMPLATE_BASE);
     }
 
     @Transactional
     public void templateToRoom(User user, Long templateId, ReqPostRoom reqPostRoom){
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-        List<InteriorTemplate> interiorTemplateList = interiorTemplateRepository.findByRoomTemplate(roomTemplate);
-        List<PlaylistTemplate> playlistTemplateList = playlistTemplateRepository.findByRoomTemplate(roomTemplate,Sort.by(Sort.Direction.ASC, "id"));
 
         Room room = roomRepository.save(Room.builder()
                         .user(user)
@@ -67,24 +70,42 @@ public class TemplateConversionService {
                         .emotionTag(roomTemplate.getEmotionTag())
                         .build());
 
+        templateToRoomDetail(room, roomTemplate);
+    }
+
+    @Transactional
+    public void initializeRoom(Room room, Long templateId){
+        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
+                .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
+
+        room.updateBackground(roomTemplate.getBackground());
+        room.updateEmotionTag(room.getEmotionTag());
+
+        templateToRoomDetail(room, roomTemplate);
+    }
+
+    @Transactional public void templateToRoomDetail(Room room, RoomTemplate roomTemplate){
+        List<InteriorTemplate> interiorTemplateList = interiorTemplateRepository.findByRoomTemplate(roomTemplate);
+        List<PlaylistTemplate> playlistTemplateList = playlistTemplateRepository.findByRoomTemplate(roomTemplate,Sort.by(Sort.Direction.ASC, "id"));
+
         for(InteriorTemplate template: interiorTemplateList){
             interiorRepository.save(Interior.builder()
-                            .room(room)
-                            .furniture(template.getFurniture())
-                            .x(template.getX())
-                            .y(template.getY())
-                            .z(template.getZ())
-                            .rotX(template.getRotX())
-                            .rotY(template.getRotY())
-                            .rotZ(template.getRotZ())
-                            .build());
+                    .room(room)
+                    .furniture(template.getFurniture())
+                    .x(template.getX())
+                    .y(template.getY())
+                    .z(template.getZ())
+                    .rotX(template.getRotX())
+                    .rotY(template.getRotY())
+                    .rotZ(template.getRotZ())
+                    .build());
         }
 
         for(PlaylistTemplate template: playlistTemplateList){
             playlistRepository.save(Playlist.builder()
-                            .room(room)
-                            .music(template.getMusic())
-                            .build());
+                    .room(room)
+                    .music(template.getMusic())
+                    .build());
         }
     }
 }

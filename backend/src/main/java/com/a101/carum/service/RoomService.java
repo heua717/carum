@@ -33,14 +33,12 @@ public class RoomService {
     private final MusicRepository musicRepository;
     private final TemplateConversionService templateConversionService;
 
-    private final String BACKGROUND = "WHITE,BLACK";
-
     @Transactional
     public void createRoom(ReqPostRoom reqPostRoom, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
-        templateConversionService.creatNewRoom(user, reqPostRoom);
+        templateConversionService.createNewRoom(user, reqPostRoom);
     }
 
     @Transactional
@@ -62,8 +60,7 @@ public class RoomService {
             }
             room.updateEmotionTag(sb.toString());
         }
-        
-        //TODO: Background 처리
+
     }
 
     @Transactional
@@ -178,7 +175,9 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
 
         interiorRepository.deleteByRoom(room);
-        //TODO: 기본 인테리어로 다시 설정
+        playlistRepository.deleteByRoom(room);
+
+        templateConversionService.initializeRoom(room);
     }
 
     @Transactional
