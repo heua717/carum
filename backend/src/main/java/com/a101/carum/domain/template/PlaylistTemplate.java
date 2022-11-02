@@ -24,7 +24,7 @@ public class PlaylistTemplate {
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = RoomTemplate.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id", referencedColumnName = "id")
     private RoomTemplate roomTemplate;
 

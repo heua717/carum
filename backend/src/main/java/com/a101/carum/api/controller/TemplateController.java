@@ -23,7 +23,7 @@ public class TemplateController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("{roomIdtemplateId}")
+    @PatchMapping("{templateId}")
     public ResponseEntity updateTemplate(@PathVariable Long templateId, @RequestBody ReqPatchRoom reqPatchRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
         templateService.updateTemplate(reqPatchRoom, id, templateId);
