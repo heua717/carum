@@ -62,7 +62,7 @@ pc의 경우 마우스, 키보드 사용 가능
     - [x]  선택오브젝트 테두리
 - [x]  inspector에 public 변수들 구분지어놓기
 - [x]  정리되면 주석달기
-- [ ]  프리뷰 처음 접근 시 null exception 간헐적으로 발생하는 버그
+- [x]  프리뷰 처음 접근 시 null exception 간헐적으로 발생하는 버그
 - [ ]  2점 터치 인식해서 기능 작동시키기
 - [x]  레이캐스트 기능 개선
     - [x]  땅에 박히지 않게
@@ -73,14 +73,56 @@ pc의 경우 마우스, 키보드 사용 가능
     - [x]  요청받은걸로 inventory 세팅하기
     - [x]  Inventory 기능 분리
     - [x]  프리뷰 문제 발생
-- [ ]  가구배치정보 저장 및 불러오기(API먼저 나와야함)
-    - [ ]  가구 배치 정보 요청
-    - [ ]  관리대상으로 추적하기
-    - [ ]  가구 추가할 때 관리대상에 추가
-    - [ ]  JSON 형태로 저장하기
-    - [ ]  가구배치 불러오기
+- [x]  가구배치정보 저장 및 불러오기(API먼저 나와야함)
+    - [x]  가구 배치 정보 요청
+    - [x]  관리대상으로 추적하기
+    - [x]  가구 추가할 때 관리대상에 추가
+    - [x]  JSON 형태로 저장하기
+    - [x]  가구배치 불러오기
+    - [x]  삭제
 - [ ]  폰트 문제 해결
 - [ ]  에셋 엑셀파일대로 정리
 - [ ]  프론트에 이식해서 엑세스 토큰 요청
 - [ ]  전체화면 버튼 및 화면스케일
+- [ ]  A Native Collection has not been disposed, resulting in a memory leak. Enable Full StackTraces to get more details. → 메모리 누수되니까 쓰지 말라는거 바꾸기
 - [x]  한번 백업하기
+- [ ]  방 바닥 늘리기
+    - [ ]  회의
+- [ ]  가구 카테고리화
+- [ ]  유니티 초기 로딩
+    - [ ]  프론트에서 토큰 가져오기
+        - [x]  씬 로드 이후 프론트에 토큰 달라고 요청 보냄
+            - [x]  sendTokenToUnity
+        - [ ]  프론트에서 요청받으면 유니티로 토큰 보냄
+            - [ ]  토큰, 유저정보 json으로 만들기
+        - [ ]  유니티에서 토큰 설정
+    - [ ]  대표 방 정보 요청
+        - [ ]  대표 방으로 방 꾸미기
+    - [ ]  CORS 체크
+        - [ ]  배포 서버로 요청 보내보기(배포서버에 상점 가구가 없음)
+- [ ]  가구 아이콘 제작해야함…
+- [x]  Addressable 웹에서 안불러와짐
+    - [x]  [https://gist.github.com/MeowKim/904087f7c2b372a5df72a0925add85d6#create-group](https://gist.github.com/MeowKim/904087f7c2b372a5df72a0925add85d6#create-group)
+    - [x]  [https://young-94.tistory.com/47](https://young-94.tistory.com/47)
+    - [x]  [https://seonbicode.tistory.com/52](https://seonbicode.tistory.com/52)
+    - [x]  [https://medium.com/pinkfong/unity-addressable-asset-를-왜-3017f3fa2edc](https://medium.com/pinkfong/unity-addressable-asset-%EB%A5%BC-%EC%99%9C-3017f3fa2edc)
+    - [x]  프리팹 뿐만 아니라 필요한 모든 요소도 함께 addressable로 추가
+    - [x]  이름 수정
+    - [x]  그룹 지정
+    - [x]  싱글톤으로부터 로드하는 식으로 변경
+    - [x]  안되면 Resources되는거야
+
+### 빌드 시간이 너무 오래걸림
+
+빌드 체크리스트
+
+- [x]  메서드 이름 바꾼거 잘 동작하는지(되긴하는데 바꿔야함)
+- [x]  토큰 주고받아지는지(안됨)
+- [x]  메서드 구조 변경
+- [x]  버튼눌러서 토큰 요청하기
+- [ ]  나중에 ReactCall3 만들어서 메서드이름+변수 되는지 확인
+
+빌드 결과
+
+- [x]  유니티 로드 안됐다면서 메서드 호출 안됨
+- [ ]  웹에서 클릭하는게 터치로인식해서 그런지 가구선택 취소됨(마우스 오버인거 적용 안되는듯)
