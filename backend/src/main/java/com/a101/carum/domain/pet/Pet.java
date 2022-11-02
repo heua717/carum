@@ -31,18 +31,20 @@ public class Pet {
     private User user;
 
     @Column(name = "year")
-    private Long year;
+    private Integer year;
 
     @Column(name = "month")
-    private Long month;
+    private Integer month;
 
     @Column(name = "appearance")
     private Integer appearance;
 
     @Column(name = "face")
+    @Enumerated(EnumType.STRING)
     private FaceType face;
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PetType type;
 
 }
