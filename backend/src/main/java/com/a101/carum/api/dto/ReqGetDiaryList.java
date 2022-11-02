@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ReqGetDiaryList {
 
-    private int Year;
-    private int Month;
+    private int year;
+    private int month;
     private int day;
 
 }
