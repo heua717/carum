@@ -39,6 +39,7 @@ public class RoomService {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
+        //TODO: Default Room 정보 가져오기
         Room room = Room.builder()
                 .name(reqPostRoom.getName())
                 .user(user)
@@ -212,6 +213,7 @@ public class RoomService {
         }
     }
 
+    @Transactional
     public ResGetPlaylist readPlaylist(Long id, Long roomId) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
