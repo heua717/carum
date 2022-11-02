@@ -1,6 +1,5 @@
-package com.a101.carum.domain.template;
+package com.a101.carum.domain.room;
 
-import com.a101.carum.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

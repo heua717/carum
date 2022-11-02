@@ -31,6 +31,7 @@ public class RoomService {
     private final InventoryRepository inventoryRepository;
     private final PlaylistRepository playlistRepository;
     private final MusicRepository musicRepository;
+    private final TemplateConversionService templateConversionService;
 
     private final String BACKGROUND = "WHITE,BLACK";
 
@@ -39,17 +40,7 @@ public class RoomService {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
-        //TODO: Default Room 정보 가져오기
-        Room room = Room.builder()
-                .name(reqPostRoom.getName())
-                .user(user)
-                .background(BACKGROUND)
-                .emotionTag("")
-                .build();
-
-        roomRepository.save(room);
-        
-        //TODO: 기본 가구 배치
+        templateConversionService.creatNewRoom(user, reqPostRoom);
     }
 
     @Transactional

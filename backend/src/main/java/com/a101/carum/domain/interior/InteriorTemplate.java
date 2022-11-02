@@ -1,7 +1,7 @@
-package com.a101.carum.domain.template;
+package com.a101.carum.domain.interior;
 
 import com.a101.carum.domain.furniture.Furniture;
-import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomTemplate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

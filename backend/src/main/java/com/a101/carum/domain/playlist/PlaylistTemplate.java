@@ -1,7 +1,7 @@
-package com.a101.carum.domain.template;
+package com.a101.carum.domain.playlist;
 
 import com.a101.carum.domain.music.Music;
-import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomTemplate;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
