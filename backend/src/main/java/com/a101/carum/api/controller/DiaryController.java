@@ -41,7 +41,7 @@ public class DiaryController {
         return ResponseEntity.ok(diaryService.getDiary(diaryId, userId));
     }
     @GetMapping("")
-    public ResponseEntity getDiaryList(@RequestBody ReqGetDiaryList reqGetDiaryList, HttpServletRequest request) {
+    public ResponseEntity getDiaryList(@ModelAttribute ReqGetDiaryList reqGetDiaryList, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
 
         return ResponseEntity.ok(diaryService.getDiaryList(reqGetDiaryList, userId));
