@@ -1,7 +1,7 @@
 import styles from "./YearlyPet.module.css";
 import TopNav from "components/TopNav";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import MonthlyPetButton from "./MonthlyPetButton";
 import { useState } from "react";
 
@@ -13,9 +13,9 @@ function YearlyPet() {
       <TopNav text="펫 조회" />
       <div className={styles.contentContainer}>
         <div className={styles.navigationBar}>
-          <ArrowBackIosIcon onClick={() => setYear(year - 1)} />
+          <KeyboardArrowLeftIcon onClick={() => setYear(year - 1)} />
           <p>{year}</p>
-          <ArrowForwardIosIcon onClick={() => setYear(year + 1)} />
+          <KeyboardArrowRightIcon onClick={() => setYear(year + 1)} />
         </div>
         <div>
           <div className={styles.row}>

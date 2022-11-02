@@ -1,6 +1,6 @@
 import "./Calendar.css";
 import Calendar from "react-calendar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import moment from "moment";
 import styles from "./CalendarDiary.module.css";
 import TopNav from "../../../components/TopNav";
@@ -13,26 +13,89 @@ import surpriseImg from "../../../assets/surprise.svg";
 import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
+import { fetchCalendar } from "apis/diary";
+import { calWeeklyStartDate } from "utils/utils";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
   const [isMonthly, setIsMonthly] = useState(true);
   const [changingEmotionIdx, setChangingEmotionIdx] = useState(0);
-  const diary = [
-    { emotion: ["angry", "sad"], createAt: "2022-10-01" },
-    { emotion: ["happy"], createAt: "2022-10-04" },
-    { emotion: ["peace"], createAt: "2022-10-07" },
-    { emotion: ["worry", "surprise"], createAt: "2022-10-10" },
-    { emotion: ["peace"], createAt: "2022-10-22" },
-    { emotion: ["peace"], createAt: "2022-10-26" },
-    { emotion: ["peace"], createAt: "2022-10-27" },
-  ];
+  const [diary, setDiary] = useState([]);
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
+  const [weeklyStartDate, setWeeklyStartDate] = useState("");
 
+  // router navigate
   const navigate = useNavigate();
 
+  // 달력 조회
+  const fetchCalendarSuccess = (res) => {
+    console.log(res);
+    setDiary(res.data.diaryList);
+  };
+
+  const fetchCalendarFail = (err) => {
+    console.log(err);
+  };
+
+  // 조회
+  useEffect(() => {
+    // 주간 시작 날짜 계산
+    setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
+
+    // 월간
+    const payload = {
+      year: parseInt(moment(activeStartDate).format("YYYY")),
+      month: parseInt(moment(activeStartDate).format("M")),
+      day: 0,
+    };
+
+    fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+  }, [activeStartDate]);
+
+  useEffect(() => {
+    // 주간 조회
+    if (!isMonthly) {
+      const payload = {
+        year: parseInt(moment(activeStartDate).format("YYYY")),
+        month: parseInt(moment(activeStartDate).format("M")),
+        day: parseInt(weeklyStartDate.split("-")[2]),
+      };
+
+      fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+    }
+  }, [weeklyStartDate]);
+
+  // 달력 일 클릭 시
   const onChange = (e) => {
+    const idx = diary.findIndex((el) => {
+      return (
+        moment(e).format("YYYY-MM-DD") ===
+        moment(el.createAt).format("YYYY-MM-DD")
+      );
+    });
+
+    if (idx !== -1) {
+      navigate(`/main/diary/${diary[idx].id}`);
+    }
     setValue(e);
-    navigate("/main/diary");
+    console.log(e);
+  };
+
+  // 달력 월 클릭 시
+  const onClickMonth = (e) => {
+    setActiveStartDate(e);
+  };
+
+  // 달력 navigation 화살표 버튼 클릭 시
+  const onActiveStartDateChange = ({ action, activeStartDate }) => {
+    if (
+      action === "prev" ||
+      action === "prev2" ||
+      action === "next" ||
+      action === "next2"
+    ) {
+      setActiveStartDate(activeStartDate);
+    }
   };
 
   const emotionIdx = 0;
@@ -65,6 +128,13 @@ function CalendarDiary() {
     }
   }, 1500);
 
+  const handleToggleButton = () => {
+    if (isMonthly) {
+      setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
+    }
+    setIsMonthly(!isMonthly);
+  };
+
   return (
     <div>
       <TopNav
@@ -74,7 +144,7 @@ function CalendarDiary() {
             text={isMonthly ? "주간" : "월간"}
             size="extraSmall"
             variant="primary"
-            onClick={() => setIsMonthly(!isMonthly)}
+            onClick={handleToggleButton}
           />
         }
       />
@@ -83,21 +153,23 @@ function CalendarDiary() {
           <div>
             <Calendar
               onChange={onChange}
+              activeStartDate={activeStartDate}
               value={value}
               // 달력에 기분 이모티콘 넣기
               formatDay={(locale, date) => {
                 const idx = diary.findIndex((el) => {
                   return (
-                    moment(date).format("YYYY-MM-DD") === String(el.createAt)
+                    moment(date).format("YYYY-MM-DD") ===
+                    moment(el.createAt).format("YYYY-MM-DD")
                   );
                 });
 
                 if (idx !== -1) {
-                  let emotionName = diary[idx]?.emotion[emotionIdx];
+                  let emotionName = diary[idx]?.emotionTag[emotionIdx];
 
                   // 감정이 두개면 1.5초마다 번갈아서 보여줌
-                  if (diary[idx].emotion.length === 2) {
-                    emotionName = diary[idx]?.emotion[changingEmotionIdx];
+                  if (diary[idx].emotionTag.length === 2) {
+                    emotionName = diary[idx]?.emotionTag[changingEmotionIdx];
                   }
 
                   return (
@@ -127,6 +199,8 @@ function CalendarDiary() {
               }}
               calendarType="US"
               maxDate={new Date()}
+              onClickMonth={onClickMonth}
+              onActiveStartDateChange={onActiveStartDateChange}
             />
             {/* 월별 감정 수치 */}
             <div className={styles.thisMonthEmotionBox}>
@@ -184,7 +258,11 @@ function CalendarDiary() {
             </div>
           </div>
         ) : (
-          <WeeklyDiary diaryList={diary} />
+          <WeeklyDiary
+            diaryList={diary}
+            weeklyStartDate={weeklyStartDate}
+            setActiveStartDate={setActiveStartDate}
+          />
         )}
       </div>
     </div>
