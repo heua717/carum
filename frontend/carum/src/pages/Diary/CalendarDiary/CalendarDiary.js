@@ -1,6 +1,6 @@
 import "./Calendar.css";
 import Calendar from "react-calendar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import moment from "moment";
 import styles from "./CalendarDiary.module.css";
 import TopNav from "../../../components/TopNav";
@@ -14,14 +14,17 @@ import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
 import { fetchCalendar } from "apis/diary";
+import { calWeeklyStartDate } from "utils/utils";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
   const [isMonthly, setIsMonthly] = useState(true);
-  const [tmpValue, setTmpValue] = useState(new Date());
   const [changingEmotionIdx, setChangingEmotionIdx] = useState(0);
   const [diary, setDiary] = useState([]);
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
+  const [weeklyStartDate, setWeeklyStartDate] = useState("");
 
+  // router navigate
   const navigate = useNavigate();
 
   // 달력 조회
@@ -33,14 +36,25 @@ function CalendarDiary() {
     console.log(err);
   };
 
-  // 월간 조회
+  // 조회
   useEffect(() => {
-    const payload = {};
-    // fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
-  }, []);
+    // 주간 시작 날짜 계산
+    setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
 
-  // 주간 조회
-  useEffect(() => {}, []);
+    // 월간
+    const payload = {
+      year: parseInt(moment(activeStartDate).format("YYYY")),
+      month: parseInt(moment(activeStartDate).format("M")),
+      day: 0,
+    };
+
+    // 주간
+    if (!isMonthly) {
+      payload.day = parseInt(weeklyStartDate.split("-")[2]);
+    }
+
+    fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+  }, [activeStartDate]);
 
   // 달력 일 클릭 시
   const onChange = (e) => {
@@ -50,8 +64,7 @@ function CalendarDiary() {
 
   // 달력 월 클릭 시
   const onClickMonth = (e) => {
-    console.log(e);
-    setTmpValue(e);
+    setActiveStartDate(e);
   };
 
   // 달력 navigation 화살표 버튼 클릭 시
@@ -62,6 +75,7 @@ function CalendarDiary() {
       action === "next" ||
       action === "next2"
     ) {
+      setActiveStartDate(activeStartDate);
     }
   };
 
@@ -119,6 +133,7 @@ function CalendarDiary() {
           <div>
             <Calendar
               onChange={onChange}
+              activeStartDate={activeStartDate}
               value={value}
               // 달력에 기분 이모티콘 넣기
               formatDay={(locale, date) => {
@@ -222,7 +237,11 @@ function CalendarDiary() {
             </div>
           </div>
         ) : (
-          <WeeklyDiary diaryList={diary} />
+          <WeeklyDiary
+            diaryList={diary}
+            weeklyStartDate={weeklyStartDate}
+            setActiveStartDate={setActiveStartDate}
+          />
         )}
       </div>
     </div>

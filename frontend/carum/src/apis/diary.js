@@ -1,10 +1,10 @@
 import api from "./api";
 
-const writeDiary = ({ content, emotions, background }, success, fail) => {
+const writeDiary = ({ content, emotionTag, background }, success, fail) => {
   api
     .post("/diary", {
       content,
-      emotions,
+      emotionTag,
       background,
     })
     .then(success)
@@ -13,11 +13,11 @@ const writeDiary = ({ content, emotions, background }, success, fail) => {
 
 const fetchCalendar = ({ year, month, day }, success, fail) => {
   api
-    .get("/diary/month", {
+    .get("/diary", {
       params: {
-        year,
-        month,
-        day,
+        year: parseInt(year),
+        month: parseInt(month),
+        day: parseInt(day),
       },
     })
     .then(success)

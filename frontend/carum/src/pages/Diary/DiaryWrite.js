@@ -83,10 +83,9 @@ function DiaryWrite() {
         timer: 800,
       });
     } else {
-      console.log("ㅇㅇ");
       const payload = {
         content: editorRef.current?.getInstance().getHTML(),
-        emotions: values.selectedEmotionList,
+        emotionTag: values.selectedEmotionList,
         background: "purple",
       };
 
