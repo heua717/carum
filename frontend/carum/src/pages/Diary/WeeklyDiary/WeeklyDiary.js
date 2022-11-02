@@ -4,6 +4,7 @@ import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { changeWeeklyDate } from "utils/utils";
 import moment from "moment";
+import { useNavigate } from "react-router-dom";
 
 function WeeklyDiary({ diaryList, weeklyStartDate, setActiveStartDate }) {
   const prev = () => {
@@ -19,6 +20,12 @@ function WeeklyDiary({ diaryList, weeklyStartDate, setActiveStartDate }) {
     }
   };
 
+  const navigate = useNavigate();
+
+  const readDiary = (id) => {
+    navigate(`/main/diary/${id}`);
+  };
+
   return (
     <div>
       <div className={styles.nav}>
@@ -28,9 +35,21 @@ function WeeklyDiary({ diaryList, weeklyStartDate, setActiveStartDate }) {
         </p>
         <KeyboardArrowRightIcon onClick={() => next()} />
       </div>
-      {diaryList.map((e) => (
-        <DayComponent emotion={e.emotion} date={e.createAt} />
-      ))}
+      {diaryList.length !== 0 ? (
+        diaryList.map((e) => (
+          <DayComponent
+            emotion={e.emotionTag}
+            date={e.createAt}
+            id={e.id}
+            key={e.id}
+            onClick={() => {
+              readDiary(e.id);
+            }}
+          />
+        ))
+      ) : (
+        <p>데이터가 없습니다.</p>
+      )}
     </div>
   );
 }

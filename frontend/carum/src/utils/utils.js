@@ -32,7 +32,7 @@ function calWeeklyStartDate(targetDay) {
   let year = parseInt(targetDay[0]);
   let month = parseInt(targetDay[1]);
   let day = parseInt(targetDay[2]);
-  console.log("call");
+
   day -= DAY;
 
   if (day < 1) {
@@ -58,7 +58,7 @@ function calWeeklyStartDate(targetDay) {
 }
 
 function changeWeeklyDate(targetDay, state, num) {
-  targetDay = moment(targetDay).format("YYYY-MM-DD").split("-");
+  targetDay = moment(new Date(targetDay)).format("YYYY-MM-DD").split("-");
 
   let year = parseInt(targetDay[0]);
   let month = parseInt(targetDay[1]);

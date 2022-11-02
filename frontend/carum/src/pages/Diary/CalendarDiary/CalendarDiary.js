@@ -29,7 +29,8 @@ function CalendarDiary() {
 
   // 달력 조회
   const fetchCalendarSuccess = (res) => {
-    console.log(res.data);
+    console.log(res);
+    setDiary(res.data.diaryList);
   };
 
   const fetchCalendarFail = (err) => {
@@ -48,16 +49,34 @@ function CalendarDiary() {
       day: 0,
     };
 
-    // 주간
-    if (!isMonthly) {
-      payload.day = parseInt(weeklyStartDate.split("-")[2]);
-    }
-
     fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
   }, [activeStartDate]);
 
+  useEffect(() => {
+    // 주간 조회
+    if (!isMonthly) {
+      const payload = {
+        year: parseInt(moment(activeStartDate).format("YYYY")),
+        month: parseInt(moment(activeStartDate).format("M")),
+        day: parseInt(weeklyStartDate.split("-")[2]),
+      };
+
+      fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+    }
+  }, [weeklyStartDate]);
+
   // 달력 일 클릭 시
   const onChange = (e) => {
+    const idx = diary.findIndex((el) => {
+      return (
+        moment(e).format("YYYY-MM-DD") ===
+        moment(el.createAt).format("YYYY-MM-DD")
+      );
+    });
+
+    if (idx !== -1) {
+      navigate(`/main/diary/${diary[idx].id}`);
+    }
     setValue(e);
     console.log(e);
   };
@@ -110,7 +129,8 @@ function CalendarDiary() {
   }, 1500);
 
   const handleToggleButton = () => {
-    if (!isMonthly) {
+    if (isMonthly) {
+      setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
     }
     setIsMonthly(!isMonthly);
   };
@@ -139,16 +159,17 @@ function CalendarDiary() {
               formatDay={(locale, date) => {
                 const idx = diary.findIndex((el) => {
                   return (
-                    moment(date).format("YYYY-MM-DD") === String(el.createAt)
+                    moment(date).format("YYYY-MM-DD") ===
+                    moment(el.createAt).format("YYYY-MM-DD")
                   );
                 });
 
                 if (idx !== -1) {
-                  let emotionName = diary[idx]?.emotion[emotionIdx];
+                  let emotionName = diary[idx]?.emotionTag[emotionIdx];
 
                   // 감정이 두개면 1.5초마다 번갈아서 보여줌
-                  if (diary[idx].emotion.length === 2) {
-                    emotionName = diary[idx]?.emotion[changingEmotionIdx];
+                  if (diary[idx].emotionTag.length === 2) {
+                    emotionName = diary[idx]?.emotionTag[changingEmotionIdx];
                   }
 
                   return (
