@@ -45,8 +45,13 @@ public class TemplateConversionService {
     private final InteriorTemplateRepository interiorTemplateRepository;
     private final PlaylistRepository playlistRepository;
     private final PlaylistTemplateRepository playlistTemplateRepository;
-    private final MusicRepository musicRepository;
-    private final FurnitureRepository furnitureRepository;
+
+    @Transactional
+    public void createNewRoomAll(User user){
+        for(Long templateId:TEMPLATE_LIST){
+            templateToRoom(user, templateId, null);
+        }
+    }
 
     @Transactional
     public void createNewRoom(User user, ReqPostRoom reqPostRoom){

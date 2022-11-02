@@ -3,8 +3,10 @@ package com.a101.carum.service;
 import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
+import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.repository.RoomRepository;
 import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
 import com.a101.carum.util.EncryptUtils;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -25,7 +28,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
+
+    private final RoomRepository roomRepository;
     private final JwtService jwtService;
+
+    private final TemplateConversionService templateConversionService;
     private final EncryptUtils encryptUtils;
 
     private final RedisTemplate<String, String> tokenRedisTemplate;
@@ -47,10 +54,14 @@ public class UserService {
 
         user = userRepository.save(user);
 
-        // TODO: Room 4개 생성 및 Main Room 설정해서 코드 수정
+        templateConversionService.createNewRoomAll(user);
+
+        Room room = roomRepository.findTop1ByUserOrderByIdAsc(user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));;
 
         UserDetail userDetail = UserDetail.builder()
                 .user(user)
+                .room(room)
                 .build();
 
         userDetailRepository.save(userDetail);
@@ -97,7 +108,17 @@ public class UserService {
         resGetUserBuilder
                 .money(userDetail.getMoney());
 
-        // TODO: Main Room 관련 정보 삽입
+        Room room = userDetail.getMainRoom();
+
+        ResGetRoom resGetRoom = ResGetRoom.builder()
+                .id(room.getId())
+                .name(room.getName())
+                .background(List.of(room.getBackground().split(",")))
+                .emotionTag(List.of(room.getEmotionTag().split(",")))
+                .build();
+
+        resGetUserBuilder
+                .mainRoom(resGetRoom);
 
         return resGetUserBuilder.build();
     }

@@ -15,4 +15,5 @@ public class ResGetUser {
     String userId, nickName, phone;
     LocalDate birth;
     Long money;
+    ResGetRoom mainRoom;
 }
