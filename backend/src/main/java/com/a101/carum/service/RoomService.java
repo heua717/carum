@@ -177,6 +177,9 @@ public class RoomService {
         interiorRepository.deleteByRoom(room);
         playlistRepository.deleteByRoom(room);
 
+        interiorRepository.flush();
+        playlistRepository.flush();
+
         templateConversionService.initializeRoom(room);
     }
 
