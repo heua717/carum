@@ -6,6 +6,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +15,27 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 @Service
+@PropertySource("classpath:application.properties")
 public class JwtService {
 
-    private final String secretKey = "unityCarum";
-    private final int EXPIRE_MINUTES = 60 * 24;
-    private final int REFRESH_MINUTES = 60 * 24 * 7;
+    private String secretKey;
+    private int EXPIRE_MINUTES;
+    private int REFRESH_MINUTES;
+
+    @Value("${jwt.token.secret}")
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
+
+    @Value("${jwt.token.time.expire}")
+    public void setEXPIRE_MINUTES(String expireMinutes){
+        this.EXPIRE_MINUTES = Integer.parseInt(expireMinutes);
+    }
+
+    @Value("${jwt.token.time.refresh}")
+    public void setREFRESH_MINUTES(String refreshMinutes){
+        this.REFRESH_MINUTES = Integer.parseInt(refreshMinutes);
+    }
 
     /**
      * request header에서 token을 가져오는 함수
@@ -45,6 +63,7 @@ public class JwtService {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * EXPIRE_MINUTES))
                 .claim("userId", user.getId())
+                .claim("userType", user.getUserType())
                 .signWith(SignatureAlgorithm.HS256, generateKey()).compact();
         return jwt;
     }
@@ -104,6 +123,16 @@ public class JwtService {
             return Long.parseLong(String.valueOf(getClaims(accessToken).get("userId")));
         } catch (Exception e){
             throw new UnAuthorizedException("잘못된 토큰입니다.");
+        }
+    }
+
+    public String getUserType(HttpServletRequest request){
+        try {
+            String type = (String) getClaims(getJwtToken(request)).get("userType");
+            return type;
+        } catch (Exception e){
+            e.printStackTrace();
+            throw new UnAuthorizedException("권한 없음");
         }
     }
 

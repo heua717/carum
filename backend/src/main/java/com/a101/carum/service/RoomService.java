@@ -1,6 +1,7 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.common.exception.LessMoneyException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
@@ -31,24 +32,23 @@ public class RoomService {
     private final InventoryRepository inventoryRepository;
     private final PlaylistRepository playlistRepository;
     private final MusicRepository musicRepository;
+    private final TemplateConversionService templateConversionService;
 
-    private final String BACKGROUND = "WHITE,BLACK";
+    private final Long ROOM_PRICE = 50L;
 
     @Transactional
     public void createRoom(ReqPostRoom reqPostRoom, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
-        Room room = Room.builder()
-                .name(reqPostRoom.getName())
-                .user(user)
-                .background(BACKGROUND)
-                .emotionTag("")
-                .build();
+        if(userDetail.getMoney() < ROOM_PRICE) {
+            throw new LessMoneyException("방을 살 돈이 없습니다.");
+        }
+        userDetail.updateMoney(ROOM_PRICE, '-');
 
-        roomRepository.save(room);
-        
-        //TODO: 기본 가구 배치
+        templateConversionService.createNewRoom(user, reqPostRoom);
     }
 
     @Transactional
@@ -70,8 +70,7 @@ public class RoomService {
             }
             room.updateEmotionTag(sb.toString());
         }
-        
-        //TODO: Background 처리
+
     }
 
     @Transactional
@@ -186,7 +185,12 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
 
         interiorRepository.deleteByRoom(room);
-        //TODO: 기본 인테리어로 다시 설정
+        playlistRepository.deleteByRoom(room);
+
+        interiorRepository.flush();
+        playlistRepository.flush();
+
+        templateConversionService.initializeRoom(room);
     }
 
     @Transactional
@@ -212,6 +216,7 @@ public class RoomService {
         }
     }
 
+    @Transactional
     public ResGetPlaylist readPlaylist(Long id, Long roomId) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
@@ -234,5 +239,18 @@ public class RoomService {
         return ResGetPlaylist.builder()
                 .playlist(musicList)
                 .build();
+    }
+
+    @Transactional
+    public void updateMainRoom(ReqPutMainRoom reqPutMainRoom, Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
+
+        Room room = roomRepository.findByIdAndUser(reqPutMainRoom.getRoomId(), user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        userDetail.updateMainRoom(room);
     }
 }
