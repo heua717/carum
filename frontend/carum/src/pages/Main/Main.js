@@ -27,6 +27,7 @@ function Main() {
       phone: res.data.phone,
       money: res.data.money,
       mainRoom: res.data.mainRoom,
+      todayDiary: res.data.todayDiary,
     };
     setUser(userInfo);
   };
@@ -41,7 +42,9 @@ function Main() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.unity}><UnityCarum/></div>
+      <div className={styles.unity}>
+        <UnityCarum />
+      </div>
       <Header />
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
@@ -54,7 +57,7 @@ function Main() {
           <Route path="yearly-pet" element={<YearlyPet />} />
           <Route path="monthly-pet" element={<MonthlyPet />} />
         </Routes>
-        {location.pathname === "/main" ? <Menu /> : null}
+        {location.pathname === "/main" ? <Menu user={user} /> : null}
       </div>
     </div>
   );
