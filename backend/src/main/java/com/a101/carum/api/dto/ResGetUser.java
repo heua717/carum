@@ -16,4 +16,5 @@ public class ResGetUser {
     LocalDate birth;
     Long money;
     ResGetRoom mainRoom;
+    boolean todayDiary;
 }

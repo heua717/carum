@@ -3,9 +3,11 @@ package com.a101.carum.service;
 import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
+import com.a101.carum.domain.diary.Diary;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.repository.DiaryRepository;
 import com.a101.carum.repository.RoomRepository;
 import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
@@ -19,6 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -28,8 +33,9 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
-
     private final RoomRepository roomRepository;
+
+    private final DiaryRepository diaryRepository;
     private final JwtService jwtService;
 
     private final TemplateConversionService templateConversionService;
@@ -120,6 +126,13 @@ public class UserService {
         resGetUserBuilder
                 .mainRoom(resGetRoom);
 
+        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(
+                LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),
+                LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),
+                user);
+
+        resGetUserBuilder
+                .todayDiary(diary == null ? false: true);
         return resGetUserBuilder.build();
     }
 
