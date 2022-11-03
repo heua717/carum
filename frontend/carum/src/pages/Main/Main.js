@@ -10,13 +10,14 @@ import YearlyPet from "pages/Pet/YearlyPet/YearlyPet";
 import Profile from "../Profile/Profile";
 import CalendarDiary from "../Diary/CalendarDiary/CalendarDiary";
 import Menu from "./Menu";
+import UnityCarum from "../../components/unity/UnityCarum";
 
 function Main() {
   const location = useLocation();
 
   return (
     <div className={styles.container}>
-      <div className={styles.unity}></div>
+      <div className={styles.unity}><UnityCarum/></div>
       <Header />
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
