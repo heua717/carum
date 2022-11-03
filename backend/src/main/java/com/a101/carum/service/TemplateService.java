@@ -30,21 +30,15 @@ public class TemplateService {
     private final RoomTemplateRepository roomTemplateRepository;
     private final InteriorTemplateRepository interiorTemplateRepository;
 
+    private final TemplateConversionService templateConversionService;
+
     private final String BACKGROUND = "WHITE,BLACK";
 
     @Transactional
     public void createTemplate(ReqPostRoom reqPostRoom, Long id) {
         checkUser(id);
 
-        //TODO: Default Room 정보 가져오기
-        RoomTemplate roomTemplate = RoomTemplate.builder()
-                .name(reqPostRoom.getName())
-                .background(BACKGROUND)
-                .emotionTag("")
-                .build();
-        roomTemplateRepository.save(roomTemplate);
-
-        //TODO: 기본 가구 배치
+        templateConversionService.createNewTemplate(reqPostRoom);
     }
 
     @Transactional
@@ -61,13 +55,11 @@ public class TemplateService {
         if(reqPatchRoom.getEmotionTags() != null) {
             StringBuilder sb = new StringBuilder();
             Collections.sort(reqPatchRoom.getEmotionTags());
-            for(String tag: reqPatchRoom.getEmotionTags()){
+            for (String tag : reqPatchRoom.getEmotionTags()) {
                 sb.append(tag).append(",");
             }
             roomTemplate.updateEmotionTag(sb.toString());
         }
-
-        //TODO: Background 처리
     }
 
     @Transactional
@@ -183,8 +175,14 @@ public class TemplateService {
         checkUser(id);
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
+
         interiorTemplateRepository.deleteByRoomTemplate(roomTemplate);
-        //TODO: 기본 인테리어로 다시 설정
+        playlistTemplateRepository.deleteByRoomTemplate(roomTemplate);
+
+        interiorTemplateRepository.flush();
+        playlistTemplateRepository.flush();
+
+        templateConversionService.initializeTemplate(roomTemplate);
     }
 
     @Transactional
