@@ -12,6 +12,7 @@ import CalendarDiary from "../Diary/CalendarDiary/CalendarDiary";
 import Menu from "./Menu";
 import { useEffect, useState } from "react";
 import { fetchProfile } from "apis/user";
+import UnityCarum from "../../components/unity/UnityCarum";
 
 function Main() {
   const location = useLocation();
@@ -40,7 +41,7 @@ function Main() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.unity}></div>
+      <div className={styles.unity}><UnityCarum/></div>
       <Header />
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
