@@ -31,15 +31,19 @@ public class DiaryService {
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
-        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user);
+        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user).orElse(null);
         if(diary!=null){
             throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
         }
         StringBuilder sb = new StringBuilder();
         if(reqPostDiary.getEmotionTag().size()!=0){
+            int cnt = 0;
             for (String a: reqPostDiary.getEmotionTag()) {
-                System.out.println(a);
-                sb.append(a).append(",");
+                if(cnt>0){
+                    sb.append(",");
+                }
+                sb.append(a);
+                cnt++;
             }
         }
         diary = Diary.builder()
