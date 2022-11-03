@@ -47,13 +47,38 @@ function Shop() {
   //페이지 이동 시, 카테고리 변경 시 가구 검색
   useEffect(() => {
     const payload = {
+      keyword: searchText ? searchText : null,
+      type: furnitureCategory[categoryIndex].type,
+      page: page - 1,
+      size: 4,
+    };
+
+    fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+  }, [page]);
+
+  useEffect(() => {
+    setSearchText("");
+    const payload = {
       keyword: null,
       type: furnitureCategory[categoryIndex].type,
       page: page - 1,
       size: 4,
     };
+
     fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
-  }, [page, categoryIndex]);
+  }, [categoryIndex]);
+
+  const handleFurnitureSearch = () => {
+    if (searchText) {
+      const payload = {
+        keyword: searchText,
+        type: furnitureCategory[categoryIndex].type,
+        page: 0,
+        size: 4,
+      };
+      fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+    }
+  };
 
   // 가구점, 내 가구 이동
   const movePlace = () => {
@@ -145,7 +170,7 @@ function Shop() {
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
         />
-        <SearchIcon />
+        <SearchIcon onClick={handleFurnitureSearch} />
       </div>
       <div className={styles.contentBox}>
         <p className={styles.categoryName}>
