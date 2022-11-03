@@ -10,7 +10,7 @@ import Button from "components/Button";
 
 function Room() {
   const [roomInfo, setRoomInfo] = useState({
-    mainRoomId: 0,
+    mainRoomId: null,
     rooms: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
@@ -43,7 +43,7 @@ function Room() {
 
   useEffect(() => {
     fetchRoomList([], fetchRoomListSuccess, fetchRoomListFail);
-  }, []);
+  }, [roomInfo.mainRoomId]);
 
   // 정보 수정 모달 열기
   const openModal = () => {

@@ -1,6 +1,5 @@
 import Carousel from "react-material-ui-carousel";
 import styles from "./RoomCarousel.module.css";
-import { Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import doorImg from "assets/door.png";
 import sadImg from "assets/sad.svg";
@@ -12,11 +11,9 @@ import peaceImg from "assets/peace.svg";
 import { useNavigate } from "react-router-dom";
 import Modal from "components/modal/Modal";
 import RoomSetting from "./RoomSetting";
+import { changeMainRoom } from "apis/room";
 
 function RoomCarousel(props) {
-  //console.log(props.mainRoomId);
-  const [selectedRoom, setSelectedRoom] = useState(0);
-
   return (
     <div className={styles.carousel}>
       <Carousel
@@ -32,7 +29,6 @@ function RoomCarousel(props) {
           <Item
             key={i}
             item={item}
-            setSelectedRoom={setSelectedRoom}
             mainRoomId={props.roomInfo.mainRoomId}
             setRoomInfo={props.setRoomInfo}
             roomInfo={props.roomInfo}
@@ -53,6 +49,8 @@ function RoomCarousel(props) {
 // 캐로셀 안 내용
 function Item(props) {
   const navigate = useNavigate();
+
+  // 방 이동
   const changeRoom = (roomId) => {
     //roomId에 따라 유니티 방 바꿔주기 실행하가
     console.log(roomId);
@@ -60,22 +58,29 @@ function Item(props) {
     navigate(`/main`);
   };
 
-  const mainRoomChange = () => {
-    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item.roomId });
+  const changeMainRoomSuccess = (res) => {
+    console.log(res);
+  };
+
+  // 메인 방 변경
+  const changeMainRoomFail = (err) => {
+    console.log(err);
+  };
+
+  const handleChangeMainRoom = () => {
+    changeMainRoom(props.item.id, changeMainRoomSuccess, changeMainRoomFail);
+    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item.id });
   };
 
   return (
     <div>
       <div>
         {props.item.id === props.mainRoomId ? (
-          <i
-            class={`bx bxs-star ${styles.starImage}`}
-            onClick={mainRoomChange}
-          ></i>
+          <i class={`bx bxs-star ${styles.starImage}`}></i>
         ) : (
           <i
             class={`bx bx-star ${styles.starImage}`}
-            onClick={mainRoomChange}
+            onClick={handleChangeMainRoom}
           ></i>
         )}
       </div>
