@@ -16,12 +16,15 @@ import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { writeDiary, editDiary } from "apis/diary";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-function DiaryWrite() {
+function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const [values, setValues] = useState({
     isSelecting: false,
     selectedEmotion: "angry",
-    selectedEmotionList: [],
+    selectedEmotionList: diary ? diary.emotionTag : [],
   });
 
   // 감정 이모티콘 클릭 시
@@ -59,25 +62,75 @@ function DiaryWrite() {
     setValues({ ...values, isSelecting: event.target.checked });
   };
 
-  const saveDiary = () => {
-    navigate("/main/diary");
-    console.log(editorRef.current?.getInstance().getHTML());
+  // 다이어리 저장
+  const writeDiarySuccess = (res) => {
+    console.log(res);
+    navigate("/main/calendar");
+  };
+
+  const writeDiaryFail = (err) => {
+    console.log(err);
+  };
+
+  // 다이어리 수정
+  const editDiarySuccess = (res) => {
+    console.log(res);
+    setDiary(null);
+    setCurState("read");
+  };
+
+  const editDiaryFail = (err) => {
+    console.log(err);
+  };
+
+  const handleWriteDiary = () => {
+    // 감정 하나도 선택하지 않았을 때
+    if (values.selectedEmotionList.length === 0) {
+      Swal.fire({
+        position: "bottom-end",
+        text: "감정을 최소 한 개 골라주세요!",
+        icon: "error",
+        showConfirmButton: false,
+        timer: 800,
+      });
+    } else {
+      const payload = {
+        diaryId: diaryId ? diaryId : null,
+        content: editorRef.current?.getInstance().getHTML(),
+        emotionTag: values.selectedEmotionList,
+        background: "purple",
+      };
+
+      if (state === "edit") {
+        editDiary(payload, editDiarySuccess, editDiaryFail);
+      } else {
+        writeDiary(payload, writeDiarySuccess, writeDiaryFail);
+      }
+    }
   };
 
   const navigate = useNavigate();
   const editorRef = useRef();
 
   // 이미지 업로드 로직
-  const uploadImage = async (blob) => {
-    const formData = new FormData();
-    formData.append("multipartFiles", blob);
-  };
-
   const onUploadImage = async (blob, callback) => {
-    // const url = await uploadImage(blob);
-    // callback(url, "alt text");
-    // return false;
-    console.log(blob);
+    const formData = new FormData();
+    formData.append("image", blob);
+
+    const response = await axios.post(
+      "https://k7a101.p.ssafy.io/api/image",
+      formData,
+      {
+        headers: {
+          "access-token": localStorage.getItem("access-token"),
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const url = response.data.fileUrl;
+    callback(url, "alt text");
+    return false;
   };
 
   return (
@@ -87,7 +140,7 @@ function DiaryWrite() {
         <div className={styles.editor}>
           <Editor
             ref={editorRef}
-            initialValue=" "
+            initialValue={diary ? diary.content : " "}
             initialEditType="wysiwyg"
             previewStyle="vertical"
             height="260px"
@@ -191,7 +244,7 @@ function DiaryWrite() {
           </div>
         </div>
         <Button
-          onClick={() => saveDiary()}
+          onClick={handleWriteDiary}
           size="big"
           variant="primary"
           text="일기 저장하기"

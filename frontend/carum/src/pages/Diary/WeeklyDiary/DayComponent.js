@@ -5,11 +5,12 @@ import worryImg from "assets/worry.svg";
 import happyImg from "assets/happy.svg";
 import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
+import moment from "moment";
 
-function DayComponent({ emotion, date }) {
+function DayComponent({ emotion, date, id, onClick }) {
   return (
-    <div className={styles.barContainer}>
-      <p className={styles.dateText}>{date}</p>
+    <div onClick={onClick} className={styles.barContainer}>
+      <p className={styles.dateText}>{moment(date).format("YYYY-MM-DD")}</p>
       <div className={styles.emotionBox}>
         {emotion.map((e) => (
           <img
@@ -30,6 +31,7 @@ function DayComponent({ emotion, date }) {
             }
             alt="emotion"
             className={styles.emotionImage}
+            key={e}
           />
         ))}
       </div>

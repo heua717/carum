@@ -20,8 +20,8 @@ function Main() {
       <Header />
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
-          <Route path="write" element={<DiaryWrite />} />
-          <Route path="diary" element={<Diary />} />
+          <Route path=":state" element={<DiaryWrite />} />
+          <Route path="diary/:id" element={<Diary />} />
           <Route path="calendar" element={<CalendarDiary />} />
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
