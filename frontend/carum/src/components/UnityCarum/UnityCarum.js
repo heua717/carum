@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Unity, useUnityContext } from "react-unity-webgl";
-import React, { useEffect, useCallback} from "react";
+import React, { useEffect, useCallback, useMemo} from "react";
 
 
 function UnityCarum() {
@@ -26,16 +26,22 @@ function UnityCarum() {
   const ReactCall = function() {
     this.sendTokenToUnity = function() {
       console.log("토큰보낸다");
-      sendMessage("Connector","StartUnity","this is token");
+      const token = {
+        "accessToken":sessionStorage.getItem("access-token"),
+        "refreshToken":sessionStorage.getItem("refresh-token")
+      }
+      const param = {
+        "mainRoomId":1,
+        token
+      }
+      
+      sendMessage("Connector","StartUnity",JSON.stringify(param));
     }
   }
 
-  const test = function() {
-    console.log("유니티로 토큰보내기")
-    sendMessage("Connector","StartUnity","this is token");
-  }
 
   const reactCall = new ReactCall();
+
   
   useEffect(() => {
     if (!isLoaded) return;
@@ -68,7 +74,7 @@ function UnityCarum() {
       }} unityProvider={unityProvider} />
       <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
-      <button onClick={()=>test()}>Send Token</button>
+      <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button>
       <button onClick={()=>handleClick()}>requestFullscreen</button>
 
   </div>
