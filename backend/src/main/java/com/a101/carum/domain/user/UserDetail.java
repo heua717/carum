@@ -49,4 +49,8 @@ public class UserDetail {
                 break;
         }
     }
+
+    public void updateMainRoom(Room room) {
+        this.mainRoom = room;
+    }
 }

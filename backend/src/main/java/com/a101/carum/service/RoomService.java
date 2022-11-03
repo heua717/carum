@@ -230,4 +230,17 @@ public class RoomService {
                 .playlist(musicList)
                 .build();
     }
+
+    @Transactional
+    public void updateMainRoom(ReqPutMainRoom reqPutMainRoom, Long id) {
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
+
+        Room room = roomRepository.findByIdAndUser(reqPutMainRoom.getRoomId(), user)
+                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+
+        userDetail.updateMainRoom(room);
+    }
 }
