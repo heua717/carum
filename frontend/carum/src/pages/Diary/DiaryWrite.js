@@ -31,17 +31,26 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const clickEmotion = (emotion) => {
     if (values.isSelecting) {
       const idx = values.selectedEmotionList.indexOf(emotion);
+      const newEmotionList = values.selectedEmotionList;
+
       if (values.selectedEmotionList.length === 2) {
         if (idx !== -1) {
-          values.selectedEmotionList.splice(idx, 1);
+          newEmotionList.splice(idx, 1);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.splice(idx, 1);
         }
       } else {
         if (idx === -1) {
-          values.selectedEmotionList.push(emotion);
+          newEmotionList.push(emotion);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.push(emotion);
         } else {
-          values.selectedEmotionList.splice(idx, 1);
+          newEmotionList.splice(idx, 1);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.splice(idx, 1);
         }
       }
+      setValues({ ...values, selectedEmotionList: newEmotionList });
     }
     setValues({ ...values, selectedEmotion: emotion });
   };

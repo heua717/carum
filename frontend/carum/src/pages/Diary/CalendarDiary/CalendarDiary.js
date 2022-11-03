@@ -70,7 +70,7 @@ function CalendarDiary() {
     const idx = diary.findIndex((el) => {
       return (
         moment(e).format("YYYY-MM-DD") ===
-        moment(el.createAt).format("YYYY-MM-DD")
+        moment(el.createDate).format("YYYY-MM-DD")
       );
     });
 
@@ -160,7 +160,7 @@ function CalendarDiary() {
                 const idx = diary.findIndex((el) => {
                   return (
                     moment(date).format("YYYY-MM-DD") ===
-                    moment(el.createAt).format("YYYY-MM-DD")
+                    moment(el.createDate).format("YYYY-MM-DD")
                   );
                 });
 
