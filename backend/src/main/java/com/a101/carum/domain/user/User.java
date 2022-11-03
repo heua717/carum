@@ -40,6 +40,10 @@ public class User {
     @Column(name="is_deleted")
     private boolean isDeleted = false;
 
+    @Column(name="user_type", length = 10)
+    @Enumerated(EnumType.STRING)
+    private UserType userType = UserType.USER;
+
     @Builder
     public User(String userId, String nickName, String password, String phone, LocalDate birth){
         this.userId = userId;

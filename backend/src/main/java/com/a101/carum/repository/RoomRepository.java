@@ -11,4 +11,6 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByIdAndUser(Long roomId, User user);
+
+    Optional<Room> findTop1ByUserOrderByIdAsc(User user);
 }

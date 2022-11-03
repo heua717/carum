@@ -69,4 +69,11 @@ public class RoomController {
         Long id = jwtService.getUserId(request);
         return ResponseEntity.ok(roomService.readPlaylist(id, roomId));
     }
+
+    @PutMapping("main")
+    public ResponseEntity updateMainRoom(@RequestBody ReqPutMainRoom reqPutMainRoom, HttpServletRequest request) {
+        Long id = jwtService.getUserId(request);
+        roomService.updateMainRoom(reqPutMainRoom, id);
+        return ResponseEntity.ok().build();
+    }
 }
