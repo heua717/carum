@@ -42,7 +42,11 @@ public class PetService {
         Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(
                 LocalDate.now(), LocalTime.of(0,0,0))
                 ,LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user).orElseThrow(()-> new NullPointerException("오늘 작성된 diary가 없습니다."));
-        ResGetPetDaily resGetPetDaily ;
+        String[] str = diary.getEmotionTag().split(",");
+        ResGetPetDaily resGetPetDaily;
+        if(str.length==1){
+
+        }
 
         return null;
     }

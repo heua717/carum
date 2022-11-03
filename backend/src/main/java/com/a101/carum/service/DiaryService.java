@@ -37,9 +37,13 @@ public class DiaryService {
         }
         StringBuilder sb = new StringBuilder();
         if(reqPostDiary.getEmotionTag().size()!=0){
+            int cnt = 0;
             for (String a: reqPostDiary.getEmotionTag()) {
-                System.out.println(a);
-                sb.append(a).append(",");
+                if(cnt>0){
+                    sb.append(",");
+                }
+                sb.append(a);
+                cnt++;
             }
         }
         diary = Diary.builder()

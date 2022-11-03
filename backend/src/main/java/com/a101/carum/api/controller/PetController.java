@@ -29,13 +29,12 @@ public class PetController {
         Long userId = jwtService.getUserId(request);
 
         return ResponseEntity.ok().body(petService.getPetDaily(userId));
-
     }
 
     @GetMapping("")
     public ResponseEntity getPet(@ModelAttribute ReqGetPet reqGetPet, HttpServletRequest request) {
         Long userId = jwtService.getUserId(request);
 
-
+        return null;
     }
 }
