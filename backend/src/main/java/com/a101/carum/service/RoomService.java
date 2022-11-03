@@ -1,6 +1,7 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.common.exception.LessMoneyException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
@@ -33,6 +34,8 @@ public class RoomService {
     private final MusicRepository musicRepository;
     private final TemplateConversionService templateConversionService;
 
+    private final Long ROOM_PRICE = 50L;
+
     @Transactional
     public void createRoom(ReqPostRoom reqPostRoom, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
@@ -40,7 +43,10 @@ public class RoomService {
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
-        userDetail.updateMoney(50L, '-');
+        if(userDetail.getMoney() < ROOM_PRICE) {
+            throw new LessMoneyException("방을 살 돈이 없습니다.");
+        }
+        userDetail.updateMoney(ROOM_PRICE, '-');
 
         templateConversionService.createNewRoom(user, reqPostRoom);
     }
