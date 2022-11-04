@@ -2,7 +2,6 @@ package com.a101.carum.service;
 
 import com.a101.carum.api.dto.ReqPostPet;
 import com.a101.carum.api.dto.ResGetPetDaily;
-import com.a101.carum.domain.diary.Diary;
 import com.a101.carum.domain.pet.Pet;
 import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.user.User;
@@ -14,10 +13,8 @@ import com.a101.carum.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Service
 @AllArgsConstructor
@@ -42,9 +39,9 @@ public class PetService {
     }
 
     public ResGetPetDaily getPetDaily(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다."));
-        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(()-> new NullPointerException("User정보가 손상 되었습니다."));
-        if(userDetail.getLastDiary().equals(LocalDate.now())) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(() -> new NullPointerException("User정보가 손상 되었습니다."));
+        if (userDetail.getLastDiary().equals(LocalDate.now())) {
             return ResGetPetDaily.builder()
                     .face(userDetail.getDailyFace())
                     .color(userDetail.getDailyColor())
@@ -54,10 +51,10 @@ public class PetService {
                     .color(0)
                     .face(FaceType.NORMAL)
                     .build();
+
+
         }
 
 
     }
-
-
 }

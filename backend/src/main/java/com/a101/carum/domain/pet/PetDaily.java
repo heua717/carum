@@ -2,21 +2,18 @@ package com.a101.carum.domain.pet;
 
 import com.a101.carum.domain.question.FaceType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
-@DynamicUpdate
-@DynamicInsert
 @Getter
-@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Table(name = "pet_daily")
 public class PetDaily {
 
     @Id
@@ -46,5 +43,6 @@ public class PetDaily {
             return Integer.parseInt(list[(int)(Math.random()*10000)%4]);
         }
     }
+
 
 }
