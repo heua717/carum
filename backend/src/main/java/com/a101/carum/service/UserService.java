@@ -129,7 +129,7 @@ public class UserService {
         Diary diary = diaryRepository.findByCreateDateBetweenAndUser(
                 LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),
                 LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),
-                user);
+                user).orElse(null);
 
         resGetUserBuilder
                 .todayDiary(diary == null ? false: true);
