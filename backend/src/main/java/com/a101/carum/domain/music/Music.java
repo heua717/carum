@@ -19,13 +19,13 @@ public class Music {
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @Column(name = "artist", nullable = false, length = 30)
+    @Column(name = "artist", nullable = false, length = 100)
     private String artist;
 
-    @Column(name = "title", nullable = false, length = 30)
+    @Column(name = "title", nullable = false, length = 100)
     private String title;
 
-    @Column(name = "resource", nullable = false, length = 100)
+    @Column(name = "resource", nullable = false, length = 200)
     private String resource;
 
     @Column(name = "emotion_tag", length = 500)
