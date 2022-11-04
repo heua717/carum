@@ -4,9 +4,12 @@ import com.a101.carum.api.dto.ReqPostPet;
 import com.a101.carum.api.dto.ResGetPetDaily;
 import com.a101.carum.domain.diary.Diary;
 import com.a101.carum.domain.pet.Pet;
+import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.user.User;
+import com.a101.carum.domain.user.UserDetail;
 import com.a101.carum.repository.DiaryRepository;
 import com.a101.carum.repository.PetRepository;
+import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,7 @@ public class PetService {
     private final PetRepository petRepository;
     private final UserRepository userRepository;
     private final DiaryRepository diaryRepository;
+    private final UserDetailRepository userDetailRepository;
 
 
     public void createPet(ReqPostPet reqPostPet, Long userId) {
@@ -39,15 +43,21 @@ public class PetService {
 
     public ResGetPetDaily getPetDaily(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다."));
-        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(
-                LocalDate.now(), LocalTime.of(0,0,0))
-                ,LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user).orElseThrow(()-> new NullPointerException("오늘 작성된 diary가 없습니다."));
-        String[] str = diary.getEmotionTag().split(",");
-        ResGetPetDaily resGetPetDaily;
-        if(str.length==1){
-
+        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(()-> new NullPointerException("User정보가 손상 되었습니다."));
+        if(userDetail.getLastDiary().equals(LocalDate.now())) {
+            return ResGetPetDaily.builder()
+                    .face(userDetail.getDailyFace())
+                    .color(userDetail.getDailyColor())
+                    .build();
+        } else {
+            return ResGetPetDaily.builder()
+                    .color(0)
+                    .face(FaceType.NORMAL)
+                    .build();
         }
 
-        return null;
+
     }
+
+
 }

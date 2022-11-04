@@ -4,6 +4,7 @@ import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.diary.Diary;
+import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -126,13 +127,19 @@ public class UserService {
         resGetUserBuilder
                 .mainRoom(resGetRoom);
 
-        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(
-                LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),
-                LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),
-                user).orElse(null);
+        if(userDetail.getLastDiary().equals(LocalDate.now())) {
+            resGetUserBuilder
+                    .dailyColor(userDetail.getDailyColor())
+                    .dailyFace(userDetail.getDailyFace())
+                    .todayDiary(true);
+        } else {
+            resGetUserBuilder
+                    .dailyFace(FaceType.NORMAL)
+                    .dailyColor(0)
+                    .todayDiary(false);
+        }
 
-        resGetUserBuilder
-                .todayDiary(diary == null ? false: true);
+
         return resGetUserBuilder.build();
     }
 
