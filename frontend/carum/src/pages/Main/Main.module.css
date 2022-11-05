@@ -2,8 +2,9 @@
 }
 
 .unity {
-  height: 300px;
-  background-color: bisque;
+  min-height: 320px;
+  background: linear-gradient(45deg, #bbb1ff, #f2bfff);
+  border-radius: 0 0 12px 12px;
 }
 
 .contentBox {
@@ -13,4 +14,5 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 8px;
 }

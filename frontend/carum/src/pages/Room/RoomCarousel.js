@@ -1,7 +1,7 @@
 import Carousel from "react-material-ui-carousel";
 import styles from "./RoomCarousel.module.css";
 import { useState, useEffect } from "react";
-import doorImg from "assets/door.png";
+import doorImg from "assets/door2.png";
 import sadImg from "assets/sad.svg";
 import angryImg from "assets/angry.svg";
 import worryImg from "assets/worry.svg";

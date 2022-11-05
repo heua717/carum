@@ -1,4 +1,4 @@
-import Header from "../../components/Header";
+import Header from "../../components/Header/Header";
 import styles from "./Main.module.css";
 import { useLocation, Routes, Route } from "react-router-dom";
 import Diary from "../Diary/Diary";
@@ -45,7 +45,6 @@ function Main() {
       <div className={styles.unity}>
         <UnityCarum />
       </div>
-      <Header />
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
           <Route path=":state" element={<DiaryWrite />} />
