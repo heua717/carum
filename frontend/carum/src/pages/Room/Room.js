@@ -5,7 +5,6 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchRoomList } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
-import { useDispatch } from "react-redux";
 import Button from "components/Button";
 
 function Room() {
@@ -17,8 +16,8 @@ function Room() {
   const [curDoorIndex, setCurDoorIndex] = useState(0);
 
   // redux
-  const nowRoomId = useAppSelector((state) => state.nowRoomId);
-  const dispatch = useDispatch();
+  const { nowRoomId } = useAppSelector((state) => state.roomInfo);
+  const dispatch = useAppDispatch();
 
   const changeRoom = useCallback(
     (id) => {
@@ -27,6 +26,7 @@ function Room() {
     [dispatch, nowRoomId]
   );
 
+  // 방 정보 호출
   const fetchRoomListSuccess = (res) => {
     console.log(res.data);
     setRoomInfo({

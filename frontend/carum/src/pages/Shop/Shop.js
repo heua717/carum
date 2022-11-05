@@ -1,23 +1,26 @@
 import styles from "./Shop.module.css";
-import TopNav from "components/TopNav";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "components/Button";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import Pagination from "@mui/material/Pagination";
 import FurnitureComponent from "./FurnitureComponent";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import CloseIcon from "@material-ui/icons/Close";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Modal from "components/modal/Modal";
 import { furnitureCategory } from "utils/utils";
 import { fetchShopItem, purchaseFurniture, fetchMyItem } from "apis/furniture";
+import Inventory from "./Inventory/Inventory";
+import Category from "./Category/Category";
+import { useNavigate } from "react-router-dom";
+import { setShopFurnitureList, setInventoryList } from "stores/slices/shop";
+import { useAppDispatch, useAppSelector } from "stores/store";
 
 function Shop() {
-  const [place, setPlace] = useState("shop");
+  const [place, setPlace] = useState("category");
   const [isOpened, setIsOpened] = useState(false);
-  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [categoryIndex, setCategoryIndex] = useState(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [money, setMoney] = useState(0);
@@ -25,7 +28,20 @@ function Shop() {
   const [anchorEl, setAnchorEl] = useState(null);
   const isMenuOpened = Boolean(anchorEl);
   const [searchText, setSearchText] = useState("");
-  const [furnitureList, setFurnitureList] = useState([]);
+
+  const navigate = useNavigate();
+
+  // redux
+  const { shopFurnitureList } = useAppSelector((state) => state.shop);
+
+  const dispatch = useAppDispatch();
+
+  const setFurnitureList = useCallback(
+    (furnitureList) => {
+      dispatch(setShopFurnitureList(furnitureList));
+    },
+    [dispatch, shopFurnitureList]
+  );
 
   // 처음 가구 불러오기
   const fetchShopItemSuccess = (res) => {
@@ -33,8 +49,8 @@ function Shop() {
     setFurnitureList(res.data.furnitureList);
     setMoney(res.data.money);
 
-    let tmpTotalPage = parseInt(res.data.furnitureCount / 4);
-    if (res.data.furnitureCount % 4) {
+    let tmpTotalPage = parseInt(res.data.furnitureCount / 9);
+    if (res.data.furnitureCount % 9) {
       tmpTotalPage += 1;
     }
     setTotalPage(tmpTotalPage);
@@ -46,12 +62,12 @@ function Shop() {
 
   //페이지 이동 시, 카테고리 변경 시 가구 검색
   useEffect(() => {
-    if (place === "shop") {
+    if (categoryIndex !== null) {
       const payload = {
         keyword: searchText ? searchText : null,
         type: furnitureCategory[categoryIndex].type,
         page: page - 1,
-        size: 4,
+        size: 9,
       };
 
       fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
@@ -60,14 +76,17 @@ function Shop() {
 
   useEffect(() => {
     setSearchText("");
-    const payload = {
-      keyword: null,
-      type: furnitureCategory[categoryIndex].type,
-      page: page - 1,
-      size: 4,
-    };
+    setPage(1);
+    if (categoryIndex !== null) {
+      const payload = {
+        keyword: null,
+        type: furnitureCategory[categoryIndex].type,
+        page: 0,
+        size: 9,
+      };
 
-    fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+      fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+    }
   }, [categoryIndex]);
 
   const handleFurnitureSearch = () => {
@@ -82,38 +101,23 @@ function Shop() {
     }
   };
 
-  const fetchMyItemSuccess = (res) => {
-    console.log(res.data);
-    setPage(1);
-    setCategoryIndex(0);
-    setFurnitureList(res.data.furnitureList);
-  };
-
-  const fetchMyItemFail = (err) => {
-    console.log(err);
-  };
-
   // 가구점, 내 가구 이동
   const movePlace = () => {
-    if (place === "myRoom") {
-      setPlace("shop");
-      const payload = {
-        keyword: null,
-        type: furnitureCategory[categoryIndex].type,
-        page: page - 1,
-        size: 4,
-      };
-
-      fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
+    if (place === "inventory") {
+      console.log(categoryIndex);
+      if (categoryIndex) {
+        setPlace("shop");
+      } else {
+        setPlace("category");
+      }
     } else {
-      setPlace("myRoom");
-      fetchMyItem(fetchMyItemSuccess, fetchMyItemFail);
+      setPlace("inventory");
     }
   };
 
   // 가구 dialog 열기
   const handleOpen = (idx) => {
-    if (place === "shop" && !furnitureList[idx].have) {
+    if (place === "shop" && !shopFurnitureList[idx].have) {
       setIsOpened(true);
       setCurrentFurnitureIndex(idx);
     }
@@ -157,23 +161,43 @@ function Shop() {
     );
   };
 
+  // 뒤로 가기 버튼 클릭 시
+  const goBack = () => {
+    if (place === "category") {
+      navigate(-1);
+    } else if (place === "shop") {
+      setPlace("category");
+    } else {
+      if (categoryIndex) {
+        setPlace("shop");
+      } else {
+        setPlace("category");
+      }
+    }
+  };
+
   return (
     <div>
-      <TopNav
-        text="가구점"
-        buttonComponent={
+      <div className={styles.topNav}>
+        <div className={styles.goBack}>
+          <button className={styles.backBtn} onClick={goBack}>
+            <ArrowBackIcon />
+          </button>
+          <p>가구점</p>
+        </div>
+        <div className={styles.buttonBox}>
           <Button
             variant="primary"
             size="extraSmall"
-            text={place === "myRoom" ? "상점" : "내가구"}
+            text={place === "inventory" ? "상점" : "내가구"}
             onClick={() => movePlace()}
           />
-        }
-      />
+        </div>
+      </div>
       {place === "shop" ? (
         <div>
           <div className={styles.searchBox}>
-            <MenuIcon onClick={handleMenuClick} id="menu-bth" />
+            {/* <MenuIcon onClick={handleMenuClick} id="menu-bth" />
             <Menu
               anchorEl={anchorEl}
               open={isMenuOpened}
@@ -188,7 +212,7 @@ function Shop() {
                   </MenuItem>
                 );
               })}
-            </Menu>
+            </Menu> */}
             <input
               className={styles.inputBox}
               value={searchText}
@@ -198,38 +222,20 @@ function Shop() {
           </div>
           <div className={styles.contentBox}>
             <p className={styles.categoryName}>
-              {furnitureCategory[categoryIndex].name}
+              {furnitureCategory?.[categoryIndex]?.name}
             </p>
-            <div className={styles.furnitureRow}>
-              {furnitureList?.map((el, idx) => {
-                if (idx < 2) {
-                  return (
-                    <FurnitureComponent
-                      name={el.name}
-                      have={el.have}
-                      place={place}
-                      point={el.price}
-                      onClick={() => handleOpen(idx)}
-                      key={idx}
-                    />
-                  );
-                }
-              })}
-            </div>
-            <div className={styles.furnitureRow}>
-              {furnitureList?.map((el, idx) => {
-                if (idx > 1) {
-                  return (
-                    <FurnitureComponent
-                      name={el.name}
-                      have={el.have}
-                      place={place}
-                      point={el.price}
-                      onClick={() => handleOpen(idx)}
-                      key={idx}
-                    />
-                  );
-                }
+            <div className={styles.furnitures}>
+              {shopFurnitureList?.map((el, idx) => {
+                return (
+                  <FurnitureComponent
+                    name={el.name}
+                    have={el.have}
+                    place={place}
+                    point={el.price}
+                    onClick={() => handleOpen(idx)}
+                    key={idx}
+                  />
+                );
               })}
             </div>
             <Pagination
@@ -242,19 +248,15 @@ function Shop() {
             />
           </div>
           {/* 가구 dialog */}
-          <Dialog
-            className={styles.dialog}
+          <Modal
             open={isOpened}
-            onClose={handleClose}
+            header={shopFurnitureList?.[currentFurnitureIndex]?.name}
+            close={() => handleClose()}
           >
             <div className={styles.dialog}>
-              <CloseIcon onClick={handleClose} className={styles.closeBtn} />
-              <DialogTitle>
-                {furnitureList[currentFurnitureIndex]?.name}
-              </DialogTitle>
               <div className={styles.furniture}>가구</div>
               <p className={styles.detailPriceTag}>
-                {furnitureList[currentFurnitureIndex]?.price}
+                {shopFurnitureList?.[currentFurnitureIndex]?.price}
               </p>
               <div className={styles.myPointBox}>
                 <p className={styles.myPointText}>내 포인트</p>
@@ -266,73 +268,17 @@ function Shop() {
                 size="small"
                 onClick={() =>
                   handlePurchaseFurniture(
-                    furnitureList[currentFurnitureIndex]?.id
+                    shopFurnitureList?.[currentFurnitureIndex]?.id
                   )
                 }
               />
             </div>
-          </Dialog>
+          </Modal>
         </div>
+      ) : place === "category" ? (
+        <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
       ) : (
-        <MyRoomComponent furnitureList={furnitureList} place={place} />
-      )}
-    </div>
-  );
-}
-
-function MyRoomComponent({ furnitureList, place }) {
-  const [newPage, setNewPage] = useState(1);
-  const [newTotalPage, setNewTotalPage] = useState(
-    furnitureList.length ? furnitureList.length : 0
-  );
-
-  const handleInventoryPage = (e, p) => {
-    setNewPage(p);
-  };
-
-  return (
-    <div>
-      {furnitureList.length > 0 ? (
-        <div className={styles.contentBox}>
-          <div className={styles.furnitureRow}>
-            {furnitureList[(newPage - 1) * 4] ? (
-              <FurnitureComponent
-                name={furnitureList[(newPage - 1) * 4]?.name}
-                place={place}
-              />
-            ) : null}
-            {furnitureList[(newPage - 1) * 4 + 1] ? (
-              <FurnitureComponent
-                name={furnitureList[(newPage - 1) * 4 + 1]?.name}
-                place={place}
-              />
-            ) : null}
-          </div>
-          <div className={styles.furnitureRow}>
-            {furnitureList[(newPage - 1) * 4 + 2] ? (
-              <FurnitureComponent
-                name={furnitureList[(newPage - 1) * 4 + 2]?.name}
-                place={place}
-              />
-            ) : null}
-            {furnitureList[(newPage - 1) * 4 + 3] ? (
-              <FurnitureComponent
-                name={furnitureList[(newPage - 1) * 4 + 3]?.name}
-                place={place}
-              />
-            ) : null}
-          </div>
-          <Pagination
-            size="small"
-            count={newTotalPage}
-            className={styles.pagination}
-            onChange={handleInventoryPage}
-            defaultPage={1}
-            page={newPage}
-          />
-        </div>
-      ) : (
-        <p className={styles.inventoryNoDataText}>가구가 없습니다.</p>
+        <Inventory furnitureList={shopFurnitureList} place={place} />
       )}
     </div>
   );
