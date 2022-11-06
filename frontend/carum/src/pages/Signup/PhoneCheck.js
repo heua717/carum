@@ -20,6 +20,7 @@ function PhoneCheck({
   const [codeError, setCodeError] = useState(false);
   const [isPrivacyPolicyAgreed, setIsPrivacyPolicyAgreed] = useState(null);
   const [isPrivacyPolicyShowing, setIsPrivacyPolicyShowing] = useState(false);
+  const [phoneNumberError, setPhoneNumberError] = useState(false);
 
   const handleChange = (event) => {
     setPhoneNumber(event.target.value);
@@ -27,10 +28,12 @@ function PhoneCheck({
 
   const phoneCertificateSuccess = (res) => {
     setCheckCode(res.data.code);
+    setPhoneNumberError(false);
   };
 
   const phoneCertificateFail = (err) => {
     console.log(err);
+    setPhoneNumberError(true);
   };
 
   // 타이머
@@ -46,6 +49,7 @@ function PhoneCheck({
         setCheckTime(parseInt(checkTime) - 1);
       } else if (parseInt(checkTime) === 0) {
         setCheckCode(null);
+        setCheckTime(180);
       }
     }, 1000);
     return () => {
@@ -61,14 +65,18 @@ function PhoneCheck({
       setCheckCode(null);
       handleClose();
     } else {
-      setCodeError(true);
+      if (checkCode !== codeInput) {
+        setCodeError(true);
+      } else if (!isPrivacyPolicyAgreed) {
+        setIsPrivacyPolicyAgreed(false);
+      }
     }
   };
 
   return (
     <Dialog open={open}>
       <div className={styles.dialog}>
-        <DialogTitle>문자(SMS)로 인증</DialogTitle>
+        <h2>문자(SMS)로 인증</h2>
         <div className={styles.privacyPolicyCheckBox}>
           <Checkbox
             onChange={(e) => setIsPrivacyPolicyAgreed(e.target.checked)}
@@ -80,6 +88,11 @@ function PhoneCheck({
             개인정보 수집 및 이용 동의(필수)
           </p>
         </div>
+        {isPrivacyPolicyAgreed !== null && !isPrivacyPolicyAgreed ? (
+          <p className={styles.errorText}>
+            개인정보 수집 및 이용 동의에 체크해주세요.
+          </p>
+        ) : null}
         {isPrivacyPolicyShowing ? (
           <div className={styles.privacyPolicyBox}>
             <p className={styles.privacyPolicyText}>
@@ -102,15 +115,22 @@ function PhoneCheck({
             </p>
           </div>
         ) : null}
-        <p className={styles.helpText}>
-          문자를 받지 못했다면 재인증을 눌러주세요.
-        </p>
+        {checkCode ? (
+          <p className={styles.helpText}>
+            문자를 받지 못했다면 재인증을 눌러주세요.
+          </p>
+        ) : null}
+        {phoneNumberError ? (
+          <p className={styles.errorText}>휴대폰 번호를 다시 입력해주세요.</p>
+        ) : null}
         <input
           onChange={handleChange}
           type="tel"
           placeholder="'-'없이 숫자만 입력"
           value={phoneNo}
-          className={styles.phoneNumberInput}
+          className={`${styles.phoneNumberInput} ${
+            phoneNumberError ? styles.errorInputBox : null
+          }`}
         />
         <Button
           onClick={() => {
@@ -132,20 +152,22 @@ function PhoneCheck({
           <div className={styles.codeChecking}>
             <div>
               <div className={styles.codeCheckBox}>
-                <TextField
-                  label="인증번호"
+                <input
                   placeholder="숫자 6자리 입력"
-                  size="small"
                   value={codeInput}
                   onChange={(event) => setCodeInput(event.target.value)}
-                  error={codeError}
-                  helperText={codeError ? "인증 번호가 다릅니다" : null}
+                  className={`${styles.codeCheckInput} ${
+                    codeError ? styles.errorInputBox : null
+                  }`}
                 />
                 <p>{`${parseInt(checkTime / 60)} : ${
-                  checkTime % 60 < 9 ? `0` : ""
+                  checkTime % 60 < 10 ? `0` : ""
                 }${checkTime % 60}`}</p>
               </div>
             </div>
+            {codeError ? (
+              <p className={styles.errorText}>인증번호가 다릅니다.</p>
+            ) : null}
             <Button
               onClick={phoneCheck}
               fullWidth={true}

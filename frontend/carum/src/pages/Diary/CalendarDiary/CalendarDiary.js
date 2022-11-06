@@ -23,6 +23,7 @@ function CalendarDiary() {
   const [diary, setDiary] = useState([]);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [weeklyStartDate, setWeeklyStartDate] = useState("");
+  const [emotionCount, setEmotionCount] = useState([0, 0, 0, 0, 0, 0]);
 
   // router navigate
   const navigate = useNavigate();
@@ -31,6 +32,26 @@ function CalendarDiary() {
   const fetchCalendarSuccess = (res) => {
     console.log(res);
     setDiary(res.data.diaryList);
+
+    if (isMonthly) {
+      const emotionName = [
+        "angry",
+        "sad",
+        "happy",
+        "worry",
+        "peace",
+        "surprise",
+      ];
+      const emotionCnt = [0, 0, 0, 0, 0, 0];
+
+      res.data.diaryList.forEach((diary) => {
+        diary.emotionTag.forEach((emotion) => {
+          emotionCnt[emotionName.indexOf(emotion)] += 1;
+        });
+      });
+
+      setEmotionCount(emotionCnt);
+    }
   };
 
   const fetchCalendarFail = (err) => {
@@ -212,7 +233,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[0]}</p>
                 </div>
                 <div className={styles.emotionImageBox}>
                   <img
@@ -220,7 +241,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[1]}</p>
                 </div>
                 <div className={styles.emotionImageBox}>
                   <img
@@ -228,7 +249,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[2]}</p>
                 </div>
                 <div className={styles.emotionImageBox}>
                   <img
@@ -236,7 +257,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[3]}</p>
                 </div>
                 <div className={styles.emotionImageBox}>
                   <img
@@ -244,7 +265,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[4]}</p>
                 </div>
                 <div className={styles.emotionImageBox}>
                   <img
@@ -252,7 +273,7 @@ function CalendarDiary() {
                     className={styles.emotionImage}
                     alt="emotion"
                   />
-                  <p className={styles.emotionCount}>0</p>
+                  <p className={styles.emotionCount}>{emotionCount[5]}</p>
                 </div>
               </div>
             </div>
