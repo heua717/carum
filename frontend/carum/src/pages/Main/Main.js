@@ -10,13 +10,24 @@ import YearlyPet from "pages/Pet/YearlyPet/YearlyPet";
 import Profile from "../Profile/Profile";
 import CalendarDiary from "../Diary/CalendarDiary/CalendarDiary";
 import Menu from "./Menu";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { fetchProfile } from "apis/user";
 import UnityCarum from "../../components/unity/UnityCarum";
+import { setNowRoomId } from "stores/slices/room";
+import { useAppDispatch } from "stores/store";
 
 function Main() {
   const location = useLocation();
   const [user, setUser] = useState(null);
+
+  const dispatch = useAppDispatch();
+
+  const changeRoom = useCallback(
+    (id) => {
+      dispatch(setNowRoomId(id));
+    },
+    [dispatch]
+  );
 
   const fetchProfileSuccess = (res) => {
     console.log(res);
@@ -29,6 +40,7 @@ function Main() {
       mainRoom: res.data.mainRoom,
       todayDiary: res.data.todayDiary,
     };
+    changeRoom(res.data.mainRoom.id);
     setUser(userInfo);
   };
 

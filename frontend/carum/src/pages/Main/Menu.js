@@ -81,8 +81,8 @@ function Menu({ user }) {
           )}
         </div>
         <div className={styles.infoRow}>
-          <p className={styles.infoText}>총 포인트</p>
-          <p className={styles.infoText}>{user?.money}</p>
+          <p className={styles.infoText}>내 포인트</p>
+          <p className={styles.infoText}>{user?.money} Point</p>
         </div>
       </div>
     </div>

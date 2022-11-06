@@ -1,7 +1,7 @@
 import Carousel from "react-material-ui-carousel";
 import styles from "./RoomCarousel.module.css";
-import { useState, useEffect } from "react";
-import doorImg from "assets/door2.png";
+import { useState, useEffect, useCallback } from "react";
+import doorImg from "assets/door.svg";
 import sadImg from "assets/sad.svg";
 import angryImg from "assets/angry.svg";
 import worryImg from "assets/worry.svg";
@@ -12,6 +12,9 @@ import { useNavigate } from "react-router-dom";
 import Modal from "components/modal/Modal";
 import RoomSetting from "./RoomSetting";
 import { changeMainRoom } from "apis/room";
+import { setNowRoomId } from "stores/slices/room";
+import { useAppDispatch, useAppSelector } from "stores/store";
+import { Chip } from "@mui/material";
 
 function RoomCarousel(props) {
   return (
@@ -22,7 +25,7 @@ function RoomCarousel(props) {
         indicators={false}
         autoPlay={false}
         fullHeightHover={false}
-        sx={{ minHeight: "48vh" }}
+        sx={{ minHeight: "50vh" }}
         onChange={(e) => props.setCurDoorIndex(e)}
       >
         {props.roomInfo.rooms.map((item, i) => (
@@ -50,12 +53,26 @@ function RoomCarousel(props) {
 function Item(props) {
   const navigate = useNavigate();
 
+  // redux
+  const { nowRoomId } = useAppSelector((state) => state.roomInfo);
+  const dispatch = useAppDispatch();
+
+  const changeRoom = useCallback(
+    (id) => {
+      dispatch(setNowRoomId(id));
+    },
+    [dispatch, nowRoomId]
+  );
+
   // 방 이동
-  const changeRoom = (roomId) => {
+  const handleChangeRoom = (roomId) => {
     //roomId에 따라 유니티 방 바꿔주기 실행하가
     console.log(roomId);
-    //끝나면 main으로 돌아가라
-    navigate(`/main`);
+    if (roomId !== nowRoomId) {
+      changeRoom(roomId);
+      //끝나면 main으로 돌아가라
+      navigate(`/main`);
+    }
   };
 
   const changeMainRoomSuccess = (res) => {
@@ -84,20 +101,22 @@ function Item(props) {
           ></i>
         )}
       </div>
-      <img
-        className={styles.doorImage}
-        src={doorImg}
-        alt={props.item.roomName}
-        onClick={() => changeRoom(props.item.roomId)}
-      />
+      <div className={styles.doorImageContainer}>
+        {props.item.id === nowRoomId ? (
+          <Chip label="이용중" color="secondary" />
+        ) : (
+          <div style={{ height: "32px" }}></div>
+        )}
+        <img
+          className={styles.doorImage}
+          src={doorImg}
+          alt={props.item.roomName}
+          onClick={() => handleChangeRoom(props.item.id)}
+        />
+      </div>
       <div className={styles.roomInfo}>
-        <div>
-          <Emotion emotionTag={props.item.emotionTag} />
-        </div>
-        <div className={styles.roomDiv}>
-          <div></div>
-          <div className={styles.roomName}>{props.item.name}</div>
-        </div>
+        <Emotion emotionTag={props.item.emotionTag} />
+        <div className={styles.roomName}>{props.item.name}</div>
       </div>
     </div>
   );
