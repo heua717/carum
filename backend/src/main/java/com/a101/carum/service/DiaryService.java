@@ -6,11 +6,11 @@ import com.a101.carum.api.dto.ResGetDiary;
 import com.a101.carum.api.dto.ResGetDiaryList;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.diary.Diary;
+import com.a101.carum.domain.pet.PetDaily;
 import com.a101.carum.domain.user.User;
-import com.a101.carum.repository.DiaryRepository;
-import com.a101.carum.repository.UserRepository;
+import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.repository.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,11 +27,14 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
+    private final UserDetailRepository userDetailRepository;
+    private final CustomPetDailyRepository petDailyRepository;
 
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
         Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user).orElse(null);
+        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(()-> new NullPointerException("User정보가 손상 되었습니다."));
         if(diary!=null){
             throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
         }
@@ -46,6 +49,13 @@ public class DiaryService {
                 cnt++;
             }
         }
+
+        PetDaily petDaily = petDailyRepository.getPetDaily(reqPostDiary.getEmotionTag(), userDetail.getPetType());
+        System.out.println(petDaily);
+
+        userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), LocalDate.now());
+
+
         diary = Diary.builder()
                 .content(reqPostDiary.getContent())
                 .user(user)
