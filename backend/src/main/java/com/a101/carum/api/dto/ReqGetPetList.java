@@ -7,7 +7,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReqGetPet {
-    private Integer year;
-    private Integer month;
+public class ReqGetPetList {
+    private int year;
 }

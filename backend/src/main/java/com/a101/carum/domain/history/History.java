@@ -1,6 +1,5 @@
-package com.a101.carum.domain.pet;
+package com.a101.carum.domain.history;
 
-import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,20 +12,20 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@Table(name = "history")
 @AllArgsConstructor
-@DynamicUpdate
-@DynamicInsert
-@Table(name = "pet", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "year", "month" }) })
+@NoArgsConstructor
 @Builder
-public class Pet {
+@DynamicInsert
+@DynamicUpdate
+public class History {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(targetEntity = User.class ,fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
@@ -36,15 +35,13 @@ public class Pet {
     @Column(name = "month")
     private Integer month;
 
-    @Column(name = "appearance")
-    private Integer appearance;
+    @Column(name = "emotion")
+    private String emotion;
 
-    @Column(name = "face")
-    @Enumerated(EnumType.STRING)
-    private FaceType face;
+    @Column(name = "count")
+    private Long count;
 
-    @Column(name = "type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PetType type;
-
+    public void updateCount() {
+        this.count++;
+    }
 }
