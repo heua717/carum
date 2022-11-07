@@ -158,7 +158,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const sendSentiment = async (content) => {
     axios
       .post(
-        "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        "https://cors-anywhere.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
         { content },
         {
           headers: {
