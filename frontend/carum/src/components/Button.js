@@ -35,7 +35,7 @@ function getTextColor(variant) {
     case "primary":
       return "white";
     case "light":
-      return 'white';
+      return "white";
     default:
       return "black";
   }
@@ -50,9 +50,9 @@ function getWidth(size) {
     case "small":
       return "140px";
     case "extraSmall":
-      return "64px";
+      return "76px";
     default:
-      return "300px";
+      return "80px";
   }
 }
 
@@ -67,13 +67,18 @@ function getHeight(size) {
     case "extraSmall":
       return "32px";
     default:
-      return "48px";
+      return "32px";
   }
 }
 
-function Button({ text, size, variant, onClick }) {
+function Button({ text, size, variant, onClick, disabled }) {
   return (
-    <StyledButton size={size} variant={variant} onClick={onClick}>
+    <StyledButton
+      size={size}
+      variant={variant}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {text}
     </StyledButton>
   );

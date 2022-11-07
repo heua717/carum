@@ -48,6 +48,10 @@
   display: block;
 }
 
+.loginFailedMessage {
+  color: #f12c2c;
+}
+
 .buttonBox {
   width: 100%;
   display: flex;

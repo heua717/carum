@@ -2,14 +2,18 @@
 }
 
 .unity {
-  height: 300px;
-  background-color: bisque;
+  width: 100vw;
+  min-height: 44vh;
+  background: linear-gradient(45deg, #bbb1ff, #f2bfff);
+  border-radius: 0 0 20px 20px;
 }
 
 .contentBox {
   width: 100%;
+  height: 52vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: center;
+  margin-top: 8px;
 }

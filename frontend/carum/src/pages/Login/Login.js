@@ -3,17 +3,38 @@ import logoWithName from "../../assets/logoWithName.png";
 import styles from "./Login.module.css";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "apis/user";
 
 function Login() {
   const [values, setValues] = useState({
     id: "",
     password: "",
   });
+  const [loginFailed, setLoginFailed] = useState(false);
 
   const navigate = useNavigate();
 
-  const login = () => {
+  const loginSuccess = (res) => {
+    sessionStorage.setItem("access-token", res.data["accessToken"]);
+    sessionStorage.setItem("refresh-token", res.data["refreshToken"]);
+    setLoginFailed(false);
     navigate("/main");
+  };
+
+  const loginFail = (err) => {
+    console.log(err);
+    setLoginFailed(true);
+    setValues({ ...values, password: "" });
+  };
+
+  const handleLogin = () => {
+    if (values.id && values.password) {
+      const payload = {
+        id: values.id,
+        password: values.password,
+      };
+      login(payload, loginSuccess, loginFail);
+    }
   };
 
   const goToSignup = () => {
@@ -53,6 +74,11 @@ function Login() {
             onChange={handleChange("password")}
           />
         </div>
+        {loginFailed ? (
+          <p className={styles.loginFailedMessage}>
+            아이디 / 비밀번호를 다시 입력해주세요.
+          </p>
+        ) : null}
         <div className={styles.buttonBox}>
           <Button
             text="회원가입"
@@ -64,7 +90,7 @@ function Login() {
             text="로그인"
             variant="extraLight"
             size="small"
-            onClick={() => login()}
+            onClick={() => handleLogin()}
           />
         </div>
       </div>
