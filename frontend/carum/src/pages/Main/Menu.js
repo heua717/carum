@@ -39,7 +39,7 @@ function Menu({ user }) {
             menuText="내일기"
           />
           <MenuBtn
-            onClick={() => openPage("yearly-pet")}
+            onClick={() => openPage(`yearly-pet/${new Date().getFullYear()}`)}
             icon={<PetsIcon fontSize="large" />}
             menuText="펫조회"
           />

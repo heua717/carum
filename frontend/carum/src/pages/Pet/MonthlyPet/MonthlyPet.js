@@ -2,7 +2,7 @@ import styles from "./MonthlyPet.module.css";
 import TopNav from "components/TopNav";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import EmotionProgressBar from "./EmotionProgressBar";
 import sadImg from "assets/sad.svg";
 import angryImg from "assets/angry.svg";
@@ -10,27 +10,34 @@ import worryImg from "assets/worry.svg";
 import happyImg from "assets/happy.svg";
 import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
+import { useParams } from "react-router-dom";
+import { fetchMonthlyPet } from "apis/pet";
 
 function MonthlyPet() {
-  const [values, setValues] = useState({
-    year: 2022,
-    month: 1,
-    petInfo: "",
+  const { year, month } = useParams();
+  const [yearState, setYearState] = useState(year);
+  const [monthState, setMonthState] = useState(month);
+
+  // 월별 펫 상태 조회
+  const fetchMonthlyPetSuccess = (res) => {
+    console.log(res.data);
+  };
+
+  const fetchMonthlyPetFail = (err) => {
+    console.log(err);
+  };
+
+  useEffect(() => {
+    const payload = {
+      year,
+      month,
+    };
+    fetchMonthlyPet(payload, fetchMonthlyPetSuccess, fetchMonthlyPetFail);
   });
 
-  const setDate = (state) => {
-    if (state === "forward") {
-      if (values.month === 12) {
-        setValues({ ...values, year: values.year + 1, month: 1 });
-      } else {
-        setValues({ ...values, month: values.month + 1 });
-      }
-    } else {
-      if (values.month === 1) {
-        setValues({ ...values, year: values.year - 1, month: 12 });
-      } else {
-        setValues({ ...values, month: values.month - 1 });
-      }
+  const handleChangeDate = (state) => {
+    if (state === "plus") {
+    } else if (state === "minus") {
     }
   };
 
@@ -39,12 +46,12 @@ function MonthlyPet() {
       <TopNav text="펫 조회" />
       <div className={styles.contentContainer}>
         <div className={styles.navigationBar}>
-          <ArrowBackIosIcon onClick={() => setDate("back")} />
+          <ArrowBackIosIcon />
           <div className={styles.navDate}>
-            <p className={styles.year}>{values.year}</p>
-            <p className={styles.month}>{values.month}</p>
+            <p className={styles.year}>{yearState}</p>
+            <p className={styles.month}>{monthState}</p>
           </div>
-          <ArrowForwardIosIcon onClick={() => setDate("forward")} />
+          <ArrowForwardIosIcon />
         </div>
         <div className={styles.pet}></div>
         <div

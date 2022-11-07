@@ -304,6 +304,18 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
             </div>
           </div>
         </div>
+        <button
+          onClick={() => {
+            sendSentiment(
+              editorRef.current
+                .getInstance()
+                .getHTML()
+                .replace(/<[^>]*>?/g, "")
+            );
+          }}
+        >
+          test
+        </button>
         <Button
           onClick={handleWriteDiary}
           size="big"

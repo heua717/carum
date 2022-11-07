@@ -65,8 +65,8 @@ function Main() {
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="yearly-pet" element={<YearlyPet />} />
-          <Route path="monthly-pet" element={<MonthlyPet />} />
+          <Route path="yearly-pet/:year" element={<YearlyPet />} />
+          <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
         </Routes>
         {location.pathname === "/main" ? <Menu user={user} /> : null}
       </div>
