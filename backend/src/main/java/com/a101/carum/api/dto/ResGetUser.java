@@ -1,5 +1,6 @@
 package com.a101.carum.api.dto;
 
+import com.a101.carum.domain.pet.PetType;
 import com.a101.carum.domain.question.FaceType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ public class ResGetUser {
     LocalDate birth;
     Long money;
     ResGetRoom mainRoom;
+    PetType petType;
     FaceType dailyFace;
     Integer dailyColor;
     boolean todayDiary;

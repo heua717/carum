@@ -6,6 +6,7 @@ import com.a101.carum.api.dto.ResGetDiary;
 import com.a101.carum.api.dto.ResGetDiaryList;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.diary.Diary;
+import com.a101.carum.domain.history.History;
 import com.a101.carum.domain.pet.PetDaily;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -30,6 +31,8 @@ public class DiaryService {
     private final UserDetailRepository userDetailRepository;
     private final CustomPetDailyRepository petDailyRepository;
 
+    private final HistoryRepository historyRepository;
+
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
@@ -51,10 +54,22 @@ public class DiaryService {
         }
 
         PetDaily petDaily = petDailyRepository.getPetDaily(reqPostDiary.getEmotionTag(), userDetail.getPetType());
-        System.out.println(petDaily);
-
         userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), LocalDate.now());
 
+        for(String emotion: reqPostDiary.getEmotionTag()) {
+            History history = historyRepository.findByEmotion(emotion);
+            if (history == null) {
+                history = historyRepository.save(History.builder()
+                                .user(user)
+                                .year(LocalDate.now().getYear())
+                                .month(LocalDate.now().getMonthValue())
+                                .emotion(emotion)
+                                .count(0L)
+                                .build());
+            }
+
+            history.updateCount();
+        }
 
         diary = Diary.builder()
                 .content(reqPostDiary.getContent())

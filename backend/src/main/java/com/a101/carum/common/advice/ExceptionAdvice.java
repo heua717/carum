@@ -1,9 +1,6 @@
 package com.a101.carum.common.advice;
 
-import com.a101.carum.common.exception.AccessFailException;
-import com.a101.carum.common.exception.LessMoneyException;
-import com.a101.carum.common.exception.RefreshFailException;
-import com.a101.carum.common.exception.UnAuthorizedException;
+import com.a101.carum.common.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -30,7 +27,7 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(UnAuthorizedException.class)
+    @ExceptionHandler({UnAuthorizedException.class, UnUpdatableException.class})
     public ResponseEntity illegalRequestException(Exception e) {
         e.printStackTrace();
         return new ResponseEntity(HttpStatus.BAD_REQUEST);

@@ -113,7 +113,8 @@ public class UserService {
         // User Detail에서 정보 가져오기
         UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
         resGetUserBuilder
-                .money(userDetail.getMoney());
+                .money(userDetail.getMoney())
+                .petType(userDetail.getPetType());
 
         Room room = userDetail.getMainRoom();
 
@@ -138,7 +139,6 @@ public class UserService {
                     .dailyColor(0)
                     .todayDiary(false);
         }
-
 
         return resGetUserBuilder.build();
     }

@@ -40,4 +40,8 @@ public class History {
 
     @Column(name = "count")
     private Long count;
+
+    public void updateCount() {
+        this.count++;
+    }
 }
