@@ -52,7 +52,7 @@ function getWidth(size) {
     case "extraSmall":
       return "76px";
     default:
-      return "300px";
+      return "80px";
   }
 }
 
@@ -67,7 +67,7 @@ function getHeight(size) {
     case "extraSmall":
       return "32px";
     default:
-      return "48px";
+      return "32px";
   }
 }
 

@@ -1,3 +1,24 @@
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+}
+
+.goBack {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  border: 0;
+  background-color: white;
+}
+
+.buttonBox {
+  min-width: 64px;
+}
+
 .searchBox {
   display: flex;
   justify-content: space-around;
@@ -30,10 +51,11 @@
   font-size: 16px;
 }
 
-.furnitureRow {
+.furnitures {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 .pagination {
@@ -81,4 +103,9 @@
 }
 
 .myPointText {
+}
+
+.inventoryNoDataText {
+  text-align: center;
+  font-size: 18px;
 }

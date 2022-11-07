@@ -57,6 +57,9 @@
 .emotionExplainBox {
   height: 68px;
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .angryBg {
@@ -86,6 +89,7 @@
 .emotionExplainRow {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .emotionExplain {

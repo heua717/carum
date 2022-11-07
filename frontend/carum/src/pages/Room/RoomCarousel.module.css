@@ -1,30 +1,53 @@
 .emotionImage {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    margin-top: 10px;
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-  
-  .carousel{
-    text-align: center;
-  }
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-right: 8px;
+  margin-left: 8px;
+}
 
-  .roomInfo{
-    background-color: #E7E9FD;
-  }
+.carousel {
+  text-align: center;
+  min-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-  .roomDiv{
-    display: flex;
-    justify-content: space-between;
-  }
+.starImage {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
 
-  .roomName{
-    font-size: 25px;
-    font-weight: 900;
-    margin-left: 80px;
-  }
+.doorImageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
 
-  .button{
-  }
+.roomInfo {
+  background-color: #e7e9fd;
+  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.roomDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.roomName {
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.button {
+}
+
+.doorImage {
+  max-height: 210px;
+}

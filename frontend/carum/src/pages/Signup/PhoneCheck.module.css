@@ -1,6 +1,6 @@
 .dialog {
-  min-width: 280px;
-  min-height: 400px;
+  min-width: 296px;
+  min-height: 480px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -25,7 +25,7 @@
 }
 
 .phoneNumberInput {
-  width: 90%;
+  width: 88%;
   height: 40px;
 }
 
@@ -46,4 +46,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.codeCheckInput {
+  width: 200px;
+  height: 36px;
+}
+
+.errorText {
+  color: rgb(240, 34, 34);
+}
+
+.errorInputBox {
+  border: 1px solid rgb(240, 34, 34);
 }

@@ -152,7 +152,6 @@ function Signup() {
           setValues({ ...values, birthDate: event.target.value })
         }
       />
-      <p>{values.birthDate}</p>
       <TextField
         className={styles.input}
         type="password"
@@ -204,6 +203,12 @@ function Signup() {
         size={"big"}
         variant={"primary"}
         text={"가입"}
+      />
+      <Button
+        size={"big"}
+        variant={"extraLight"}
+        text={"로그인으로"}
+        onClick={() => navigate("/")}
       />
       <PhoneCheck
         phoneNo={phoneNumber}

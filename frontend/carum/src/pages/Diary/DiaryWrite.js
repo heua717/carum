@@ -19,6 +19,16 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useInterval } from "utils/utils";
+
+const EMOTION_VALUE = {
+  sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
+  worry: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
+  happy: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
+  surprise: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
+  peace: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
+  angry: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
+};
 
 function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const [values, setValues] = useState({
@@ -26,22 +36,32 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
     selectedEmotion: "angry",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
+  const [tmpContent, setTmpContent] = useState("");
 
   // 감정 이모티콘 클릭 시
   const clickEmotion = (emotion) => {
     if (values.isSelecting) {
       const idx = values.selectedEmotionList.indexOf(emotion);
+      const newEmotionList = values.selectedEmotionList;
+
       if (values.selectedEmotionList.length === 2) {
         if (idx !== -1) {
-          values.selectedEmotionList.splice(idx, 1);
+          newEmotionList.splice(idx, 1);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.splice(idx, 1);
         }
       } else {
         if (idx === -1) {
-          values.selectedEmotionList.push(emotion);
+          newEmotionList.push(emotion);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.push(emotion);
         } else {
-          values.selectedEmotionList.splice(idx, 1);
+          newEmotionList.splice(idx, 1);
+          // setValues({ ...values, selectedEmotionList: newEmotionList });
+          // values.selectedEmotionList.splice(idx, 1);
         }
       }
+      setValues({ ...values, selectedEmotionList: newEmotionList });
     }
     setValues({ ...values, selectedEmotion: emotion });
   };
@@ -132,6 +152,47 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
     callback(url, "alt text");
     return false;
   };
+
+  // cors error 방지 https://cors-anywhere.herokuapp.com/
+  // CLOVA API
+  const sendSentiment = async (content) => {
+    axios
+      .post(
+        "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        { content },
+        {
+          headers: {
+            "X-NCP-APIGW-API-KEY-ID": process.env.REACT_APP_CLOVA_API_ID,
+            "X-NCP-APIGW-API-KEY": process.env.REACT_APP_CLOVA_API_KEY,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // useInterval(() => {
+  //   const data = editorRef.current
+  //     .getInstance()
+  //     .getHTML()
+  //     .replace(/<[^>]*>?/g, "");
+
+  //   console.log(data);
+  //   console.log(tmpContent);
+
+  //   if (data.trim() && data.trim() !== tmpContent.trim()) {
+  //     console.log("데이터 보낸다");
+  //     sendSentiment(data);
+  //     setTmpContent(data);
+  //   } else {
+  //     console.log("데이터 안보낸다 바뀐 거 없다");
+  //   }
+  // }, 15000);
 
   return (
     <div>
@@ -232,17 +293,29 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
             }`}
           >
             <div className={styles.emotionExplainRow}>
-              <span>{values.selectedEmotionList}</span>
-              <span></span>
-              <span></span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][0]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][1]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][2]}</span>
             </div>
             <div className={styles.emotionExplainRow}>
-              <span></span>
-              <span></span>
-              <span></span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][3]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][4]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][5]}</span>
             </div>
           </div>
         </div>
+        <button
+          onClick={() => {
+            sendSentiment(
+              editorRef.current
+                .getInstance()
+                .getHTML()
+                .replace(/<[^>]*>?/g, "")
+            );
+          }}
+        >
+          test
+        </button>
         <Button
           onClick={handleWriteDiary}
           size="big"

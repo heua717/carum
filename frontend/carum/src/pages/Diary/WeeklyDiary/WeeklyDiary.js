@@ -39,7 +39,7 @@ function WeeklyDiary({ diaryList, weeklyStartDate, setActiveStartDate }) {
         diaryList.map((e) => (
           <DayComponent
             emotion={e.emotionTag}
-            date={e.createAt}
+            date={e.createDate}
             id={e.id}
             key={e.id}
             onClick={() => {
