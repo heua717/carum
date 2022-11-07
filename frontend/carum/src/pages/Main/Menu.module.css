@@ -10,7 +10,7 @@
 }
 
 .infoBox {
-  height: 124px;
+  height: 144px;
   width: 300px;
   border-radius: 10px;
   background: #ffffff;
@@ -18,6 +18,38 @@
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  margin-top: 12px;
+}
+
+.diaryInfoRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nicknameText {
+  font-size: 18px;
+}
+
+.diaryInfoText {
+  text-align: center;
+  font-size: 14px;
+  margin: 4px;
+}
+
+.diaryCheckedBox {
+  border-radius: 12px;
+  width: 50%;
+  height: 40px;
+  background-color: #b7bdee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.diaryCheckedText {
+  color: white;
 }
 
 .infoRow {

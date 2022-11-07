@@ -10,17 +10,21 @@ function Login() {
     id: "",
     password: "",
   });
+  const [loginFailed, setLoginFailed] = useState(false);
 
   const navigate = useNavigate();
 
   const loginSuccess = (res) => {
     sessionStorage.setItem("access-token", res.data["accessToken"]);
     sessionStorage.setItem("refresh-token", res.data["refreshToken"]);
+    setLoginFailed(false);
     navigate("/main");
   };
 
   const loginFail = (err) => {
     console.log(err);
+    setLoginFailed(true);
+    setValues({ ...values, password: "" });
   };
 
   const handleLogin = () => {
@@ -70,6 +74,11 @@ function Login() {
             onChange={handleChange("password")}
           />
         </div>
+        {loginFailed ? (
+          <p className={styles.loginFailedMessage}>
+            아이디 / 비밀번호를 다시 입력해주세요.
+          </p>
+        ) : null}
         <div className={styles.buttonBox}>
           <Button
             text="회원가입"

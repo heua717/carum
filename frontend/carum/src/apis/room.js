@@ -21,4 +21,13 @@ const editRoomInfo = ({ roomId, name, emotionTags }, success, fail) => {
     .catch(fail);
 };
 
-export { fetchRoomList, editRoomInfo };
+const changeMainRoom = (roomId, success, fail) => {
+  api
+    .put(`/room/main`, {
+      roomId,
+    })
+    .then(success)
+    .catch(fail);
+};
+
+export { fetchRoomList, editRoomInfo, changeMainRoom };

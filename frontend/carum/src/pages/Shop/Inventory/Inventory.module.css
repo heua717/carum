@@ -1,0 +1,29 @@
+.contentBox {
+  width: 300px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  margin: 4px auto;
+  overflow: auto;
+}
+
+.contentBox::-webkit-scrollbar {
+  display: none;
+}
+
+.furnitures {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.pagination {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inventoryNoDataText {
+  text-align: center;
+  font-size: 18px;
+}

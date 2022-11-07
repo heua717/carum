@@ -22,7 +22,7 @@
   background: linear-gradient(
     45deg,
     rgba(181, 174, 211, 0.9),
-    rgba(218, 238, 247, 0.9)
+    rgba(234, 245, 255, 0.9)
   );
   animation: modal-show 0.3s;
   overflow: hidden;

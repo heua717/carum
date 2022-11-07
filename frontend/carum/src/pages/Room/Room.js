@@ -5,20 +5,19 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchRoomList } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
-import { useDispatch } from "react-redux";
 import Button from "components/Button";
 
 function Room() {
   const [roomInfo, setRoomInfo] = useState({
-    mainRoomId: 0,
+    mainRoomId: null,
     rooms: [],
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [curDoorIndex, setCurDoorIndex] = useState(0);
 
   // redux
-  const nowRoomId = useAppSelector((state) => state.nowRoomId);
-  const dispatch = useDispatch();
+  const { nowRoomId } = useAppSelector((state) => state.roomInfo);
+  const dispatch = useAppDispatch();
 
   const changeRoom = useCallback(
     (id) => {
@@ -27,14 +26,30 @@ function Room() {
     [dispatch, nowRoomId]
   );
 
+  // 방 정보 호출
   const fetchRoomListSuccess = (res) => {
     console.log(res.data);
+
+    // 현재 방 id가 없으면 메인룸을 현재 방으로 지정
+    if (!nowRoomId) {
+      changeRoom(res.data.mainRoomId);
+    }
+
+    // 현재 있는 방을 리스트 앞으로 가져오기
+    const sortedRoomList = [...res.data.roomList];
+    const nowRoomIdx = sortedRoomList.findIndex((room) => {
+      return room.id === nowRoomId;
+    });
+
+    const nowRoomInfo = sortedRoomList[nowRoomIdx];
+    sortedRoomList.splice(nowRoomIdx, 1);
+    sortedRoomList.splice(0, 0, nowRoomInfo);
+
     setRoomInfo({
       ...roomInfo,
       mainRoomId: res.data.mainRoomId,
-      rooms: res.data.roomList,
+      rooms: sortedRoomList,
     });
-    changeRoom(res.data.mainRoomId);
   };
 
   const fetchRoomListFail = (err) => {
@@ -43,7 +58,7 @@ function Room() {
 
   useEffect(() => {
     fetchRoomList([], fetchRoomListSuccess, fetchRoomListFail);
-  }, []);
+  }, [roomInfo.mainRoomId]);
 
   // 정보 수정 모달 열기
   const openModal = () => {
@@ -53,6 +68,7 @@ function Room() {
   // 정보 수정 모달 닫기
   const closeModal = () => {
     setModalOpen(false);
+    fetchRoomList([], fetchRoomListSuccess, fetchRoomListFail);
   };
 
   return (

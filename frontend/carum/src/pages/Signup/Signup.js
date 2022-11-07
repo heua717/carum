@@ -205,6 +205,12 @@ function Signup() {
         variant={"primary"}
         text={"가입"}
       />
+      <Button
+        size={"big"}
+        variant={"extraLight"}
+        text={"로그인으로"}
+        onClick={() => navigate("/")}
+      />
       <PhoneCheck
         phoneNo={phoneNumber}
         setPhoneNumber={setPhoneNumber}

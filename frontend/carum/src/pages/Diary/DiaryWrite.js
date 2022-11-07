@@ -19,6 +19,16 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useInterval } from "utils/utils";
+
+const EMOTION_VALUE = {
+  sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
+  worry: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
+  happy: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
+  surprise: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
+  peace: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
+  angry: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
+};
 
 function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   const [values, setValues] = useState({
@@ -241,14 +251,14 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
             }`}
           >
             <div className={styles.emotionExplainRow}>
-              <span>{values.selectedEmotionList}</span>
-              <span></span>
-              <span></span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][0]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][1]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][2]}</span>
             </div>
             <div className={styles.emotionExplainRow}>
-              <span></span>
-              <span></span>
-              <span></span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][3]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][4]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion][5]}</span>
             </div>
           </div>
         </div>
