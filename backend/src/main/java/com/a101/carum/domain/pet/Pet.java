@@ -17,7 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @DynamicUpdate
 @DynamicInsert
-@Table(name = "pet")
+@Table(name = "pet", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "year", "month" }) })
 @Builder
 public class Pet {
 

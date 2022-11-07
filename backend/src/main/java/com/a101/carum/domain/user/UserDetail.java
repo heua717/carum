@@ -76,4 +76,8 @@ public class UserDetail {
     public void updateMainRoom(Room room) {
         this.mainRoom = room;
     }
+
+    public void updatePetType(PetType petType) {
+        this.petType = petType;
+    }
 }

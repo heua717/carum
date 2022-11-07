@@ -16,8 +16,8 @@ public class PetUtils {
         }
         public static ResGetPetDaily getFaceType(PetDaily petDaily) {
             return ResGetPetDaily.builder()
-                    .face(FaceType.valueOf(petDaily.getEmotion()))
-                    .color(getRandomColor(petDaily.getColors()))
+                    .face(petDaily.getFace())
+                    .color(getRandomColor(petDaily.getColor()))
                     .build();
         }
     }
