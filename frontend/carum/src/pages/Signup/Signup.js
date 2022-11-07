@@ -152,7 +152,6 @@ function Signup() {
           setValues({ ...values, birthDate: event.target.value })
         }
       />
-      <p>{values.birthDate}</p>
       <TextField
         className={styles.input}
         type="password"

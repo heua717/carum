@@ -36,6 +36,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
     selectedEmotion: "angry",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
+  const [tmpContent, setTmpContent] = useState("");
 
   // 감정 이모티콘 클릭 시
   const clickEmotion = (emotion) => {
@@ -152,6 +153,47 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
     return false;
   };
 
+  // cors error 방지 https://cors-anywhere.herokuapp.com/
+  // CLOVA API
+  const sendSentiment = async (content) => {
+    axios
+      .post(
+        "https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        { content },
+        {
+          headers: {
+            "X-NCP-APIGW-API-KEY-ID": process.env.REACT_APP_CLOVA_API_ID,
+            "X-NCP-APIGW-API-KEY": process.env.REACT_APP_CLOVA_API_KEY,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  // useInterval(() => {
+  //   const data = editorRef.current
+  //     .getInstance()
+  //     .getHTML()
+  //     .replace(/<[^>]*>?/g, "");
+
+  //   console.log(data);
+  //   console.log(tmpContent);
+
+  //   if (data.trim() && data.trim() !== tmpContent.trim()) {
+  //     console.log("데이터 보낸다");
+  //     sendSentiment(data);
+  //     setTmpContent(data);
+  //   } else {
+  //     console.log("데이터 안보낸다 바뀐 거 없다");
+  //   }
+  // }, 15000);
+
   return (
     <div>
       <TopNav text="다이어리 작성" />
@@ -262,6 +304,18 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
             </div>
           </div>
         </div>
+        <button
+          onClick={() => {
+            sendSentiment(
+              editorRef.current
+                .getInstance()
+                .getHTML()
+                .replace(/<[^>]*>?/g, "")
+            );
+          }}
+        >
+          test
+        </button>
         <Button
           onClick={handleWriteDiary}
           size="big"
