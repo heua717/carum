@@ -72,10 +72,11 @@ function UnityCarum() {
         justifySelf:'center',
         visibility: isLoaded ? "visible" : "hidden"
       }} unityProvider={unityProvider} />
-      <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
+
+      {/* <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
       <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button>
-      <button onClick={()=>handleClick()}>requestFullscreen</button>
+      <button onClick={()=>handleClick()}>requestFullscreen</button> */}
 
   </div>
   )
