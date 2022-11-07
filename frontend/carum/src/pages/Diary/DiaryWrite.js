@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { useInterval } from "utils/utils";
 
 const EMOTION_VALUE = {
   sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
