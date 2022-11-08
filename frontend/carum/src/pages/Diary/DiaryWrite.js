@@ -20,6 +20,7 @@ import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useInterval } from "utils/utils";
+import react, {useEffect} from "react";
 
 const EMOTION_VALUE = {
   sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
@@ -30,13 +31,26 @@ const EMOTION_VALUE = {
   angry: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
 };
 
-function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
+function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp, exitCloseUp }) {
   const [values, setValues] = useState({
     isSelecting: false,
     selectedEmotion: "angry",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
   const [tmpContent, setTmpContent] = useState("");
+
+  const unityEnterCloseUp = () => {
+    enterCloseUp();
+  }
+  const unityExitCloseUp = () => {
+    exitCloseUp();
+  }
+  useEffect(()=> {
+    unityEnterCloseUp();
+    return () => {
+      unityExitCloseUp();
+    }
+  },[])
 
   // 감정 이모티콘 클릭 시
   const clickEmotion = (emotion) => {

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Unity, useUnityContext } from "react-unity-webgl";
-import React, { useEffect, useCallback, useMemo } from "react";
+import React, { useEffect, useCallback, useMemo, useImperativeHandle,forwardRef  } from "react";
 
-function UnityCarum() {
+function UnityCarum({},ref) {
   const {
     isLoaded,
     unityProvider,
@@ -17,6 +17,16 @@ function UnityCarum() {
     codeUrl: "build/build3.wasm",
   });
   const navigate = useNavigate();
+  // 첫번째 방법
+  useImperativeHandle(ref, () => ({
+    enterCloseUp, exitCloseUp
+  }));
+  async function enterCloseUp() {
+    sendMessage("Connector","PetCloseUp");
+  };
+  async function exitCloseUp() {
+    sendMessage("Connector","PetEndCloseUp");
+  };
 
   function handleSceneTransition(sceneName) {
     console.log("move to " + sceneName);
@@ -42,6 +52,10 @@ function UnityCarum() {
 
       sendMessage("Connector", "StartUnity", JSON.stringify(param));
     };
+
+    this.closeUpPet = function() {
+      alert("클로즈업");
+    }
   };
 
   const reactCall = new ReactCall();
@@ -92,4 +106,4 @@ function UnityCarum() {
   );
 }
 
-export default UnityCarum;
+export default forwardRef(UnityCarum);
