@@ -94,9 +94,9 @@ function Shop() {
     if (searchText) {
       const payload = {
         keyword: searchText,
-        type: furnitureCategory[categoryIndex].type,
+        type: null,
         page: 0,
-        size: 4,
+        size: 9,
       };
       fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
     }
@@ -225,6 +225,7 @@ function Shop() {
             <input
               className={styles.inputBox}
               value={searchText}
+              placeholder="전체 검색"
               onChange={(e) => setSearchText(e.target.value)}
             />
             <SearchIcon onClick={handleFurnitureSearch} />
@@ -247,14 +248,18 @@ function Shop() {
                 );
               })}
             </div>
-            <Pagination
-              size="small"
-              count={totalPage}
-              className={styles.pagination}
-              onChange={handlePageChange}
-              defaultPage={1}
-              page={page}
-            />
+            {shopFurnitureList?.length > 0 ? (
+              <Pagination
+                size="small"
+                count={totalPage}
+                className={styles.pagination}
+                onChange={handlePageChange}
+                defaultPage={1}
+                page={page}
+              />
+            ) : (
+              <p>가구가 없습니다.</p>
+            )}
           </div>
           {/* 가구 dialog */}
           <Modal
