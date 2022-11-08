@@ -86,7 +86,8 @@ function Diary({ unityRef }) {
 
   useEffect(() => {
     return () => {
-      if (diary?.background !== curBackgroundColor) {
+      console.log(diary);
+      if (diary && diary?.background !== curBackgroundColor) {
         const payload = {
           content: diary?.content,
           emotionTag: diary?.emotionTag,
@@ -107,7 +108,7 @@ function Diary({ unityRef }) {
         );
       }
     };
-  }, []);
+  }, [diary]);
 
   // 다이어리 비우기
   const deleteDiaryContentSuccess = (res) => {

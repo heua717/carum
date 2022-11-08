@@ -122,7 +122,7 @@ const furnitureCategory = [
 
 const calEmotion = (pos, nag, neu) => {
   nag *= 0.9;
-  const num = nag / pos;
+  const num = Math.atan(nag / pos);
   let rlt = "";
 
   if (neu > 65) {
