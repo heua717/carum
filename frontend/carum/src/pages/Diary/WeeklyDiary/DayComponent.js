@@ -15,17 +15,17 @@ function DayComponent({ emotion, date, id, onClick }) {
         {emotion.map((e) => (
           <img
             src={
-              e === "sad"
+              e === "SAD"
                 ? sadImg
-                : e === "angry"
+                : e === "ANGRY"
                 ? angryImg
-                : e === "peace"
+                : e === "PEACE"
                 ? peaceImg
-                : e === "worry"
+                : e === "WORRY"
                 ? worryImg
-                : e === "happy"
+                : e === "HAPPY"
                 ? happyImg
-                : e === "surprise"
+                : e === "SURPRISE"
                 ? surpriseImg
                 : null
             }

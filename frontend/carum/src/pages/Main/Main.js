@@ -15,6 +15,7 @@ import { fetchProfile } from "apis/user";
 import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
+import { setUserInfo } from "stores/slices/user";
 
 function Main() {
   const location = useLocation();
@@ -25,6 +26,13 @@ function Main() {
   const changeRoom = useCallback(
     (id) => {
       dispatch(setNowRoomId(id));
+    },
+    [dispatch]
+  );
+
+  const handleUserInfo = useCallback(
+    (userInfo) => {
+      dispatch(setUserInfo(userInfo));
     },
     [dispatch]
   );
@@ -42,6 +50,7 @@ function Main() {
     };
     changeRoom(res.data.mainRoom.id);
     setUser(userInfo);
+    handleUserInfo(userInfo);
   };
 
   const fetchProfileFail = (err) => {

@@ -2,18 +2,34 @@ import styles from "./TopNav.module.css";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { useNavigate, useLocation } from "react-router-dom";
 
-function TopNav({ text, buttonComponent }) {
+function TopNav({
+  text,
+  buttonComponent,
+  timer,
+  petTimer,
+  setTimer,
+  setPetTimer,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const goTo = () => {
-    if (location.pathname === '/main/diary') {
-      navigate('/main/calendar')
-    } else if (location.pathname === '/main/calendar' ) {
-      navigate('/main')
+    if (location.pathname === "/main/diary") {
+      navigate("/main/calendar");
+    } else if (location.pathname === "/main/calendar") {
+      navigate("/main");
     } else {
-      navigate(-1)
+      if (timer) {
+        clearInterval(timer);
+        setTimer(null);
+      }
+
+      if (petTimer) {
+        clearInterval(petTimer);
+        setPetTimer(null);
+      }
+      navigate(-1);
     }
-  }
+  };
 
   return (
     <div className={styles.topNav}>

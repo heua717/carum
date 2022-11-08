@@ -32,15 +32,16 @@ function CalendarDiary() {
   const fetchCalendarSuccess = (res) => {
     console.log(res);
     setDiary(res.data.diaryList);
+    console.log("월간");
 
     if (isMonthly) {
       const emotionName = [
-        "angry",
-        "sad",
-        "happy",
-        "worry",
-        "peace",
-        "surprise",
+        "ANGRY",
+        "SAD",
+        "HAPPY",
+        "WORRY",
+        "PEACE",
+        "SURPRISE",
       ];
       const emotionCnt = [0, 0, 0, 0, 0, 0];
 
@@ -64,27 +65,29 @@ function CalendarDiary() {
     setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
 
     // 월간
-    const payload = {
-      year: parseInt(moment(activeStartDate).format("YYYY")),
-      month: parseInt(moment(activeStartDate).format("M")),
-      day: 0,
-    };
-
-    fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
-  }, [activeStartDate]);
-
-  useEffect(() => {
-    // 주간 조회
-    if (!isMonthly) {
+    if (isMonthly) {
       const payload = {
         year: parseInt(moment(activeStartDate).format("YYYY")),
         month: parseInt(moment(activeStartDate).format("M")),
-        day: parseInt(weeklyStartDate.split("-")[2]),
+        day: 0,
       };
 
       fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
     }
-  }, [weeklyStartDate]);
+  }, [activeStartDate, isMonthly]);
+
+  // useEffect(() => {
+  //   // 주간 조회
+  //   if (!isMonthly) {
+  //     const payload = {
+  //       year: parseInt(moment(activeStartDate).format("YYYY")),
+  //       month: parseInt(moment(activeStartDate).format("M")),
+  //       day: parseInt(weeklyStartDate.split("-")[2]),
+  //     };
+
+  //     fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
+  //   }
+  // }, [weeklyStartDate]);
 
   // 달력 일 클릭 시
   const onChange = (e) => {
@@ -177,17 +180,17 @@ function CalendarDiary() {
                   return (
                     <img
                       src={
-                        emotionName === "angry"
+                        emotionName === "ANGRY"
                           ? angryImg
-                          : emotionName === "sad"
+                          : emotionName === "SAD"
                           ? sadImg
-                          : emotionName === "happy"
+                          : emotionName === "HAPPY"
                           ? happyImg
-                          : emotionName === "peace"
+                          : emotionName === "PEACE"
                           ? peaceImg
-                          : emotionName === "worry"
+                          : emotionName === "WORRY"
                           ? worryImg
-                          : emotionName === "surprise"
+                          : emotionName === "SURPRISE"
                           ? surpriseImg
                           : null
                       }
@@ -264,6 +267,7 @@ function CalendarDiary() {
             diaryList={diary}
             weeklyStartDate={weeklyStartDate}
             setActiveStartDate={setActiveStartDate}
+            activeStartDate={activeStartDate}
           />
         )}
       </div>
