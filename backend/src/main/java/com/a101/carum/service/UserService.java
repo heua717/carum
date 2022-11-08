@@ -25,6 +25,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -123,7 +124,11 @@ public class UserService {
                 .name(room.getName())
                 .background(room.getBackground())
                 .frame(room.getFrame())
-                .emotionTag(List.of(room.getEmotionTag().split(",")))
+                .emotionTag(
+                        room.getEmotionTag() == null ?
+                             new ArrayList<>()
+                            :List.of(room.getEmotionTag().split(","))
+                )
                 .build();
 
         resGetUserBuilder
