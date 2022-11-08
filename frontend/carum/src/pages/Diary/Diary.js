@@ -86,17 +86,17 @@ function Diary() {
                   <img
                     className={styles.emotionImg}
                     src={
-                      e === "sad"
+                      e === "SAD"
                         ? sadImg
-                        : e === "angry"
+                        : e === "ANGRY"
                         ? angryImg
-                        : e === "peace"
+                        : e === "PEACE"
                         ? peaceImg
-                        : e === "happy"
+                        : e === "HAPPY"
                         ? happyImg
-                        : e === "surprise"
+                        : e === "SURPRISE"
                         ? surpriseImg
-                        : e === "worry"
+                        : e === "WORRY"
                         ? worryImg
                         : null
                     }

@@ -14,13 +14,16 @@ import worryImg from "../../assets/worry.svg";
 import happyImg from "../../assets/happy.svg";
 import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useInterval } from "utils/utils";
+
+import { useInterval, calEmotion, petTalk } from "utils/utils";
+import { useAppSelector } from "stores/store";
 import react, {useEffect} from "react";
+
 
 const EMOTION_VALUE = {
   sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
@@ -39,6 +42,14 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
   });
   const [tmpContent, setTmpContent] = useState("");
 
+  const [totalTime, setTotalTime] = useState(30);
+  const [timer, setTimer] = useState(1000);
+  const [petTimer, setPetTimer] = useState(null);
+  const [coolTime, setCoolTime] = useState(10);
+  const [canTalk, setCanTalk] = useState(true);
+
+  // user redux
+  const { userInfo } = useAppSelector((state) => state.user);
   const unityEnterCloseUp = () => {
     enterCloseUp();
   }
@@ -170,6 +181,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
   // cors error 방지 https://cors-anywhere.herokuapp.com/
   // CLOVA API
   const sendSentiment = async (content) => {
+    setTimer(null);
     axios
       .post(
         "https://cors-anywhere.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
@@ -184,33 +196,101 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
       )
       .then((res) => {
         console.log(res);
+        console.log(
+          calEmotion(
+            res.data.document.confidence.positive,
+            res.data.document.confidence.negative,
+            res.data.document.confidence.neutral
+          )
+        );
+        console.log(
+          petTalk(
+            calEmotion(
+              res.data.document.confidence.positive,
+              res.data.document.confidence.negative,
+              res.data.document.confidence.neutral
+            ),
+            userInfo.nickname
+          )
+        );
+        console.log(userInfo.nickname);
+        setTotalTime(30);
+        setTimer(1000);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  // useInterval(() => {
-  //   const data = editorRef.current
-  //     .getInstance()
-  //     .getHTML()
-  //     .replace(/<[^>]*>?/g, "");
+  // 자동 타이머
+  useInterval(() => {
+    if (totalTime > 0) {
+      setTotalTime(totalTime - 1);
+    } else {
+      setTotalTime(30);
 
-  //   console.log(data);
-  //   console.log(tmpContent);
+      const data = editorRef.current
+        .getInstance()
+        .getHTML()
+        .replace(/<[^>]*>?/g, "");
 
-  //   if (data.trim() && data.trim() !== tmpContent.trim()) {
-  //     console.log("데이터 보낸다");
-  //     sendSentiment(data);
-  //     setTmpContent(data);
-  //   } else {
-  //     console.log("데이터 안보낸다 바뀐 거 없다");
-  //   }
-  // }, 15000);
+      console.log("data: ", data);
+      console.log("tmpContent: ", tmpContent);
+
+      if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
+        sendSentiment(data);
+        setTmpContent(data);
+        console.log("감정분석 예스");
+      } else {
+        console.log("감정분석엑스");
+      }
+    }
+    console.log(totalTime);
+  }, timer);
+
+  useInterval(() => {
+    if (coolTime > 0) {
+      setCoolTime(coolTime - 1);
+      console.log("cooltime", coolTime);
+    } else {
+      setPetTimer(null);
+      setCanTalk(true);
+      setCoolTime(10);
+    }
+  }, petTimer);
+
+  // 펫 터치시 쿨타임 시작, 자동 타이머 시간 초기화
+  const touchPet = () => {
+    if (canTalk) {
+      const data = editorRef.current
+        .getInstance()
+        .getHTML()
+        .replace(/<[^>]*>?/g, "");
+
+      console.log("data: ", data);
+      console.log("tmpContent: ", tmpContent);
+
+      if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
+        console.log("감정분석");
+        sendSentiment(data);
+        setCanTalk(false);
+        setTmpContent(data);
+        setPetTimer(1000);
+      } else {
+        console.log("감정 분석 안 함");
+      }
+    }
+  };
 
   return (
     <div>
-      <TopNav text="다이어리 작성" />
+      <TopNav
+        text="다이어리 작성"
+        timer={timer}
+        setTimer={setTimer}
+        petTimer={petTimer}
+        setPetTimer={setPetTimer}
+      />
       <div className={styles.contentContainer}>
         <div className={styles.editor}>
           <Editor
@@ -242,7 +322,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
           </div>
           <div className={styles.emotions}>
             <img
-              onClick={() => clickEmotion("angry")}
+              onClick={() => clickEmotion("ANGRY")}
               className={`${styles.emotionImg} ${
                 isChecked("angry") ? styles.checked : null
               }`}
@@ -250,7 +330,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
               alt="emotion"
             />
             <img
-              onClick={() => clickEmotion("sad")}
+              onClick={() => clickEmotion("SAD")}
               className={`${styles.emotionImg} ${
                 isChecked("sad") ? styles.checked : null
               }`}
@@ -258,7 +338,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
               alt="emotion"
             />
             <img
-              onClick={() => clickEmotion("happy")}
+              onClick={() => clickEmotion("HAPPY")}
               className={`${styles.emotionImg} ${
                 isChecked("happy") ? styles.checked : null
               }`}
@@ -266,7 +346,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
               alt="emotion"
             />
             <img
-              onClick={() => clickEmotion("worry")}
+              onClick={() => clickEmotion("WORRY")}
               className={`${styles.emotionImg} ${
                 isChecked("worry") ? styles.checked : null
               }`}
@@ -274,7 +354,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
               alt="emotion"
             />
             <img
-              onClick={() => clickEmotion("peace")}
+              onClick={() => clickEmotion("PEACE")}
               className={`${styles.emotionImg} ${
                 isChecked("peace") ? styles.checked : null
               }`}
@@ -282,7 +362,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
               alt="emotion"
             />
             <img
-              onClick={() => clickEmotion("surprise")}
+              onClick={() => clickEmotion("SURPRISE")}
               className={`${styles.emotionImg} ${
                 isChecked("surprise") ? styles.checked : null
               }`}
@@ -293,15 +373,15 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
           <div
             className={`${styles.emotionExplainBox} 
             ${
-              values.selectedEmotion === "angry"
+              values.selectedEmotion === "ANGRY"
                 ? styles.angryBg
-                : values.selectedEmotion === "sad"
+                : values.selectedEmotion === "SAD"
                 ? styles.sadBg
-                : values.selectedEmotion === "happy"
+                : values.selectedEmotion === "HAPPY"
                 ? styles.happyBg
-                : values.selectedEmotion === "worry"
+                : values.selectedEmotion === "WORRY"
                 ? styles.worryBg
-                : values.selectedEmotion === "peace"
+                : values.selectedEmotion === "PEACE"
                 ? styles.peaceBg
                 : styles.surpriseBg
             }`}
@@ -318,6 +398,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary, enterCloseUp
             </div>
           </div>
         </div>
+        <button onClick={touchPet}>펫 클릭</button>
         <Button
           onClick={handleWriteDiary}
           size="big"

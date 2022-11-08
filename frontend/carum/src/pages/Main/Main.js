@@ -15,6 +15,7 @@ import { fetchProfile } from "apis/user";
 import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
+import { setUserInfo } from "stores/slices/user";
 import React, {useRef} from "react";
 
 function Main() {
@@ -39,6 +40,13 @@ function Main() {
     [dispatch]
   );
 
+  const handleUserInfo = useCallback(
+    (userInfo) => {
+      dispatch(setUserInfo(userInfo));
+    },
+    [dispatch]
+  );
+
   const fetchProfileSuccess = (res) => {
     console.log(res);
     const userInfo = {
@@ -52,6 +60,7 @@ function Main() {
     };
     changeRoom(res.data.mainRoom.id);
     setUser(userInfo);
+    handleUserInfo(userInfo);
   };
 
   const fetchProfileFail = (err) => {
@@ -75,8 +84,8 @@ function Main() {
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="yearly-pet" element={<YearlyPet />} />
-          <Route path="monthly-pet" element={<MonthlyPet />} />
+          <Route path="yearly-pet/:year" element={<YearlyPet />} />
+          <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
         </Routes>
         {location.pathname === "/main" ? <Menu user={user} /> : null}
       </div>

@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./MonthlyPetButton.module.css";
 
-function MonthlyPetButton({ month, pet }) {
+function MonthlyPetButton({ year, month, pet }) {
   const navigate = useNavigate();
 
   return (
     <div
       className={styles.container}
-      onClick={() => navigate("/main/monthly-pet")}
+      onClick={() => navigate(`/main/monthly-pet/${year}/${month}`)}
     >
       {pet ? (
         <div className={styles.pet}></div>
