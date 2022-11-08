@@ -16,18 +16,18 @@ import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 
 function Main() {
   const location = useLocation();
   const childRef = useRef(null);
 
   const enterCloseUp = () => {
-      childRef.current.enterCloseUp();
-  }
+    childRef.current.enterCloseUp();
+  };
   const exitCloseUp = () => {
     childRef.current.exitCloseUp();
-  }
+  };
 
   const [user, setUser] = useState(null);
 
@@ -74,12 +74,20 @@ function Main() {
   return (
     <div className={styles.container}>
       <div className={styles.unity}>
-        <UnityCarum ref = {childRef} />
+        <UnityCarum ref={childRef} />
       </div>
       <div className={location.pathname === "/main" ? styles.contentBox : null}>
         <Routes>
-          <Route path=":state" element={<DiaryWrite enterCloseUp = {enterCloseUp} exitCloseUp = {exitCloseUp}/>} />
-          <Route path="diary/:id" element={<Diary />} />
+          <Route
+            path=":state"
+            element={
+              <DiaryWrite
+                enterCloseUp={enterCloseUp}
+                exitCloseUp={exitCloseUp}
+              />
+            }
+          />
+          <Route path="diary/:id" element={<Diary unityRef={childRef} />} />
           <Route path="calendar" element={<CalendarDiary />} />
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
