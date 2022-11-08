@@ -44,6 +44,10 @@ public class SchedulerService {
             }
 
             History history = historyRepository.findTop1ByYearAndMonthAndUserOrderByCountDesc(year, month, user);
+            if(history == null) {
+                continue;
+            }
+
             String emotion = history.getEmotion();
 
             List<String> tags = new ArrayList<>();
