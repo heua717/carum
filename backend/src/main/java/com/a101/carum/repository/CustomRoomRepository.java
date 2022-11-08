@@ -43,7 +43,8 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
                         room.id,
                         room.name,
                         room.emotionTag,
-                        room.background
+                        room.background,
+                        room.frame
                 ))
                 .from(room)
                 .where(booleanBuilder)
@@ -52,16 +53,14 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
         List<ResGetRoom> roomList = new ArrayList<>();
 
         for(ResGetRoomTemp resGetRoomTemp: roomListTemp){
-            String backgroundTemp = resGetRoomTemp.getBackground();
             String emotionTagTemp = resGetRoomTemp.getEmotionTag();
-
-            List<String> background = List.of(backgroundTemp.split(","));
-            List<String> emotionTag = List.of(emotionTagTemp.split(","));
+            List<String> emotionTag = emotionTagTemp == null? new ArrayList<>(): List.of(emotionTagTemp.split(","));
 
             roomList.add(ResGetRoom.builder()
                             .id(resGetRoomTemp.getId())
                             .name(resGetRoomTemp.getName())
-                            .background(background)
+                            .background(resGetRoomTemp.getBackground())
+                            .frame(resGetRoomTemp.getFrame())
                             .emotionTag(emotionTag)
                             .build());
         }

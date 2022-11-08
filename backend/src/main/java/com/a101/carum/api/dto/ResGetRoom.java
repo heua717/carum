@@ -12,5 +12,6 @@ import java.util.List;
 public class ResGetRoom {
     Long id;
     String name;
-    List<String> emotionTag, background;
+    List<String> emotionTag;
+    Integer background, frame;
 }

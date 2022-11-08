@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetInteriorList {
-    List<String> background;
+    Integer background, frame;
     List<ResGetInterior> interiorList;
 }

@@ -11,5 +11,6 @@ import java.util.List;
 @ToString
 public class ResGetRoomTemp {
     Long id;
-    String name, emotionTag, background;
+    String name, emotionTag;
+    Integer background, frame;
 }

@@ -121,7 +121,8 @@ public class UserService {
         ResGetRoom resGetRoom = ResGetRoom.builder()
                 .id(room.getId())
                 .name(room.getName())
-                .background(List.of(room.getBackground().split(",")))
+                .background(room.getBackground())
+                .frame(room.getFrame())
                 .emotionTag(List.of(room.getEmotionTag().split(",")))
                 .build();
 

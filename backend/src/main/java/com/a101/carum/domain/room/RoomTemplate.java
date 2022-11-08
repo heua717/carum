@@ -22,16 +22,20 @@ public class RoomTemplate {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "background", length = 100)
-    private String background;
+    @Column(name = "background")
+    private Integer background;
+
+    @Column(name = "frame")
+    private Integer frame;
 
     @Column(name = "emotion_tag", length = 500)
     private String emotionTag;
 
     @Builder
-    public RoomTemplate(String name, String background, String emotionTag){
+    public RoomTemplate(String name, Integer background, Integer frame, String emotionTag){
         this.name = name;
         this.background = background;
+        this.frame = frame;
         this.emotionTag = emotionTag;
     }
 
@@ -39,11 +43,15 @@ public class RoomTemplate {
         this.name = name;
     }
 
-    public void updateBackground(String background){
+    public void updateBackground(Integer background){
         this.background = background;
     }
 
     public void updateEmotionTag(String emotionTag){
         this.emotionTag = emotionTag;
+    }
+
+    public void updateFrame(Integer frame) {
+        this.frame = frame;
     }
 }
