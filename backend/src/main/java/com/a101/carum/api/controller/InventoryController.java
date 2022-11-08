@@ -1,10 +1,12 @@
 package com.a101.carum.api.controller;
 
+import com.a101.carum.api.dto.ReqGetInventory;
 import com.a101.carum.service.InventoryService;
 import com.a101.carum.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +21,8 @@ public class InventoryController {
     private final JwtService jwtService;
 
     @GetMapping()
-    public ResponseEntity readInventory(HttpServletRequest request){
+    public ResponseEntity readInventory(@ModelAttribute ReqGetInventory reqGetInventory, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok(inventoryService.readInventory(id));
+        return ResponseEntity.ok(inventoryService.readInventory(reqGetInventory, id));
     }
 }

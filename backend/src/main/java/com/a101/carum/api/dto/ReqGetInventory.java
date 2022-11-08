@@ -10,7 +10,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ReqGetFurnitureList {
+public class ReqGetInventory {
     String keyword;
     FurnitureType type;
 }

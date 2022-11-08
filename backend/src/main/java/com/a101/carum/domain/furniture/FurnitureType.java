@@ -3,7 +3,7 @@ package com.a101.carum.domain.furniture;
 public enum FurnitureType {
     BED
     ,KITCHEN
-    ,LAUNDRY_BAT
+    ,LAUNDRY_BATH
     ,WALL
     ,FLOOR
     ,OUTSIDE
