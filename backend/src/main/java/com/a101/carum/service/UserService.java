@@ -62,7 +62,7 @@ public class UserService {
 
         user = userRepository.save(user);
 
-        templateConversionService.createNewRoomAll(user);
+        //templateConversionService.createNewRoomAll(user);
 
         Room room = roomRepository.findTop1ByUserOrderByIdAsc(user)
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));;

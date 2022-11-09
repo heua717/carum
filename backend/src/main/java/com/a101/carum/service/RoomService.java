@@ -48,7 +48,7 @@ public class RoomService {
         }
         userDetail.updateMoney(ROOM_PRICE, '-');
 
-        templateConversionService.createNewRoom(user, reqPostRoom);
+        //templateConversionService.createNewRoom(user, reqPostRoom);
     }
 
     @Transactional
@@ -186,7 +186,7 @@ public class RoomService {
         interiorRepository.flush();
         playlistRepository.flush();
 
-        templateConversionService.initializeRoom(room);
+        //templateConversionService.initializeRoom(room);
     }
 
     @Transactional
