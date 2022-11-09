@@ -84,6 +84,7 @@ public class TemplateConversionService {
         Room room = roomRepository.save(Room.builder()
                         .user(user)
                         .name(reqPostRoom != null? reqPostRoom.getName():roomTemplate.getName())
+                        .frame(roomTemplate.getFrame())
                         .background(roomTemplate.getBackground())
                         .emotionTag(roomTemplate.getEmotionTag())
                         .build());
@@ -98,6 +99,7 @@ public class TemplateConversionService {
 
         RoomTemplate room = roomTemplateRepository.save(RoomTemplate.builder()
                 .name(reqPostRoom != null? reqPostRoom.getName():roomTemplate.getName())
+                .frame(roomTemplate.getFrame())
                 .background(roomTemplate.getBackground())
                 .emotionTag(roomTemplate.getEmotionTag())
                 .build());
@@ -110,6 +112,7 @@ public class TemplateConversionService {
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
 
+        room.updateFrame(roomTemplate.getFrame());
         room.updateBackground(roomTemplate.getBackground());
         room.updateEmotionTag(room.getEmotionTag());
 
@@ -121,6 +124,7 @@ public class TemplateConversionService {
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
 
+        room.updateFrame(roomTemplate.getFrame());
         room.updateBackground(roomTemplate.getBackground());
         room.updateEmotionTag(room.getEmotionTag());
 
