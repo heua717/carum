@@ -38,6 +38,7 @@ public class DiaryService {
         User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
         Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user).orElse(null);
         UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(()-> new NullPointerException("User정보가 손상 되었습니다."));
+        userDetail.updateMoney(100L, '+');
         if(diary!=null){
             throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
         }

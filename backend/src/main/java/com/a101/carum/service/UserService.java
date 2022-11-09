@@ -71,6 +71,7 @@ public class UserService {
                 .user(user)
                 .room(room)
                 .build();
+        userDetail.updateMoney(500L, '+');
 
         userDetailRepository.save(userDetail);
     }

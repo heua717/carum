@@ -27,7 +27,7 @@ public class SchedulerService {
     private final PetRepository petRepository;
     private final CustomPetDailyRepository petDailyRepository;
     @Transactional
-    @Scheduled(cron = "0 0 0 9 * *")
+    @Scheduled(cron = "1 0 0 1 * *")
     public void initializeRoom(){
         LocalDate date = LocalDate.now().minusDays(1);
         Integer year = date.getYear();
