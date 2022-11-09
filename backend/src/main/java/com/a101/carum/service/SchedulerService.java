@@ -67,6 +67,9 @@ public class SchedulerService {
                     .build();
 
             petRepository.save(pet);
+
+            // 매 달 들어왔는지 확인하기 위하는 부분
+            userDetail.updatePetType(null);
         }
     }
 }

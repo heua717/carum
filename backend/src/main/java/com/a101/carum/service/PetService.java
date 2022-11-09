@@ -71,7 +71,7 @@ public class PetService {
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
         // 이 달에 일기를 쓴적이 없어야 수정 가능
-        if (!inMonth(userDetail.getLastDiary())){
+        if (userDetail.getLastDiary() == null || !inMonth(userDetail.getLastDiary())){
             userDetail.updatePetType(reqPostPet.getType());
         } else {
             throw new UnUpdatableException("이 달의 펫을 수정하실 수 없습니다.");
