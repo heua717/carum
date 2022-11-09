@@ -134,7 +134,7 @@ public class UserService {
         resGetUserBuilder
                 .mainRoom(resGetRoom);
 
-        if(userDetail.getLastDiary() != null || userDetail.getLastDiary().equals(LocalDate.now())) {
+        if(userDetail.getLastDiary() != null && userDetail.getLastDiary().equals(LocalDate.now())) {
             resGetUserBuilder
                     .dailyColor(userDetail.getDailyColor())
                     .dailyFace(userDetail.getDailyFace())
