@@ -1,10 +1,10 @@
 import styles from "./Menu.module.css";
 import Checkbox from "@material-ui/core/Checkbox";
 import MenuBtn from "./MenuButton";
-import PetsIcon from "@material-ui/icons/Pets";
-import StoreIcon from "@material-ui/icons/Store";
-import PersonIcon from "@material-ui/icons/Person";
-import MeetingRoomIcon from "@material-ui/icons/MeetingRoom";
+import PetsIcon from "@mui/icons-material/Pets";
+import StoreIcon from "@mui/icons-material/Store";
+import PersonIcon from "@mui/icons-material/Person";
+import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -30,34 +30,44 @@ function Menu({ user }) {
         <div className={styles.menuRow}>
           <MenuBtn
             onClick={() => openPage("write")}
-            icon={<i className={`bx bxs-book ${styles.large}`}></i>}
+            icon={
+              <i
+                className={`bx bxs-book ${styles.large} ${styles.diaryIcon}`}
+              ></i>
+            }
             menuText="다이어리"
           />
           <MenuBtn
             onClick={() => openPage("calendar")}
-            icon={<i className={`bx bx-calendar ${styles.large}`}></i>}
+            icon={
+              <i
+                className={`bx bx-calendar ${styles.large} ${styles.calendarIcon}`}
+              ></i>
+            }
             menuText="내일기"
           />
           <MenuBtn
             onClick={() => openPage(`yearly-pet/${new Date().getFullYear()}`)}
-            icon={<PetsIcon fontSize="large" />}
+            icon={<PetsIcon sx={{ color: "#645CAA" }} fontSize="large" />}
             menuText="펫조회"
           />
         </div>
         <div className={styles.menuRow}>
           <MenuBtn
             onClick={() => openPage("room")}
-            icon={<MeetingRoomIcon fontSize="large" />}
+            icon={
+              <MeetingRoomIcon sx={{ color: "#645CAA" }} fontSize="large" />
+            }
             menuText="방 이동"
           />
           <MenuBtn
             onClick={() => openPage("shop")}
-            icon={<StoreIcon fontSize="large" />}
+            icon={<StoreIcon sx={{ color: "#645CAA" }} fontSize="large" />}
             menuText="상점"
           />
           <MenuBtn
             onClick={() => openPage("profile")}
-            icon={<PersonIcon fontSize="large" />}
+            icon={<PersonIcon sx={{ color: "#645CAA" }} fontSize="large" />}
             menuText="내정보"
           />
         </div>

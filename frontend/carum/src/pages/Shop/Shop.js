@@ -204,7 +204,7 @@ function Shop() {
         </div>
       </div>
       {place === "shop" ? (
-        <div>
+        <div className={styles.contentContainer}>
           <div className={styles.searchBox}>
             <input
               className={styles.inputBox}
