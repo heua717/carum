@@ -206,22 +206,6 @@ function Shop() {
       {place === "shop" ? (
         <div>
           <div className={styles.searchBox}>
-            {/* <MenuIcon onClick={handleMenuClick} id="menu-bth" />
-            <Menu
-              anchorEl={anchorEl}
-              open={isMenuOpened}
-              onClose={handleMenuClose}
-              MenuListProps={{ "aria-labelledby": "menu-btn" }}
-              sx={{ maxHeight: "200px" }}
-            >
-              {furnitureCategory.map((el, idx) => {
-                return (
-                  <MenuItem onClick={() => handleMenuClose(idx)} key={idx}>
-                    {el.name}
-                  </MenuItem>
-                );
-              })}
-            </Menu> */}
             <input
               className={styles.inputBox}
               value={searchText}

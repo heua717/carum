@@ -1,6 +1,7 @@
 .contentBox {
   width: 300px;
   display: flex;
+  height: 50vh;
   justify-content: space-evenly;
   flex-direction: column;
   margin: 4px auto;
@@ -16,6 +17,7 @@
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
+  min-height: 46vh;
 }
 
 .pagination {

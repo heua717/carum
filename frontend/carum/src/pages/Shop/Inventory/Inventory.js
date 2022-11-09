@@ -45,11 +45,13 @@ function Inventory({ place }) {
       {inventoryList?.length > 0 ? (
         <div className={styles.contentBox}>
           <div className={styles.furnitures}>
-            {inventoryList.map((el, idx) => {
-              return (
-                <FurnitureComponent key={idx} name={el.name} place={place} />
-              );
-            })}
+            {inventoryList
+              .slice((newPage - 1) * 9, newPage * 9)
+              .map((el, idx) => {
+                return (
+                  <FurnitureComponent key={idx} name={el.name} place={place} />
+                );
+              })}
           </div>
           <Pagination
             size="small"

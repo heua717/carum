@@ -17,6 +17,7 @@ import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
 import React, { useRef } from "react";
+import jwt_decode from "jwt-decode";
 
 function Main() {
   const location = useLocation();
@@ -69,6 +70,10 @@ function Main() {
 
   useEffect(() => {
     fetchProfile(fetchProfileSuccess, fetchProfileFail);
+    const token = sessionStorage.getItem("access-token");
+    const decoded = jwt_decode(token).exp;
+    console.log(decoded * 1000);
+    console.log(parseInt(Date.now()));
   }, []);
 
   return (

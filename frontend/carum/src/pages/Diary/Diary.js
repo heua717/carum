@@ -154,6 +154,15 @@ function Diary({ unityRef }) {
     });
   };
 
+  const handleChangeBackgroundColor = (col) => {
+    setCurBackgroundColor(col);
+    setShowColorPickerBar(false);
+
+    const newColorPickerBar = [...color];
+    newColorPickerBar.splice(color.indexOf(col), 1);
+    setColorBar(newColorPickerBar);
+  };
+
   return (
     <div>
       {curState === "read" ? (
@@ -205,10 +214,7 @@ function Diary({ unityRef }) {
                     <div
                       className={`${styles.colors} ${setBackgroundColor(col)}`}
                       key={idx}
-                      onClick={() => {
-                        setCurBackgroundColor(col);
-                        setShowColorPickerBar(false);
-                      }}
+                      onClick={() => handleChangeBackgroundColor(col)}
                     ></div>
                   ))}
                 </div>
