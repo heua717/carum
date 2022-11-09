@@ -1,5 +1,4 @@
 import styles from "./Menu.module.css";
-import Checkbox from "@material-ui/core/Checkbox";
 import MenuBtn from "./MenuButton";
 import PetsIcon from "@mui/icons-material/Pets";
 import StoreIcon from "@mui/icons-material/Store";
@@ -20,7 +19,7 @@ function Menu({ user }) {
         timer: 800,
       });
     } else {
-      navigate(`/main/${page}`);
+      navigate(`/${page}`);
     }
   };
 

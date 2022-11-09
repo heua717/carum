@@ -7,7 +7,7 @@ function MonthlyPetButton({ year, month, pet }) {
   return (
     <div
       className={styles.container}
-      onClick={() => navigate(`/main/monthly-pet/${year}/${month}`)}
+      onClick={() => navigate(`/monthly-pet/${year}/${month}`)}
     >
       {pet ? (
         <div className={styles.pet}></div>

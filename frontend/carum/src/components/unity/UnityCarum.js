@@ -98,9 +98,10 @@ function UnityCarum({}, ref) {
       <Unity
         style={{
           width: "100%",
-          height: "40vh",
+          height: "42vh",
           justifySelf: "center",
           visibility: isLoaded ? "visible" : "hidden",
+          borderRadius: "0 0 20px 20px",
         }}
         unityProvider={unityProvider}
       />

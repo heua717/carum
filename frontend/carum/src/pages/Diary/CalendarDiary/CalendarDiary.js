@@ -99,7 +99,7 @@ function CalendarDiary() {
     });
 
     if (idx !== -1) {
-      navigate(`/main/diary/${diary[idx].id}`);
+      navigate(`/diary/${diary[idx].id}`);
     }
     setValue(e);
     console.log(e);

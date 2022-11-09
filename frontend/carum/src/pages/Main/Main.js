@@ -17,7 +17,6 @@ import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
 import React, { useRef } from "react";
-import jwt_decode from "jwt-decode";
 
 function Main() {
   const location = useLocation();
@@ -69,19 +68,17 @@ function Main() {
   };
 
   useEffect(() => {
-    fetchProfile(fetchProfileSuccess, fetchProfileFail);
-    const token = sessionStorage.getItem("access-token");
-    const decoded = jwt_decode(token).exp;
-    console.log(decoded * 1000);
-    console.log(parseInt(Date.now()));
-  }, []);
+    if (location.pathname === "/") {
+      fetchProfile(fetchProfileSuccess, fetchProfileFail);
+    }
+  }, [location.pathname]);
 
   return (
     <div className={styles.container}>
       <div className={styles.unity}>
         <UnityCarum ref={childRef} />
       </div>
-      <div className={location.pathname === "/main" ? styles.contentBox : null}>
+      <div className={location.pathname === "/" ? styles.contentBox : null}>
         <Routes>
           <Route
             path=":state"
@@ -100,7 +97,7 @@ function Main() {
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
         </Routes>
-        {location.pathname === "/main" ? <Menu user={user} /> : null}
+        {location.pathname === "/" ? <Menu user={user} /> : null}
       </div>
     </div>
   );

@@ -115,7 +115,7 @@ function DiaryWrite({
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
     console.log(res);
-    navigate("/main/calendar");
+    navigate("/calendar");
   };
 
   const writeDiaryFail = (err) => {

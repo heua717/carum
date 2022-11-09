@@ -34,7 +34,7 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
   const navigate = useNavigate();
 
   const readDiary = (id) => {
-    navigate(`/main/diary/${id}`);
+    navigate(`/diary/${id}`);
   };
 
   useEffect(() => {

@@ -5,7 +5,7 @@ function CheckAuth({ children }) {
   const token = sessionStorage.getItem("access-token");
 
   if (!token) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return children;

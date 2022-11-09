@@ -71,7 +71,7 @@ function Item(props) {
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
       //끝나면 main으로 돌아가라
-      navigate(`/main`);
+      navigate(`/`);
     }
   };
 

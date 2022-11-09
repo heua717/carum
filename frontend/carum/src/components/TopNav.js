@@ -13,10 +13,10 @@ function TopNav({
   const navigate = useNavigate();
   const location = useLocation();
   const goTo = () => {
-    if (location.pathname === "/main/diary") {
-      navigate("/main/calendar");
-    } else if (location.pathname === "/main/calendar") {
-      navigate("/main");
+    if (location.pathname === "/diary") {
+      navigate("/calendar");
+    } else if (location.pathname === "/calendar") {
+      navigate("/");
     } else {
       if (timer) {
         clearInterval(timer);
