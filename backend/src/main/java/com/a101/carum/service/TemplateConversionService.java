@@ -5,6 +5,7 @@ import com.a101.carum.domain.ServiceType;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
 import com.a101.carum.domain.interior.InteriorTemplate;
+import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.playlist.PlaylistTemplate;
 import com.a101.carum.domain.room.Room;
@@ -46,6 +47,8 @@ public class TemplateConversionService {
     private final PlaylistRepository playlistRepository;
     private final PlaylistTemplateRepository playlistTemplateRepository;
 
+    private final InventoryRepository inventoryRepository;
+
     @Transactional
     public void createNewRoomAll(User user){
         for(Long templateId:TEMPLATE_LIST){
@@ -85,7 +88,7 @@ public class TemplateConversionService {
                         .emotionTag(roomTemplate.getEmotionTag())
                         .build());
 
-        templateToRoomDetail(room, roomTemplate);
+        templateToRoomDetail(room, roomTemplate, user);
     }
 
     @Transactional
@@ -110,7 +113,7 @@ public class TemplateConversionService {
         room.updateBackground(roomTemplate.getBackground());
         room.updateEmotionTag(room.getEmotionTag());
 
-        templateToRoomDetail(room, roomTemplate);
+        templateToRoomDetail(room, roomTemplate, null);
     }
 
     @Transactional
@@ -125,7 +128,7 @@ public class TemplateConversionService {
     }
 
     @Transactional
-    public void templateToRoomDetail(Room room, RoomTemplate roomTemplate){
+    public void templateToRoomDetail(Room room, RoomTemplate roomTemplate, User user){
         List<InteriorTemplate> interiorTemplateList = interiorTemplateRepository.findByRoomTemplate(roomTemplate);
         List<PlaylistTemplate> playlistTemplateList = playlistTemplateRepository.findByRoomTemplate(roomTemplate,Sort.by(Sort.Direction.ASC, "id"));
 
@@ -140,6 +143,16 @@ public class TemplateConversionService {
                     .rotY(template.getRotY())
                     .rotZ(template.getRotZ())
                     .build());
+
+            Inventory inventory = inventoryRepository.findByUserAndFurniture(user, template.getFurniture()).orElse(null);
+            if (inventory == null) {
+                inventoryRepository.save(
+                        Inventory.builder()
+                                .user(user)
+                                .furniture(template.getFurniture())
+                                .build()
+                );
+            }
         }
 
         for(PlaylistTemplate template: playlistTemplateList){

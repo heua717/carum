@@ -1,10 +1,7 @@
 package com.a101.carum.domain.history;
 
 import com.a101.carum.domain.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -18,6 +15,7 @@ import javax.persistence.*;
 @Builder
 @DynamicInsert
 @DynamicUpdate
+@ToString
 public class History {
 
     @Id

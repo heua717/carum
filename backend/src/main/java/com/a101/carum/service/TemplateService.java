@@ -69,18 +69,15 @@ public class TemplateService {
         List<ResGetRoom> roomList = new ArrayList<>();
 
         for(RoomTemplate roomTemplate: roomTemplateList){
-            String backgroundTemp = roomTemplate.getBackground();
             String emotionTagTemp = roomTemplate.getEmotionTag();
-
-            List<String> background = List.of(backgroundTemp.split(","));
-            List<String> emotionTag = List.of(emotionTagTemp.split(","));
-
+            List<String> emotionTag = emotionTagTemp == null? new ArrayList<>():List.of(emotionTagTemp.split(","));
             roomList.add(ResGetRoom.builder()
-                            .id(roomTemplate.getId())
-                            .name(roomTemplate.getName())
-                            .background(background)
-                            .emotionTag(emotionTag)
-                            .build());
+                    .id(roomTemplate.getId())
+                    .name(roomTemplate.getName())
+                    .background(roomTemplate.getBackground())
+                    .frame(roomTemplate.getFrame())
+                    .emotionTag(emotionTag)
+                    .build());
         }
 
         return ResGetRoomList.builder()
@@ -93,13 +90,9 @@ public class TemplateService {
         checkUser(id);
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-        if(reqPutRoom.getBackground() != null) {
-            StringBuilder sb = new StringBuilder();
-            for(String color: reqPutRoom.getBackground()){
-                sb.append(color).append(",");
-            }
-            roomTemplate.updateBackground(sb.toString());
-        }
+
+        roomTemplate.updateBackground(reqPutRoom.getBackground());
+        roomTemplate.updateFrame(reqPutRoom.getFrame());
 
         if(reqPutRoom.getInteriorList() != null) {
             for (ReqPutRoomDetail reqPutRoomDetail : reqPutRoom.getInteriorList()) {
@@ -165,7 +158,8 @@ public class TemplateService {
                     .build());
         }
         return ResGetInteriorList.builder()
-                .background(List.of(roomTemplate.getBackground().split(",")))
+                .background(roomTemplate.getBackground())
+                .frame(roomTemplate.getFrame())
                 .interiorList(interiorList)
                 .build();
     }

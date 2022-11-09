@@ -25,6 +25,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -121,14 +122,19 @@ public class UserService {
         ResGetRoom resGetRoom = ResGetRoom.builder()
                 .id(room.getId())
                 .name(room.getName())
-                .background(List.of(room.getBackground().split(",")))
-                .emotionTag(List.of(room.getEmotionTag().split(",")))
+                .background(room.getBackground())
+                .frame(room.getFrame())
+                .emotionTag(
+                        room.getEmotionTag() == null ?
+                             new ArrayList<>()
+                            :List.of(room.getEmotionTag().split(","))
+                )
                 .build();
 
         resGetUserBuilder
                 .mainRoom(resGetRoom);
 
-        if(userDetail.getLastDiary().equals(LocalDate.now())) {
+        if(userDetail.getLastDiary() == null || userDetail.getLastDiary().equals(LocalDate.now())) {
             resGetUserBuilder
                     .dailyColor(userDetail.getDailyColor())
                     .dailyFace(userDetail.getDailyFace())

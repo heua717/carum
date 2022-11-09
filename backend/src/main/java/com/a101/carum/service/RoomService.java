@@ -97,13 +97,8 @@ public class RoomService {
         Room room = roomRepository.findByIdAndUser(roomId, user)
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
 
-        if(reqPutRoom.getBackground() != null) {
-            StringBuilder sb = new StringBuilder();
-            for(String color: reqPutRoom.getBackground()){
-                sb.append(color).append(",");
-            }
-            room.updateBackground(sb.toString());
-        }
+        room.updateBackground(reqPutRoom.getBackground());
+        room.updateFrame(reqPutRoom.getFrame());
 
         if(reqPutRoom.getInteriorList() != null) {
             for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriorList()){
@@ -172,7 +167,8 @@ public class RoomService {
         }
 
         return ResGetInteriorList.builder()
-                .background(List.of(room.getBackground().split(",")))
+                .background(room.getBackground())
+                .frame(room.getFrame())
                 .interiorList(interiorList)
                 .build();
     }

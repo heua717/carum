@@ -91,7 +91,7 @@ public class PetService {
         Pet pet = petRepository.findByIdAndUser(petId, user)
                 .orElseThrow(() -> new NullPointerException("Pet이 없습니다."));
 
-        return createResGetPet(pet);
+        return createResGetPet(pet, LocalDate.now().getYear(), LocalDate.now().getMonthValue());
     }
 
     @Transactional
@@ -133,11 +133,11 @@ public class PetService {
         Pet pet = petRepository.findByYearAndMonthAndUser(year, month, user)
                 .orElseThrow(() -> new NullPointerException("Monthly Pet을 찾을 수 없습니다."));
 
-        return createResGetPet(pet);
+        return createResGetPet(pet, year, month);
     }
 
     @Transactional
-    public ResGetPet createResGetPet(Pet pet){
+    public ResGetPet createResGetPet(Pet pet, Integer year, Integer month){
         ResGetPet.ResGetPetBuilder resGetPetBuilder = ResGetPet.builder();
         resGetPetBuilder
                 .id(pet.getId())
@@ -148,7 +148,7 @@ public class PetService {
         Map<String, Long> emotionMap = new HashMap<>();
         for(String emotion: emotions){
             History history = historyRepository.findByEmotionAndYearAndMonth(
-                    emotion, LocalDate.now().getYear(), LocalDate.now().getMonthValue()
+                    emotion, year, month
             );
 
             if (history == null){

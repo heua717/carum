@@ -26,10 +26,14 @@ public class CustomPetDailyRepository  extends QuerydslRepositorySupport {
     public PetDaily getPetDaily(List<String> tags, PetType petType) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
-        if(tags != null && tags.size() > 0) {
-            for(String tag : tags){
-                System.out.println(tag);
-                booleanBuilder.and(petDaily.emotionTag.contains(tag));
+        if(tags != null){
+            if(tags.size() > 1) {
+                for (String tag : tags) {
+                    System.out.println(tag);
+                    booleanBuilder.and(petDaily.emotionTag.contains(tag));
+                }
+            } else {
+                booleanBuilder.and(petDaily.emotionTag.eq(tags.get(0)));
             }
         }
         System.out.println(petType);
