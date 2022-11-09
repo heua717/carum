@@ -54,6 +54,17 @@ function Diary({ unityRef }) {
   const [curBackgroundColor, setCurBackgroundColor] = useState("indigo");
   const { id } = useParams();
 
+  const diaryRef = useRef();
+  const curBackgroundColorRef = useRef();
+
+  useEffect(() => {
+    diaryRef.current = diary;
+  }, [diary]);
+
+  useEffect(() => {
+    curBackgroundColorRef.current = curBackgroundColor;
+  }, [curBackgroundColor]);
+
   // unity
 
   const enterCloseUp = () => {
@@ -86,12 +97,15 @@ function Diary({ unityRef }) {
 
   useEffect(() => {
     return () => {
-      console.log(diary);
-      if (diary && diary?.background !== curBackgroundColor) {
+      if (diaryRef.current?.background !== curBackgroundColorRef.current) {
+        console.log(
+          diaryRef.current?.background,
+          curBackgroundColorRef.current
+        );
         const payload = {
-          content: diary?.content,
-          emotionTag: diary?.emotionTag,
-          background: curBackgroundColor,
+          content: diaryRef.current?.content,
+          emotionTag: diaryRef.current?.emotionTag,
+          background: curBackgroundColorRef.current,
           diaryId: id,
         };
 
@@ -108,7 +122,7 @@ function Diary({ unityRef }) {
         );
       }
     };
-  }, [diary]);
+  }, []);
 
   // 다이어리 비우기
   const deleteDiaryContentSuccess = (res) => {
