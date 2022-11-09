@@ -17,6 +17,10 @@ import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
 import React, { useRef } from "react";
+import { Dialog } from "@mui/material";
+import { chooseMonthlyPet } from "apis/pet";
+import dinoImage from "assets/dino.png";
+import whaleImage from "assets/whale.png";
 
 function Main() {
   const location = useLocation();
@@ -30,6 +34,7 @@ function Main() {
   };
 
   const [user, setUser] = useState(null);
+  const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -61,6 +66,10 @@ function Main() {
     changeRoom(res.data.mainRoom.id);
     setUser(userInfo);
     handleUserInfo(userInfo);
+
+    if (!res.data.petType) {
+      setPetChooseModalOpen(true);
+    }
   };
 
   const fetchProfileFail = (err) => {
@@ -72,6 +81,20 @@ function Main() {
       fetchProfile(fetchProfileSuccess, fetchProfileFail);
     }
   }, [location.pathname]);
+
+  // 펫 고르기
+  const chooseMonthlyPetSuccess = (res) => {
+    console.log(res);
+    setPetChooseModalOpen(false);
+  };
+
+  const chooseMonthlyPetFail = (err) => {
+    console.log(err);
+  };
+
+  const handleChoosePet = (type) => {
+    chooseMonthlyPet(type, chooseMonthlyPetSuccess, chooseMonthlyPetFail);
+  };
 
   return (
     <div className={styles.container}>
@@ -99,6 +122,23 @@ function Main() {
         </Routes>
         {location.pathname === "/" ? <Menu user={user} /> : null}
       </div>
+      <Dialog open={petChooseModalOpen}>
+        <div className={styles.petChooseModal}>
+          <h3>이번 달 함께 할 펫을 골라주세요!</h3>
+          <div
+            className={styles.petImageContainer}
+            onClick={() => handleChoosePet("WHALE")}
+          >
+            <img src={dinoImage} />
+          </div>
+          <div
+            className={styles.petImageContainer}
+            onClick={() => handleChoosePet("DINO")}
+          >
+            <img src={whaleImage} />
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }
