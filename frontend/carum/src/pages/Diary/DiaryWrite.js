@@ -31,6 +31,9 @@ const EMOTION_VALUE = {
   ANGRY: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
 };
 
+const TIME = 20;
+const COOL_TIME = 10;
+
 function DiaryWrite({
   state,
   diary,
@@ -47,10 +50,10 @@ function DiaryWrite({
   });
   const [tmpContent, setTmpContent] = useState("");
 
-  const [totalTime, setTotalTime] = useState(30);
+  const [totalTime, setTotalTime] = useState(TIME);
   const [timer, setTimer] = useState(1000);
   const [petTimer, setPetTimer] = useState(null);
-  const [coolTime, setCoolTime] = useState(10);
+  const [coolTime, setCoolTime] = useState(COOL_TIME);
   const [canTalk, setCanTalk] = useState(true);
 
   // user redux
@@ -219,7 +222,7 @@ function DiaryWrite({
           )
         );
         console.log(userInfo.nickname);
-        setTotalTime(30);
+        setTotalTime(TIME);
         setTimer(1000);
       })
       .catch((err) => {
@@ -232,7 +235,7 @@ function DiaryWrite({
     if (totalTime > 0) {
       setTotalTime(totalTime - 1);
     } else {
-      setTotalTime(30);
+      setTotalTime(TIME);
 
       const data = editorRef.current
         .getInstance()
@@ -260,7 +263,7 @@ function DiaryWrite({
     } else {
       setPetTimer(null);
       setCanTalk(true);
-      setCoolTime(10);
+      setCoolTime(COOL_TIME);
     }
   }, petTimer);
 
