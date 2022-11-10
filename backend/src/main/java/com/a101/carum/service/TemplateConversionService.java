@@ -4,9 +4,9 @@ import com.a101.carum.api.dto.ReqPostRoom;
 import com.a101.carum.domain.interior.Interior;
 import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.playlist.Playlist;
-import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
 import com.a101.carum.domain.room.RoomTemplate;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.repository.*;
 import com.a101.carum.util.RoomParentFactory;
@@ -45,14 +45,14 @@ public class TemplateConversionService {
     }
 
     @Transactional
-    public void createBaseRoom(User user, ReqPostRoom reqPostRoom) {
-        createRoomParent(user, reqPostRoom.getName(), TEMPLATE_BASE);
+    public void createBaseRoom(User user, ReqPostRoom reqPostRoom, RoomType roomType) {
+        createRoomParent(user, reqPostRoom.getName(), TEMPLATE_BASE, roomType);
     }
 
     @Transactional
     public void createNewRoomAll(User user) {
         for(Long templateId: TEMPLATE_LIST){
-            createRoomParent(user, null, templateId);
+            createRoomParent(user, null, templateId, RoomType.ROOM);
         }
     }
 
@@ -74,7 +74,7 @@ public class TemplateConversionService {
     }
 
     @Transactional
-    public void createRoomParent(User user, String name, Long templateId){
+    public void createRoomParent(User user, String name, Long templateId, RoomType roomType){
         RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
                 .orElseThrow(() -> {throw new NullPointerException("템플릿이 없습니다.");});
         RoomParent roomParent = roomParentFactory.createRoomParent(
@@ -82,7 +82,8 @@ public class TemplateConversionService {
                 name != null? name:roomTemplate.getName(),
                 roomTemplate.getBackground(),
                 roomTemplate.getFrame(),
-                roomTemplate.getEmotionTag()
+                roomTemplate.getEmotionTag(),
+                roomType
         );
         roomParent = roomParentRepository.save(roomParent);
         setRoomDetail(roomParent, roomTemplate, user);

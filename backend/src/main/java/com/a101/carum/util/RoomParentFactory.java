@@ -1,6 +1,5 @@
 package com.a101.carum.util;
 
-import com.a101.carum.api.dto.ReqPostRoom;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
@@ -21,8 +20,8 @@ public class RoomParentFactory {
     private final RoomRepository roomRepository;
     private final RoomTemplateRepository roomTemplateRepository;
 
-    public RoomParent createRoomParent(User user, String name, Integer background, Integer frame, String emotionTag) {
-        if(user == null) {
+    public RoomParent createRoomParent(User user, String name, Integer background, Integer frame, String emotionTag, RoomType roomType) {
+        if(roomType == RoomType.TEMPLATE) {
             return RoomTemplate.builder()
                     .name(name)
                     .frame(frame)

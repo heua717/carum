@@ -5,6 +5,7 @@ import com.a101.carum.api.dto.ResGetRoomTemp;
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.domain.user.User;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -29,12 +30,12 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public List<ResGetRoom> readRoomList(User user, List<String> tags) {
-        BooleanBuilder booleanBuilder =  getBooleanBuilder(user, tags);
+    public List<ResGetRoom> readRoomList(User user, List<String> tags, RoomType roomType) {
+        BooleanBuilder booleanBuilder =  getBooleanBuilder(user, tags, roomType);
 
         List<ResGetRoomTemp> roomListTemp;
 
-        if(user != null) {
+        if(roomType == RoomType.ROOM) {
             roomListTemp = queryFactory
                     .select(Projections.bean(
                             ResGetRoomTemp.class,
@@ -64,9 +65,9 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
         return tmpToDto(roomListTemp);
     }
 
-    public BooleanBuilder getBooleanBuilder(User user, List<String> tags){
+    public BooleanBuilder getBooleanBuilder(User user, List<String> tags, RoomType roomType){
         BooleanBuilder booleanBuilder =  new BooleanBuilder();
-        if(user != null){
+        if(roomType == RoomType.ROOM){
             booleanBuilder.and(room.user.eq(user));
             if(tags != null){
                 for(String tag:tags){

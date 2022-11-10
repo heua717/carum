@@ -60,7 +60,7 @@ public class RoomService {
             throw new UnAuthorizedException("권한이 없습니다.");
         }
 
-        templateConversionService.createBaseRoom(user, reqPostRoom);
+        templateConversionService.createBaseRoom(user, reqPostRoom, roomType);
     }
 
     @Transactional
@@ -98,7 +98,7 @@ public class RoomService {
             );
         }
 
-        List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags());
+        List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags(), roomType);
         resGetRoomListBuilder.roomList(roomList);
         return resGetRoomListBuilder.build();
     }
