@@ -48,7 +48,7 @@ public class RoomService {
         }
         userDetail.updateMoney(ROOM_PRICE, '-');
 
-        //templateConversionService.createNewRoom(user, reqPostRoom);
+        templateConversionService.createBaseRoom(user, reqPostRoom);
     }
 
     @Transactional
