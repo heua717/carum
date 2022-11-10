@@ -8,9 +8,13 @@ import com.a101.carum.domain.interior.Interior;
 import com.a101.carum.domain.music.Music;
 import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomParent;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.domain.user.UserType;
 import com.a101.carum.repository.*;
+import com.a101.carum.util.RoomParentFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,6 +30,9 @@ public class RoomService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final RoomRepository roomRepository;
+
+    private final RoomTemplateRepository roomTemplateRepository;
+    private final RoomParentRepository roomParentRepository;
     private final CustomRoomRepository customRoomRepository;
     private final InteriorRepository interiorRepository;
     private final FurnitureRepository furnitureRepository;
@@ -33,30 +40,34 @@ public class RoomService {
     private final PlaylistRepository playlistRepository;
     private final MusicRepository musicRepository;
     private final TemplateConversionService templateConversionService;
+    private final RoomParentFactory roomParentFactory;
 
     private final Long ROOM_PRICE = 50L;
 
     @Transactional
-    public void createRoom(ReqPostRoom reqPostRoom, Long id) {
+    public void createRoom(ReqPostRoom reqPostRoom, Long id, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
-        if(userDetail.getMoney() < ROOM_PRICE) {
-            throw new LessMoneyException("방을 살 돈이 없습니다.");
+        if(roomType == RoomType.ROOM){
+            if(userDetail.getMoney() < ROOM_PRICE) {
+                throw new LessMoneyException("방을 살 돈이 없습니다.");
+            }
+            userDetail.updateMoney(ROOM_PRICE, '-');
+        } else if(user.getUserType() != UserType.ADMIN){
+            throw new UnAuthorizedException("권한이 없습니다.");
         }
-        userDetail.updateMoney(ROOM_PRICE, '-');
 
-        templateConversionService.createNewRoom(user, reqPostRoom);
+        templateConversionService.createBaseRoom(user, reqPostRoom, roomType);
     }
 
     @Transactional
-    public void updateRoom(ReqPatchRoom reqPatchRoom, Long id, Long roomId) {
+    public void updateRoom(ReqPatchRoom reqPatchRoom, Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
         if(reqPatchRoom.getName() != null) {
             room.updateName(reqPatchRoom.getName());
@@ -74,32 +85,36 @@ public class RoomService {
     }
 
     @Transactional
-    public ResGetRoomList readRoomList(ReqGetRoomList reqGetRoomList, Long id) {
+    public ResGetRoomList readRoomList(ReqGetRoomList reqGetRoomList, Long id, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
         ResGetRoomList.ResGetRoomListBuilder resGetRoomListBuilder = ResGetRoomList.builder();
-        resGetRoomListBuilder.mainRoomId(
-                userDetail.getMainRoom().getId()
-        );
+        if(roomType == RoomType.ROOM){
+            resGetRoomListBuilder.mainRoomId(
+                    userDetail.getMainRoom().getId()
+            );
+        }
 
-        List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags());
+        List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags(), roomType);
         resGetRoomListBuilder.roomList(roomList);
         return resGetRoomListBuilder.build();
     }
 
     @Transactional
-    public void updateInterior(ReqPutRoom reqPutRoom, Long id, Long roomId) {
+    public void updateInterior(ReqPutRoom reqPutRoom, Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
-        room.updateBackground(reqPutRoom.getBackground());
-        room.updateFrame(reqPutRoom.getFrame());
-
+        if(reqPutRoom.getBackground() != null){
+            room.updateBackground(reqPutRoom.getBackground());
+        }
+        if(reqPutRoom.getFrame() != null) {
+            room.updateFrame(reqPutRoom.getFrame());
+        }
         if(reqPutRoom.getInteriorList() != null) {
             for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriorList()){
                 switch (reqPutRoomDetail.getAction()){
@@ -122,12 +137,18 @@ public class RoomService {
                         break;
                     case DEL:
                         Interior interiorDelete = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
+                        if (interiorDelete.getRoom().getId() != room.getId()){
+                            throw new UnAuthorizedException("권한이 없습니다");
+                        }
                         interiorRepository.delete(interiorDelete);
                         break;
                     case MOD:
                         Interior interiorUpdate = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
+                        if (interiorUpdate.getRoom().getId() != room.getId()){
+                            throw new UnAuthorizedException("권한이 없습니다");
+                        }
                         interiorUpdate.updatePlace(
                                 reqPutRoomDetail.getX(),
                                 reqPutRoomDetail.getY(),
@@ -143,11 +164,10 @@ public class RoomService {
     }
 
     @Transactional
-    public ResGetInteriorList readInterior(Long id, Long roomId) {
+    public ResGetInteriorList readInterior(Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
         List<Interior> interiors = interiorRepository.findByRoom(room);
 
         List<ResGetInterior> interiorList = new ArrayList<>();
@@ -174,11 +194,10 @@ public class RoomService {
     }
 
     @Transactional
-    public void deleteInterior(Long id, Long roomId) {
+    public void deleteInterior(Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
         interiorRepository.deleteByRoom(room);
         playlistRepository.deleteByRoom(room);
@@ -186,16 +205,14 @@ public class RoomService {
         interiorRepository.flush();
         playlistRepository.flush();
 
-        templateConversionService.initializeRoom(room);
+        templateConversionService.initializeRoom(room, user);
     }
 
     @Transactional
-    public void updatePlaylist(ReqPutPlaylist reqPutPlaylist, Long id, Long roomId) {
+    public void updatePlaylist(ReqPutPlaylist reqPutPlaylist, Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
-
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
         playlistRepository.deleteByRoom(room);
         playlistRepository.flush();
 
@@ -213,11 +230,10 @@ public class RoomService {
     }
 
     @Transactional
-    public ResGetPlaylist readPlaylist(Long id, Long roomId) {
+    public ResGetPlaylist readPlaylist(Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
         List<Playlist> playlistList = playlistRepository.findByRoom(room, Sort.by(Sort.Direction.ASC, "id"));
         List<ResGetMusic> musicList = new ArrayList<>();
@@ -243,10 +259,8 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
-
         Room room = roomRepository.findByIdAndUser(reqPutMainRoom.getRoomId(), user)
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
-
         userDetail.updateMainRoom(room);
     }
 }

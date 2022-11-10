@@ -14,4 +14,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     List<Inventory> findByUser(User user);
 
     Optional<Inventory> findByUserAndFurniture(User user, Furniture furniture);
+
+    boolean existsByFurnitureAndUser(Furniture furniture, User user);
 }

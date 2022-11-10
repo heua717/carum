@@ -1,21 +1,17 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.ReqPostRoom;
-import com.a101.carum.domain.ServiceType;
-import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.interior.Interior;
-import com.a101.carum.domain.interior.InteriorTemplate;
 import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.playlist.Playlist;
-import com.a101.carum.domain.playlist.PlaylistTemplate;
-import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomParent;
 import com.a101.carum.domain.room.RoomTemplate;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.repository.*;
+import com.a101.carum.util.RoomParentFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +21,14 @@ import java.util.*;
 @RequiredArgsConstructor
 public class TemplateConversionService {
 
+    private final RoomParentFactory roomParentFactory;
+    private final RoomParentRepository roomParentRepository;
+    private final RoomRepository roomRepository;
+    private final RoomTemplateRepository roomTemplateRepository;
+    private final InteriorRepository interiorRepository;
+    private final PlaylistRepository playlistRepository;
+    private final InventoryRepository inventoryRepository;
+
     @Value("${room.template.base}")
     private Long TEMPLATE_BASE;
 
@@ -33,163 +37,96 @@ public class TemplateConversionService {
     @Value("${room.template.list}")
     public void setTEMPLATE_LIST(String listString){
         String[] list = listString.split(",");
-        this.TEMPLATE_LIST = new ArrayList<>();
+        TEMPLATE_LIST = new ArrayList<>();
 
         for(String id: list){
-            this.TEMPLATE_LIST.add(Long.parseLong(id));
-        }
-    }
-
-    private final RoomRepository roomRepository;
-    private final RoomTemplateRepository roomTemplateRepository;
-    private final InteriorRepository interiorRepository;
-    private final InteriorTemplateRepository interiorTemplateRepository;
-    private final PlaylistRepository playlistRepository;
-    private final PlaylistTemplateRepository playlistTemplateRepository;
-
-    private final InventoryRepository inventoryRepository;
-
-    @Transactional
-    public void createNewRoomAll(User user){
-        for(Long templateId:TEMPLATE_LIST){
-            templateToRoom(user, templateId, null);
+            TEMPLATE_LIST.add(Long.parseLong(id));
         }
     }
 
     @Transactional
-    public void createNewRoom(User user, ReqPostRoom reqPostRoom){
-        templateToRoom(user, TEMPLATE_BASE, reqPostRoom);
+    public void createBaseRoom(User user, ReqPostRoom reqPostRoom, RoomType roomType) {
+        createRoomParent(user, reqPostRoom.getName(), TEMPLATE_BASE, roomType);
     }
 
     @Transactional
-    public void createNewTemplate(ReqPostRoom reqPostRoom){
-        templateToTemplate(TEMPLATE_BASE, reqPostRoom);
+    public void createNewRoomAll(User user) {
+        for(Long templateId: TEMPLATE_LIST){
+            createRoomParent(user, null, templateId, RoomType.ROOM);
+        }
     }
 
     @Transactional
-    public void initializeRoom(Room room){
-        initializeRoom(room, TEMPLATE_BASE);
-    }
-
-    @Transactional
-    public void initializeTemplate(RoomTemplate roomTemplate){
-        initializeTemplate(roomTemplate, TEMPLATE_BASE);
-    }
-
-    @Transactional
-    public void templateToRoom(User user, Long templateId, ReqPostRoom reqPostRoom){
-        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
-                .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-
-        Room room = roomRepository.save(Room.builder()
-                        .user(user)
-                        .name(reqPostRoom != null? reqPostRoom.getName():roomTemplate.getName())
-                        .frame(roomTemplate.getFrame())
-                        .background(roomTemplate.getBackground())
-                        .emotionTag(roomTemplate.getEmotionTag())
-                        .build());
-
-        templateToRoomDetail(room, roomTemplate, user);
-    }
-
-    @Transactional
-    public void templateToTemplate(Long templateId, ReqPostRoom reqPostRoom){
-        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
-                .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-
-        RoomTemplate room = roomTemplateRepository.save(RoomTemplate.builder()
-                .name(reqPostRoom != null? reqPostRoom.getName():roomTemplate.getName())
-                .frame(roomTemplate.getFrame())
-                .background(roomTemplate.getBackground())
-                .emotionTag(roomTemplate.getEmotionTag())
-                .build());
-
-        templateToTemplateDetail(room, roomTemplate);
-    }
-
-    @Transactional
-    public void initializeRoom(Room room, Long templateId){
-        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
-                .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-
-        room.updateFrame(roomTemplate.getFrame());
+    public void initializeRoom(RoomParent room, User user) {
+        RoomTemplate roomTemplate = roomTemplateRepository.findById(TEMPLATE_BASE)
+                .orElseThrow(() -> {throw new NullPointerException("템플릿이 없습니다.");});
         room.updateBackground(roomTemplate.getBackground());
-        room.updateEmotionTag(room.getEmotionTag());
-
-        templateToRoomDetail(room, roomTemplate, null);
-    }
-
-    @Transactional
-    public void initializeTemplate(RoomTemplate room, Long templateId){
-        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
-                .orElseThrow(() -> new NullPointerException("template을 찾을 수 없습니다."));
-
+        room.updateEmotionTag(roomTemplate.getEmotionTag());
         room.updateFrame(roomTemplate.getFrame());
-        room.updateBackground(roomTemplate.getBackground());
-        room.updateEmotionTag(room.getEmotionTag());
 
-        templateToTemplateDetail(room, roomTemplate);
+        interiorRepository.deleteByRoom(room);
+        interiorRepository.flush();
+        setInteriors(room, roomTemplate, user);
+
+        playlistRepository.deleteByRoom(room);
+        playlistRepository.flush();
+        setPlaylists(room, roomTemplate);
     }
 
     @Transactional
-    public void templateToRoomDetail(Room room, RoomTemplate roomTemplate, User user){
-        List<InteriorTemplate> interiorTemplateList = interiorTemplateRepository.findByRoomTemplate(roomTemplate);
-        List<PlaylistTemplate> playlistTemplateList = playlistTemplateRepository.findByRoomTemplate(roomTemplate,Sort.by(Sort.Direction.ASC, "id"));
+    public void createRoomParent(User user, String name, Long templateId, RoomType roomType){
+        RoomTemplate roomTemplate = roomTemplateRepository.findById(templateId)
+                .orElseThrow(() -> {throw new NullPointerException("템플릿이 없습니다.");});
+        RoomParent roomParent = roomParentFactory.createRoomParent(
+                user,
+                name != null? name:roomTemplate.getName(),
+                roomTemplate.getBackground(),
+                roomTemplate.getFrame(),
+                roomTemplate.getEmotionTag(),
+                roomType
+        );
+        roomParent = roomParentRepository.save(roomParent);
+        setRoomDetail(roomParent, roomTemplate, user);
+    }
 
-        for(InteriorTemplate template: interiorTemplateList){
-            interiorRepository.save(Interior.builder()
-                    .room(room)
-                    .furniture(template.getFurniture())
-                    .x(template.getX())
-                    .y(template.getY())
-                    .z(template.getZ())
-                    .rotX(template.getRotX())
-                    .rotY(template.getRotY())
-                    .rotZ(template.getRotZ())
-                    .build());
+    @Transactional
+    public void setRoomDetail(RoomParent roomParent, RoomTemplate roomTemplate, User user){
+        setInteriors(roomParent, roomTemplate, user);
+        setPlaylists(roomParent, roomTemplate);
+    }
 
-            Inventory inventory = inventoryRepository.findByUserAndFurniture(user, template.getFurniture()).orElse(null);
-            if (inventory == null) {
-                inventoryRepository.save(
-                        Inventory.builder()
-                                .user(user)
-                                .furniture(template.getFurniture())
-                                .build()
-                );
-            }
-        }
-
-        for(PlaylistTemplate template: playlistTemplateList){
+    @Transactional
+    public void setPlaylists(RoomParent roomParent, RoomTemplate roomTemplate) {
+        List<Playlist> playlistList = playlistRepository.findByRoom(roomTemplate);
+        for(Playlist playList: playlistList){
             playlistRepository.save(Playlist.builder()
-                    .room(room)
-                    .music(template.getMusic())
-                    .build());
+                            .room(roomParent)
+                            .music(playList.getMusic())
+                            .build());
         }
     }
 
     @Transactional
-    public void templateToTemplateDetail(RoomTemplate room, RoomTemplate roomTemplate){
-        List<InteriorTemplate> interiorTemplateList = interiorTemplateRepository.findByRoomTemplate(roomTemplate);
-        List<PlaylistTemplate> playlistTemplateList = playlistTemplateRepository.findByRoomTemplate(roomTemplate,Sort.by(Sort.Direction.ASC, "id"));
+    public void setInteriors(RoomParent roomParent, RoomTemplate roomTemplate, User user) {
+        List<Interior> interiorList = interiorRepository.findByRoom(roomTemplate);
+        for(Interior interior: interiorList){
+            interiorRepository.save(Interior.builder()
+                            .room(roomParent)
+                            .furniture(interior.getFurniture())
+                            .x(interior.getX())
+                            .y(interior.getY())
+                            .z(interior.getZ())
+                            .rotX(interior.getRotX())
+                            .rotY(interior.getRotY())
+                            .rotZ(interior.getRotZ())
+                            .build());
 
-        for(InteriorTemplate template: interiorTemplateList){
-            interiorTemplateRepository.save(InteriorTemplate.builder()
-                    .roomTemplate(room)
-                    .furniture(template.getFurniture())
-                    .x(template.getX())
-                    .y(template.getY())
-                    .z(template.getZ())
-                    .rotX(template.getRotX())
-                    .rotY(template.getRotY())
-                    .rotZ(template.getRotZ())
-                    .build());
-        }
-
-        for(PlaylistTemplate template: playlistTemplateList){
-            playlistTemplateRepository.save(PlaylistTemplate.builder()
-                    .roomTemplate(room)
-                    .music(template.getMusic())
-                    .build());
+            if(!inventoryRepository.existsByFurnitureAndUser(interior.getFurniture(), user)){
+                inventoryRepository.save(Inventory.builder()
+                                .furniture(interior.getFurniture())
+                                .user(user)
+                                .build());
+            }
         }
     }
 }

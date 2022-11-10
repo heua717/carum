@@ -2,6 +2,7 @@ package com.a101.carum.domain.interior;
 
 import com.a101.carum.domain.furniture.Furniture;
 import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomParent;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,9 +24,9 @@ public class Interior {
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @ManyToOne(targetEntity = Room.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = RoomParent.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
-    private Room room;
+    private RoomParent room;
 
     @ManyToOne(targetEntity = Furniture.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "furniture_id", referencedColumnName = "id")
@@ -50,7 +51,7 @@ public class Interior {
     private Float rotZ;
 
     @Builder
-    public Interior(Room room, Furniture furniture, Float x, Float y, Float z, Float rotX, Float rotY, Float rotZ){
+    public Interior(RoomParent room, Furniture furniture, Float x, Float y, Float z, Float rotX, Float rotY, Float rotZ){
         this.room = room;
         this.furniture = furniture;
         this.x = x;
