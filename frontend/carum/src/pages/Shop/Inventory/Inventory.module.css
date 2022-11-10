@@ -29,3 +29,11 @@
   text-align: center;
   font-size: 18px;
 }
+
+@media only screen and (min-width: 1224px) {
+  .contentBox {
+    height: 70vh;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+}

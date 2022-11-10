@@ -69,3 +69,9 @@
   display: flex;
   justify-content: space-around;
 }
+
+@media only screen and (min-width: 1224px) {
+  .container {
+    height: 70vh;
+  }
+}

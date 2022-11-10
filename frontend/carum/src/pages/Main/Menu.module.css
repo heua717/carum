@@ -82,3 +82,6 @@
 .calendarIcon {
   color: #3b2a71;
 }
+
+@media only screen and (min-width: 1224px) {
+}
