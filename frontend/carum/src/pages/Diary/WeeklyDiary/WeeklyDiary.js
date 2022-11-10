@@ -34,7 +34,7 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
   const navigate = useNavigate();
 
   const readDiary = (id) => {
-    navigate(`/main/diary/${id}`);
+    navigate(`/diary/${id}`);
   };
 
   useEffect(() => {
@@ -69,7 +69,7 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
           />
         ))
       ) : (
-        <p>데이터가 없습니다.</p>
+        <p className={styles.noDataText}>데이터가 없습니다.</p>
       )}
     </div>
   );

@@ -19,16 +19,16 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useInterval, calEmotion, petTalk } from "utils/utils";
+import { useInterval, calEmotion, petTalk, preventRefresh } from "utils/utils";
 import { useAppSelector } from "stores/store";
 
 const EMOTION_VALUE = {
-  sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
-  worry: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
-  happy: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
-  surprise: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
-  peace: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
-  angry: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
+  SAD: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
+  WORRY: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
+  HAPPY: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
+  SURPRISE: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
+  PEACE: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
+  ANGRY: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
 };
 
 function DiaryWrite({
@@ -42,7 +42,7 @@ function DiaryWrite({
 }) {
   const [values, setValues] = useState({
     isSelecting: false,
-    selectedEmotion: "angry",
+    selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
   const [tmpContent, setTmpContent] = useState("");
@@ -115,7 +115,7 @@ function DiaryWrite({
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
     console.log(res);
-    navigate("/main/calendar");
+    navigate("/calendar");
   };
 
   const writeDiaryFail = (err) => {
@@ -148,7 +148,7 @@ function DiaryWrite({
         diaryId: diaryId ? diaryId : null,
         content: editorRef.current?.getInstance().getHTML(),
         emotionTag: values.selectedEmotionList,
-        background: "purple",
+        background: "indigo",
       };
 
       if (state === "edit") {
@@ -287,6 +287,11 @@ function DiaryWrite({
     }
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
+
   return (
     <div>
       <TopNav
@@ -329,7 +334,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("ANGRY")}
               className={`${styles.emotionImg} ${
-                isChecked("angry") ? styles.checked : null
+                isChecked("ANGRY") ? styles.checked : null
               }`}
               src={angryImg}
               alt="emotion"
@@ -337,7 +342,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("SAD")}
               className={`${styles.emotionImg} ${
-                isChecked("sad") ? styles.checked : null
+                isChecked("SAD") ? styles.checked : null
               }`}
               src={sadImg}
               alt="emotion"
@@ -345,7 +350,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("HAPPY")}
               className={`${styles.emotionImg} ${
-                isChecked("happy") ? styles.checked : null
+                isChecked("HAPPY") ? styles.checked : null
               }`}
               src={happyImg}
               alt="emotion"
@@ -353,7 +358,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("WORRY")}
               className={`${styles.emotionImg} ${
-                isChecked("worry") ? styles.checked : null
+                isChecked("WORRY") ? styles.checked : null
               }`}
               src={worryImg}
               alt="emotion"
@@ -361,7 +366,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("PEACE")}
               className={`${styles.emotionImg} ${
-                isChecked("peace") ? styles.checked : null
+                isChecked("PEACE") ? styles.checked : null
               }`}
               src={peaceImg}
               alt="emotion"
@@ -369,7 +374,7 @@ function DiaryWrite({
             <img
               onClick={() => clickEmotion("SURPRISE")}
               className={`${styles.emotionImg} ${
-                isChecked("surprise") ? styles.checked : null
+                isChecked("SURPRISE") ? styles.checked : null
               }`}
               src={surpriseImg}
               alt="emotion"
@@ -392,14 +397,14 @@ function DiaryWrite({
             }`}
           >
             <div className={styles.emotionExplainRow}>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][0]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][1]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][2]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[0]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[1]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[2]}</span>
             </div>
             <div className={styles.emotionExplainRow}>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][3]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][4]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][5]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[3]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[4]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[5]}</span>
             </div>
           </div>
         </div>

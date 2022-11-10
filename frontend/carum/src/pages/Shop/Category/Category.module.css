@@ -1,6 +1,6 @@
 .contentContainer {
   width: 300px;
-  height: 46vh;
+  height: 50vh;
   overflow: auto;
   margin-left: auto;
   margin-right: auto;
@@ -8,7 +8,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  gap: 8px;
+  gap: 4px;
 }
 
 .contentContainer::-webkit-scrollbar {
@@ -17,7 +17,7 @@
 
 .category {
   width: 43%;
-  height: 32px;
+  height: 34px;
   border-radius: 20px;
   background: linear-gradient(135deg, #e1bcff, #ffd2e7);
   display: flex;

@@ -1,20 +1,17 @@
 import styles from "./Shop.module.css";
 import { useCallback, useEffect, useState } from "react";
 import Button from "components/Button";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import Pagination from "@mui/material/Pagination";
 import FurnitureComponent from "./FurnitureComponent";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Modal from "components/modal/Modal";
-import { furnitureCategory } from "utils/utils";
-import { fetchShopItem, purchaseFurniture, fetchMyItem } from "apis/furniture";
+import { furnitureCategory, preventRefresh } from "utils/utils";
+import { fetchShopItem, purchaseFurniture } from "apis/furniture";
 import Inventory from "./Inventory/Inventory";
 import Category from "./Category/Category";
 import { useNavigate } from "react-router-dom";
-import { setShopFurnitureList, setInventoryList } from "stores/slices/shop";
+import { setShopFurnitureList } from "stores/slices/shop";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import Swal from "sweetalert2";
 
@@ -26,9 +23,8 @@ function Shop() {
   const [totalPage, setTotalPage] = useState(1);
   const [money, setMoney] = useState(0);
   const [currentFurnitureIndex, setCurrentFurnitureIndex] = useState(0);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const isMenuOpened = Boolean(anchorEl);
   const [searchText, setSearchText] = useState("");
+  const [searching, setSearching] = useState(false);
 
   const navigate = useNavigate();
 
@@ -54,6 +50,7 @@ function Shop() {
     if (res.data.furnitureCount % 9) {
       tmpTotalPage += 1;
     }
+
     setTotalPage(tmpTotalPage);
   };
 
@@ -78,6 +75,7 @@ function Shop() {
   useEffect(() => {
     setSearchText("");
     setPage(1);
+    setSearching(false);
     if (categoryIndex !== null) {
       const payload = {
         keyword: null,
@@ -98,6 +96,7 @@ function Shop() {
         page: 0,
         size: 9,
       };
+      setSearching(true);
       fetchShopItem(payload, fetchShopItemSuccess, fetchShopItemFail);
     }
   };
@@ -129,17 +128,6 @@ function Shop() {
     setIsOpened(false);
   };
 
-  // 카테고리 메뉴 열고 닫기
-  const handleMenuClick = (event, menu) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = (index) => {
-    setAnchorEl(null);
-    setCategoryIndex(index);
-    setPage(1);
-  };
-
   // 페이지 이동
   const handlePageChange = (e, p) => {
     setPage(p);
@@ -148,6 +136,17 @@ function Shop() {
   // 가구 구매
   const purchaseFurnitureSuccess = (res) => {
     console.log(res);
+    Swal.fire({
+      icon: "success",
+      title: "구매가 완료됐습니다.",
+      showConfirmButton: false,
+      timer: 1000,
+    });
+
+    const newFurnitureList = JSON.parse(JSON.stringify(shopFurnitureList));
+    newFurnitureList[currentFurnitureIndex].have = true;
+    setFurnitureList(newFurnitureList);
+    setIsOpened(false);
   };
 
   const purchaseFurnitureFail = (err) => {
@@ -185,6 +184,11 @@ function Shop() {
     }
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
+
   return (
     <div>
       <div className={styles.topNav}>
@@ -204,24 +208,8 @@ function Shop() {
         </div>
       </div>
       {place === "shop" ? (
-        <div>
+        <div className={styles.contentContainer}>
           <div className={styles.searchBox}>
-            {/* <MenuIcon onClick={handleMenuClick} id="menu-bth" />
-            <Menu
-              anchorEl={anchorEl}
-              open={isMenuOpened}
-              onClose={handleMenuClose}
-              MenuListProps={{ "aria-labelledby": "menu-btn" }}
-              sx={{ maxHeight: "200px" }}
-            >
-              {furnitureCategory.map((el, idx) => {
-                return (
-                  <MenuItem onClick={() => handleMenuClose(idx)} key={idx}>
-                    {el.name}
-                  </MenuItem>
-                );
-              })}
-            </Menu> */}
             <input
               className={styles.inputBox}
               value={searchText}
@@ -231,9 +219,12 @@ function Shop() {
             <SearchIcon onClick={handleFurnitureSearch} />
           </div>
           <div className={styles.contentBox}>
-            <p className={styles.categoryName}>
-              {furnitureCategory?.[categoryIndex]?.name}
-            </p>
+            {!searching ? (
+              <p className={styles.categoryName}>
+                {furnitureCategory?.[categoryIndex]?.name}
+              </p>
+            ) : null}
+
             <div className={styles.furnitures}>
               {shopFurnitureList?.map((el, idx) => {
                 return (

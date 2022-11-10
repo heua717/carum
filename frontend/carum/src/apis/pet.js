@@ -23,4 +23,13 @@ const fetchMonthlyPet = ({ year, month }, success, fail) => {
     .catch(fail);
 };
 
-export { fetchYearlyPet, fetchMonthlyPet };
+const chooseMonthlyPet = (type, success, fail) => {
+  api
+    .put("/pet", {
+      type,
+    })
+    .then(success)
+    .catch(fail);
+};
+
+export { fetchYearlyPet, fetchMonthlyPet, chooseMonthlyPet };

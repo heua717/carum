@@ -18,7 +18,7 @@ function Login() {
     sessionStorage.setItem("access-token", res.data["accessToken"]);
     sessionStorage.setItem("refresh-token", res.data["refreshToken"]);
     setLoginFailed(false);
-    navigate("/main");
+    navigate("/");
   };
 
   const loginFail = (err) => {

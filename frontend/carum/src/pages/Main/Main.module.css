@@ -3,9 +3,7 @@
 
 .unity {
   width: 100vw;
-  min-height: 44vh;
-  background: linear-gradient(45deg, #bbb1ff, #f2bfff);
-  border-radius: 0 0 20px 20px;
+  /* background: linear-gradient(45deg, #bbb1ff, #f2bfff); */
 }
 
 .contentBox {
@@ -16,4 +14,26 @@
   align-items: center;
   justify-content: center;
   margin-top: 8px;
+}
+
+.petChooseModal {
+  min-height: 60vh;
+  min-width: 296px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background: linear-gradient(45deg, rgb(231, 221, 255), rgb(255, 217, 245));
+}
+
+.petImageContainer {
+  height: 140px;
+  width: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

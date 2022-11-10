@@ -6,6 +6,7 @@ import { phoneCertificate } from "apis/user";
 import { TextField } from "@mui/material";
 import styles from "./PhoneCheck.module.css";
 import { Checkbox } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 function PhoneCheck({
   open,
@@ -76,6 +77,7 @@ function PhoneCheck({
   return (
     <Dialog open={open}>
       <div className={styles.dialog}>
+        <CloseIcon onClick={handleClose} sx={{ alignSelf: "flex-end" }} />
         <h2>문자(SMS)로 인증</h2>
         <div className={styles.privacyPolicyCheckBox}>
           <Checkbox
@@ -137,6 +139,9 @@ function PhoneCheck({
             if (!!checkCode) {
               setCheckTime(179);
             }
+            if (!isPrivacyPolicyAgreed) {
+              setIsPrivacyPolicyAgreed(false);
+            }
             phoneCertificate(
               phoneNo,
               phoneCertificateSuccess,
@@ -173,6 +178,7 @@ function PhoneCheck({
               fullWidth={true}
               variant="contained"
               disabled={!checkCode}
+              sx={{ margin: "8px 0" }}
             >
               확인
             </Button>

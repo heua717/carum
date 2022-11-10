@@ -28,11 +28,11 @@ function RoomCarousel(props) {
         sx={{ minHeight: "50vh" }}
         onChange={(e) => props.setCurDoorIndex(e)}
       >
-        {props.roomInfo.rooms.map((item, i) => (
+        {props.roomInfo?.rooms?.map((item, i) => (
           <Item
             key={i}
             item={item}
-            mainRoomId={props.roomInfo.mainRoomId}
+            mainRoomId={props.roomInfo?.mainRoomId}
             setRoomInfo={props.setRoomInfo}
             roomInfo={props.roomInfo}
           />
@@ -71,7 +71,7 @@ function Item(props) {
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
       //끝나면 main으로 돌아가라
-      navigate(`/main`);
+      navigate(`/`);
     }
   };
 
@@ -86,13 +86,13 @@ function Item(props) {
 
   const handleChangeMainRoom = () => {
     changeMainRoom(props.item.id, changeMainRoomSuccess, changeMainRoomFail);
-    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item.id });
+    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item?.id });
   };
 
   return (
     <div>
       <div>
-        {props.item.id === props.mainRoomId ? (
+        {props.item?.id === props.mainRoomId ? (
           <i class={`bx bxs-star ${styles.starImage}`}></i>
         ) : (
           <i
@@ -102,28 +102,28 @@ function Item(props) {
         )}
       </div>
       <div className={styles.doorImageContainer}>
-        {props.item.id === nowRoomId ? (
-          <Chip label="이용중" color="secondary" />
-        ) : (
-          <div style={{ height: "32px" }}></div>
-        )}
+        {props.item?.id === nowRoomId ? (
+          <div className={styles.using}>
+            <p className={styles.usingText}>이용중</p>
+          </div>
+        ) : null}
         <img
           className={styles.doorImage}
           src={doorImg}
-          alt={props.item.roomName}
+          alt={props.item?.roomName}
           onClick={() => handleChangeRoom(props.item.id)}
         />
       </div>
       <div className={styles.roomInfo}>
-        <Emotion emotionTag={props.item.emotionTag} />
-        <div className={styles.roomName}>{props.item.name}</div>
+        <Emotion emotionTag={props.item?.emotionTag} />
+        <div className={styles.roomName}>{props.item?.name}</div>
       </div>
     </div>
   );
 }
 
 function Emotion(props) {
-  const emotionLink = props.emotionTag.map(function (item) {
+  const emotionLink = props.emotionTag?.map(function (item) {
     if (item === "SAD") return sadImg;
     else if (item === "WORRY") return worryImg;
     else if (item === "ANGRY") return angryImg;
@@ -133,7 +133,7 @@ function Emotion(props) {
   });
   return (
     <div>
-      {emotionLink.map((item, i) => (
+      {emotionLink?.map((item, i) => (
         <img key={i} src={item} alt="emotion" className={styles.emotionImage} />
       ))}
     </div>

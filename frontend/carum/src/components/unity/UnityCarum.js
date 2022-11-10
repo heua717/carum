@@ -1,8 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Unity, useUnityContext } from "react-unity-webgl";
-import React, { useEffect, useCallback, useMemo, useImperativeHandle,forwardRef  } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  useMemo,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 
-function UnityCarum({},ref) {
+function UnityCarum({}, ref) {
   const {
     isLoaded,
     unityProvider,
@@ -19,14 +25,15 @@ function UnityCarum({},ref) {
   const navigate = useNavigate();
   // 첫번째 방법
   useImperativeHandle(ref, () => ({
-    enterCloseUp, exitCloseUp
+    enterCloseUp,
+    exitCloseUp,
   }));
   async function enterCloseUp() {
-    sendMessage("Connector","PetCloseUp");
-  };
+    sendMessage("Connector", "PetCloseUp");
+  }
   async function exitCloseUp() {
-    sendMessage("Connector","PetEndCloseUp");
-  };
+    sendMessage("Connector", "PetEndCloseUp");
+  }
 
   function handleSceneTransition(sceneName) {
     console.log("move to " + sceneName);
@@ -53,9 +60,9 @@ function UnityCarum({},ref) {
       sendMessage("Connector", "StartUnity", JSON.stringify(param));
     };
 
-    this.closeUpPet = function() {
+    this.closeUpPet = function () {
       alert("클로즈업");
-    }
+    };
   };
 
   const reactCall = new ReactCall();
@@ -91,9 +98,10 @@ function UnityCarum({},ref) {
       <Unity
         style={{
           width: "100%",
-          height: "39vh",
+          height: "42vh",
           justifySelf: "center",
           visibility: isLoaded ? "visible" : "hidden",
+          borderRadius: "0 0 20px 20px",
         }}
         unityProvider={unityProvider}
       />

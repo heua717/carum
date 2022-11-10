@@ -13,20 +13,18 @@ function Category({ setPlace, setCategoryIndex }) {
   }, []);
 
   return (
-    <div>
-      <div className={styles.contentContainer}>
-        {furnitureCategory.map((el, idx) => {
-          return (
-            <div
-              className={styles.category}
-              key={idx}
-              onClick={() => chooseCategory(idx)}
-            >
-              <p>{el.name}</p>
-            </div>
-          );
-        })}
-      </div>
+    <div className={styles.contentContainer}>
+      {furnitureCategory.map((el, idx) => {
+        return (
+          <div
+            className={styles.category}
+            key={idx}
+            onClick={() => chooseCategory(idx)}
+          >
+            <p>{el.name}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

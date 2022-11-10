@@ -14,7 +14,7 @@ import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
 import { fetchCalendar } from "apis/diary";
-import { calWeeklyStartDate, useInterval } from "utils/utils";
+import { calWeeklyStartDate, useInterval, preventRefresh } from "utils/utils";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
@@ -99,7 +99,7 @@ function CalendarDiary() {
     });
 
     if (idx !== -1) {
-      navigate(`/main/diary/${diary[idx].id}`);
+      navigate(`/diary/${diary[idx].id}`);
     }
     setValue(e);
     console.log(e);
@@ -139,6 +139,11 @@ function CalendarDiary() {
     }
     setIsMonthly(!isMonthly);
   };
+
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
 
   return (
     <div>

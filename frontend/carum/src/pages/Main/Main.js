@@ -16,20 +16,26 @@ import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
-import React, {useRef} from "react";
+import React, { useRef } from "react";
+import { Dialog } from "@mui/material";
+import { chooseMonthlyPet } from "apis/pet";
+import dinoImage from "assets/dino.png";
+import whaleImage from "assets/whale.png";
+import NotFound from "components/NotFound";
 
 function Main() {
   const location = useLocation();
   const childRef = useRef(null);
 
   const enterCloseUp = () => {
-      childRef.current.enterCloseUp();
-  }
+    childRef.current.enterCloseUp();
+  };
   const exitCloseUp = () => {
     childRef.current.exitCloseUp();
-  }
+  };
 
   const [user, setUser] = useState(null);
+  const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -61,6 +67,10 @@ function Main() {
     changeRoom(res.data.mainRoom.id);
     setUser(userInfo);
     handleUserInfo(userInfo);
+
+    if (!res.data.petType) {
+      setPetChooseModalOpen(true);
+    }
   };
 
   const fetchProfileFail = (err) => {
@@ -68,27 +78,69 @@ function Main() {
   };
 
   useEffect(() => {
-    fetchProfile(fetchProfileSuccess, fetchProfileFail);
-  }, []);
+    if (location.pathname === "/") {
+      fetchProfile(fetchProfileSuccess, fetchProfileFail);
+    }
+  }, [location.pathname]);
+
+  // 펫 고르기
+  const chooseMonthlyPetSuccess = (res) => {
+    console.log(res);
+    setPetChooseModalOpen(false);
+  };
+
+  const chooseMonthlyPetFail = (err) => {
+    console.log(err);
+  };
+
+  const handleChoosePet = (type) => {
+    chooseMonthlyPet(type, chooseMonthlyPetSuccess, chooseMonthlyPetFail);
+  };
 
   return (
     <div className={styles.container}>
       <div className={styles.unity}>
-        <UnityCarum ref = {childRef} />
+        <UnityCarum ref={childRef} />
       </div>
-      <div className={location.pathname === "/main" ? styles.contentBox : null}>
+      <div className={location.pathname === "/" ? styles.contentBox : null}>
         <Routes>
-          <Route path=":state" element={<DiaryWrite enterCloseUp = {enterCloseUp} exitCloseUp = {exitCloseUp}/>} />
-          <Route path="diary/:id" element={<Diary />} />
+          <Route
+            path="/write/:state"
+            element={
+              <DiaryWrite
+                enterCloseUp={enterCloseUp}
+                exitCloseUp={exitCloseUp}
+              />
+            }
+          />
+          <Route path="diary/:id" element={<Diary unityRef={childRef} />} />
           <Route path="calendar" element={<CalendarDiary />} />
           <Route path="room" element={<Room />} />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
-        {location.pathname === "/main" ? <Menu user={user} /> : null}
+        {location.pathname === "/" ? <Menu user={user} /> : null}
       </div>
+      <Dialog open={petChooseModalOpen}>
+        <div className={styles.petChooseModal}>
+          <h3>이번 달 함께 할 펫을 골라주세요!</h3>
+          <div
+            className={styles.petImageContainer}
+            onClick={() => handleChoosePet("DINO")}
+          >
+            <img src={dinoImage} />
+          </div>
+          <div
+            className={styles.petImageContainer}
+            onClick={() => handleChoosePet("WHALE")}
+          >
+            <img src={whaleImage} />
+          </div>
+        </div>
+      </Dialog>
     </div>
   );
 }

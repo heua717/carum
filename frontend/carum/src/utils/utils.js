@@ -122,24 +122,24 @@ const furnitureCategory = [
 
 const calEmotion = (pos, nag, neu) => {
   nag *= 0.9;
-  const num = nag / pos;
+  const num = Math.atan(nag / pos);
   let rlt = "";
 
   if (neu > 65) {
     if (num < Math.PI / 12) {
-      rlt = "peace";
+      rlt = "PEACE";
     } else if (num > (5 / 12) * Math.PI) {
-      rlt = "stun";
+      rlt = "STUN";
     } else {
-      rlt = "normal";
+      rlt = "NORMAL";
     }
   } else {
     if (num < Math.PI / 6) {
-      rlt = "happy";
+      rlt = "HAPPY";
     } else if (num > Math.PI / 3) {
-      rlt = "sad";
+      rlt = "SAD";
     } else {
-      rlt = "confuse";
+      rlt = "CONFUSE";
     }
   }
 
@@ -148,31 +148,31 @@ const calEmotion = (pos, nag, neu) => {
 
 const petTalk = (emotion, nickname) => {
   const emotionSentence = {
-    happy: [
+    HAPPY: [
       "내일도 오늘만 같았으면 좋겠네요.",
       `${nickname}님이 기분이 좋으시니 저도 기분이 너무 좋아요!`,
       "헐 대박!",
     ],
-    peace: ["즐거워 보이니 다행이에요.", "오늘 많이 편안해 보이시네요."],
-    sad: [
+    PEACE: ["즐거워 보이니 다행이에요.", "오늘 많이 편안해 보이시네요."],
+    SAD: [
       "많이 힘든 하루셨군요. 내일은 분명 좋은 일이 생길 거예요.",
       `저는 언제나 ${nickname}님의 편이랍니다.`,
       "비가 갠 뒤에 무지개가 피는 것처럼 좋은 일이 있을 거예요.",
       "많이 속상하셨겠어요. ㅠㅠ",
       "으앙ㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠㅠ",
     ],
-    stun: [
+    STUN: [
       "어질어질한 하루를 보내셨군요.",
       "쉽지 않은 하루였네요.",
       "힘든 하루를 보내셨네요. 오늘은 푹 쉬세요.",
       "으으으…",
     ],
-    normal: [
+    NORMAL: [
       "나쁘지 않은 하루였길 바라요.",
       "무난한 하루를 보내셨군요.",
       "아~ 그러셨구나",
     ],
-    confuse: [
+    CONFUSE: [
       "다사다난한 하루였군요. 마무리는 잘 해봐요!",
       "마음을 터놓을 수 있는 상대와 얘기해보는 건 어때요?",
       "어떤 일이 있었는지 다 말해보세요.",
@@ -184,6 +184,12 @@ const petTalk = (emotion, nickname) => {
   return emotionSentence[emotion][randomIdx];
 };
 
+// 새로고침 막는 함수
+const preventRefresh = (e) => {
+  e.preventDefault();
+  e.returnValue = "";
+};
+
 export {
   useInterval,
   calWeeklyStartDate,
@@ -191,4 +197,5 @@ export {
   furnitureCategory,
   calEmotion,
   petTalk,
+  preventRefresh,
 };

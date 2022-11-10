@@ -146,7 +146,7 @@ function Profile() {
   const logoutSuccess = (res) => {
     sessionStorage.removeItem("access-token");
     sessionStorage.removeItem("refresh-token");
-    navigate("/");
+    navigate("/login");
   };
 
   const logoutFail = (err) => {

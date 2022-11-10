@@ -3,12 +3,14 @@ import styles from "./MonthlyPetButton.module.css";
 
 function MonthlyPetButton({ year, month, pet }) {
   const navigate = useNavigate();
+  const handleClick = () => {
+    if (pet) {
+      navigate(`/monthly-pet/${year}/${month}`);
+    }
+  };
 
   return (
-    <div
-      className={styles.container}
-      onClick={() => navigate(`/main/monthly-pet/${year}/${month}`)}
-    >
+    <div className={styles.container} onClick={handleClick}>
       {pet ? (
         <div className={styles.pet}></div>
       ) : (
