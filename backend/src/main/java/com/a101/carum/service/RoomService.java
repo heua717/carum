@@ -104,11 +104,10 @@ public class RoomService {
     }
 
     @Transactional
-    public void updateInterior(ReqPutRoom reqPutRoom, Long id, Long roomId) {
+    public void updateInterior(ReqPutRoom reqPutRoom, Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
         room.updateBackground(reqPutRoom.getBackground());
         room.updateFrame(reqPutRoom.getFrame());
@@ -135,12 +134,18 @@ public class RoomService {
                         break;
                     case DEL:
                         Interior interiorDelete = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
+                        if (interiorDelete.getRoom().getId() != room.getId()){
+                            throw new UnAuthorizedException("권한이 없습니다");
+                        }
                         interiorRepository.delete(interiorDelete);
                         break;
                     case MOD:
                         Interior interiorUpdate = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));;
+                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
+                        if (interiorUpdate.getRoom().getId() != room.getId()){
+                            throw new UnAuthorizedException("권한이 없습니다");
+                        }
                         interiorUpdate.updatePlace(
                                 reqPutRoomDetail.getX(),
                                 reqPutRoomDetail.getY(),
@@ -199,7 +204,7 @@ public class RoomService {
         interiorRepository.flush();
         playlistRepository.flush();
 
-        templateConversionService.initializeRoom(room);
+        templateConversionService.initializeRoom(room, user);
     }
 
     @Transactional

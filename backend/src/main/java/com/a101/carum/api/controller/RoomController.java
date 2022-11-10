@@ -42,6 +42,7 @@ public class RoomController {
     @PutMapping("{roomId}")
     public ResponseEntity updateInterior(@PathVariable Long roomId, @RequestBody ReqPutRoom reqPutRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
+        roomService.updateInterior(reqPutRoom, id, roomId, RoomType.ROOM);
         return ResponseEntity.ok().build();
     }
 

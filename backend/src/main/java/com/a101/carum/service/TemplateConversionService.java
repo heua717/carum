@@ -2,6 +2,7 @@ package com.a101.carum.service;
 
 import com.a101.carum.api.dto.ReqPostRoom;
 import com.a101.carum.domain.interior.Interior;
+import com.a101.carum.domain.inventory.Inventory;
 import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
@@ -26,6 +27,7 @@ public class TemplateConversionService {
     private final RoomTemplateRepository roomTemplateRepository;
     private final InteriorRepository interiorRepository;
     private final PlaylistRepository playlistRepository;
+    private final InventoryRepository inventoryRepository;
 
     @Value("${room.template.base}")
     private Long TEMPLATE_BASE;
@@ -55,7 +57,7 @@ public class TemplateConversionService {
     }
 
     @Transactional
-    public void initializeRoom(RoomParent room) {
+    public void initializeRoom(RoomParent room, User user) {
         RoomTemplate roomTemplate = roomTemplateRepository.findById(TEMPLATE_BASE)
                 .orElseThrow(() -> {throw new NullPointerException("템플릿이 없습니다.");});
         room.updateBackground(roomTemplate.getBackground());
@@ -64,7 +66,7 @@ public class TemplateConversionService {
 
         interiorRepository.deleteByRoom(room);
         interiorRepository.flush();
-        setInteriors(room, roomTemplate);
+        setInteriors(room, roomTemplate, user);
 
         playlistRepository.deleteByRoom(room);
         playlistRepository.flush();
@@ -83,12 +85,12 @@ public class TemplateConversionService {
                 roomTemplate.getEmotionTag()
         );
         roomParent = roomParentRepository.save(roomParent);
-        setRoomDetail(roomParent, roomTemplate);
+        setRoomDetail(roomParent, roomTemplate, user);
     }
 
     @Transactional
-    public void setRoomDetail(RoomParent roomParent, RoomTemplate roomTemplate){
-        setInteriors(roomParent, roomTemplate);
+    public void setRoomDetail(RoomParent roomParent, RoomTemplate roomTemplate, User user){
+        setInteriors(roomParent, roomTemplate, user);
         setPlaylists(roomParent, roomTemplate);
     }
 
@@ -104,7 +106,7 @@ public class TemplateConversionService {
     }
 
     @Transactional
-    public void setInteriors(RoomParent roomParent, RoomTemplate roomTemplate) {
+    public void setInteriors(RoomParent roomParent, RoomTemplate roomTemplate, User user) {
         List<Interior> interiorList = interiorRepository.findByRoom(roomTemplate);
         for(Interior interior: interiorList){
             interiorRepository.save(Interior.builder()
@@ -117,6 +119,13 @@ public class TemplateConversionService {
                             .rotY(interior.getRotY())
                             .rotZ(interior.getRotZ())
                             .build());
+
+            if(!inventoryRepository.existsByFurnitureAndUser(interior.getFurniture(), user)){
+                inventoryRepository.save(Inventory.builder()
+                                .furniture(interior.getFurniture())
+                                .user(user)
+                                .build());
+            }
         }
     }
 }
