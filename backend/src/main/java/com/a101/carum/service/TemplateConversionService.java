@@ -3,6 +3,7 @@ package com.a101.carum.service;
 import com.a101.carum.api.dto.ReqPostRoom;
 import com.a101.carum.domain.interior.Interior;
 import com.a101.carum.domain.playlist.Playlist;
+import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
 import com.a101.carum.domain.room.RoomTemplate;
 import com.a101.carum.domain.user.User;
@@ -51,6 +52,23 @@ public class TemplateConversionService {
         for(Long templateId: TEMPLATE_LIST){
             createRoomParent(user, null, templateId);
         }
+    }
+
+    @Transactional
+    public void initializeRoom(RoomParent room) {
+        RoomTemplate roomTemplate = roomTemplateRepository.findById(TEMPLATE_BASE)
+                .orElseThrow(() -> {throw new NullPointerException("템플릿이 없습니다.");});
+        room.updateBackground(roomTemplate.getBackground());
+        room.updateEmotionTag(roomTemplate.getEmotionTag());
+        room.updateFrame(roomTemplate.getFrame());
+
+        interiorRepository.deleteByRoom(room);
+        interiorRepository.flush();
+        setInteriors(room, roomTemplate);
+
+        playlistRepository.deleteByRoom(room);
+        playlistRepository.flush();
+        setPlaylists(room, roomTemplate);
     }
 
     @Transactional

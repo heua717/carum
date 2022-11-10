@@ -13,7 +13,7 @@ import java.util.List;
 public interface InteriorRepository extends JpaRepository<Interior, Long> {
     List<Interior> findByRoom(Room room);
 
-    void deleteByRoom(Room room);
+    void deleteByRoom(RoomParent room);
 
     List<Interior> findByRoom(RoomParent roomTemplate);
 }

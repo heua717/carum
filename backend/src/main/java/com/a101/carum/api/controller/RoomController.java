@@ -1,6 +1,7 @@
 package com.a101.carum.api.controller;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.service.JwtService;
 import com.a101.carum.service.RoomService;
 import lombok.RequiredArgsConstructor;
@@ -15,16 +16,19 @@ import javax.servlet.http.HttpServletRequest;
 public class RoomController {
 
     private final JwtService jwtService;
+    private final RoomService roomService;
 
     @PostMapping()
     public ResponseEntity createRoom(@RequestBody ReqPostRoom reqPostRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
+        roomService.createRoom(reqPostRoom, id, RoomType.ROOM);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("{roomId}")
     public ResponseEntity updateRoom(@PathVariable Long roomId, @RequestBody ReqPatchRoom reqPatchRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
+        roomService.updateRoom(reqPatchRoom, id, roomId, RoomType.ROOM);
         return ResponseEntity.ok().build();
     }
 

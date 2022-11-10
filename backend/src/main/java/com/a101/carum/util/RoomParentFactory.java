@@ -4,6 +4,7 @@ import com.a101.carum.api.dto.ReqPostRoom;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomParent;
 import com.a101.carum.domain.room.RoomTemplate;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.repository.RoomParentRepository;
 import com.a101.carum.repository.RoomRepository;
@@ -35,5 +36,15 @@ public class RoomParentFactory {
                 .background(background)
                 .emotionTag(emotionTag)
                 .build();
+    }
+
+    public RoomParent readRoomParent(Long id, User user, RoomType roomType){
+        if(roomType == RoomType.TEMPLATE){
+            return roomTemplateRepository.findById(id)
+                    .orElseThrow(() -> new NullPointerException("Template이 없습니다."));
+        } else {
+            return roomRepository.findByIdAndUser(id, user)
+                    .orElseThrow(() -> new NullPointerException("Room이 없습니다."));
+        }
     }
 }
