@@ -109,9 +109,12 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
 
-        room.updateBackground(reqPutRoom.getBackground());
-        room.updateFrame(reqPutRoom.getFrame());
-
+        if(reqPutRoom.getBackground() != null){
+            room.updateBackground(reqPutRoom.getBackground());
+        }
+        if(reqPutRoom.getFrame() != null) {
+            room.updateFrame(reqPutRoom.getFrame());
+        }
         if(reqPutRoom.getInteriorList() != null) {
             for(ReqPutRoomDetail reqPutRoomDetail: reqPutRoom.getInteriorList()){
                 switch (reqPutRoomDetail.getAction()){
@@ -161,11 +164,10 @@ public class RoomService {
     }
 
     @Transactional
-    public ResGetInteriorList readInterior(Long id, Long roomId) {
+    public ResGetInteriorList readInterior(Long id, Long roomId, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Room room = roomRepository.findByIdAndUser(roomId, user)
-                .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        RoomParent room = roomParentFactory.readRoomParent(roomId, user, roomType);
         List<Interior> interiors = interiorRepository.findByRoom(room);
 
         List<ResGetInterior> interiorList = new ArrayList<>();

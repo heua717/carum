@@ -49,7 +49,7 @@ public class RoomController {
     @GetMapping("{roomId}")
     public ResponseEntity readInterior(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(roomService.readInterior(id, roomId, RoomType.ROOM));
     }
 
     @DeleteMapping("{roomId}")
