@@ -103,10 +103,10 @@ function Item(props) {
       </div>
       <div className={styles.doorImageContainer}>
         {props.item?.id === nowRoomId ? (
-          <Chip label="이용중" color="secondary" />
-        ) : (
-          <div style={{ height: "32px" }}></div>
-        )}
+          <div className={styles.using}>
+            <p className={styles.usingText}>이용중</p>
+          </div>
+        ) : null}
         <img
           className={styles.doorImage}
           src={doorImg}

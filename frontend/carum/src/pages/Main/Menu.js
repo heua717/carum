@@ -47,7 +47,7 @@ function Menu({ user }) {
           />
           <MenuBtn
             onClick={() => openPage(`yearly-pet/${new Date().getFullYear()}`)}
-            icon={<PetsIcon sx={{ color: "#FFC8CE", fontSize: "48px" }} />}
+            icon={<PetsIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />}
             menuText="펫조회"
           />
         </div>
@@ -55,18 +55,18 @@ function Menu({ user }) {
           <MenuBtn
             onClick={() => openPage("room")}
             icon={
-              <MeetingRoomIcon sx={{ color: "#A387C2", fontSize: "48px" }} />
+              <MeetingRoomIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />
             }
             menuText="방 이동"
           />
           <MenuBtn
             onClick={() => openPage("shop")}
-            icon={<StoreIcon sx={{ color: "#1270B0", fontSize: "48px" }} />}
+            icon={<StoreIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />}
             menuText="상점"
           />
           <MenuBtn
             onClick={() => openPage("profile")}
-            icon={<PersonIcon sx={{ color: "#E46868", fontSize: "48px" }} />}
+            icon={<PersonIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />}
             menuText="내정보"
           />
         </div>

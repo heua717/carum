@@ -21,6 +21,7 @@ import { Dialog } from "@mui/material";
 import { chooseMonthlyPet } from "apis/pet";
 import dinoImage from "assets/dino.png";
 import whaleImage from "assets/whale.png";
+import NotFound from "components/NotFound";
 
 function Main() {
   const location = useLocation();
@@ -104,7 +105,7 @@ function Main() {
       <div className={location.pathname === "/" ? styles.contentBox : null}>
         <Routes>
           <Route
-            path=":state"
+            path="/write/:state"
             element={
               <DiaryWrite
                 enterCloseUp={enterCloseUp}
@@ -119,6 +120,7 @@ function Main() {
           <Route path="profile" element={<Profile />} />
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         {location.pathname === "/" ? <Menu user={user} /> : null}
       </div>
