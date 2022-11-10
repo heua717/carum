@@ -72,7 +72,7 @@ function Room() {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <TopNav
         text="방 이동"
         buttonComponent={

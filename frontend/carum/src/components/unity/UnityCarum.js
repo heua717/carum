@@ -7,6 +7,7 @@ import React, {
   useImperativeHandle,
   forwardRef,
 } from "react";
+import styles from "./UnityCarum.module.css";
 
 function UnityCarum({}, ref) {
   const {
@@ -98,15 +99,10 @@ function UnityCarum({}, ref) {
   }
 
   return (
-    <div className="UnityCarum">
+    <div className={styles.unityCarum}>
       <Unity
-        style={{
-          width: "100%",
-          height: "42vh",
-          justifySelf: "center",
-          visibility: isLoaded ? "visible" : "hidden",
-          borderRadius: "0 0 20px 20px",
-        }}
+        className={styles.unity}
+        style={{ visibility: isLoaded ? "visible" : "hidden" }}
         unityProvider={unityProvider}
       />
 

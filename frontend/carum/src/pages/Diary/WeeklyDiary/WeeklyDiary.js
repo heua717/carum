@@ -48,7 +48,7 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
   }, [weeklyStartDate]);
 
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.nav}>
         <KeyboardArrowLeftIcon onClick={() => prev()} />
         <p>
