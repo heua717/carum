@@ -1,6 +1,7 @@
 package com.a101.carum.api.controller;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.service.JwtService;
 import com.a101.carum.service.RoomService;
@@ -35,7 +36,7 @@ public class RoomController {
     @GetMapping()
     public ResponseEntity readRoom(@ModelAttribute ReqGetRoomList reqGetRoomList, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(roomService.readRoomList(reqGetRoomList, id, RoomType.ROOM));
     }
 
     @PutMapping("{roomId}")

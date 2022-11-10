@@ -85,16 +85,18 @@ public class RoomService {
     }
 
     @Transactional
-    public ResGetRoomList readRoomList(ReqGetRoomList reqGetRoomList, Long id) {
+    public ResGetRoomList readRoomList(ReqGetRoomList reqGetRoomList, Long id, RoomType roomType) {
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
 
         ResGetRoomList.ResGetRoomListBuilder resGetRoomListBuilder = ResGetRoomList.builder();
-        resGetRoomListBuilder.mainRoomId(
-                userDetail.getMainRoom().getId()
-        );
+        if(roomType == RoomType.ROOM){
+            resGetRoomListBuilder.mainRoomId(
+                    userDetail.getMainRoom().getId()
+            );
+        }
 
         List<ResGetRoom> roomList = customRoomRepository.readRoomList(user, reqGetRoomList.getTags());
         resGetRoomListBuilder.roomList(roomList);
