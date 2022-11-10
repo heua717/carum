@@ -33,6 +33,9 @@ function Main() {
   const exitCloseUp = () => {
     childRef.current.exitCloseUp();
   };
+  const petConversation = (json) => {
+    childRef.current.petConversation(json);
+  }
 
   const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
@@ -105,11 +108,12 @@ function Main() {
       <div className={location.pathname === "/" ? styles.contentBox : null}>
         <Routes>
           <Route
-            path="/write/:state"
+            path="write"
             element={
               <DiaryWrite
                 enterCloseUp={enterCloseUp}
                 exitCloseUp={exitCloseUp}
+                petConversation={petConversation}
               />
             }
           />

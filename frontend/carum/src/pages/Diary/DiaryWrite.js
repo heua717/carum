@@ -39,6 +39,7 @@ function DiaryWrite({
   setDiary,
   enterCloseUp,
   exitCloseUp,
+  petConversation,
 }) {
   const [values, setValues] = useState({
     isSelecting: false,
@@ -61,6 +62,9 @@ function DiaryWrite({
   const unityExitCloseUp = () => {
     exitCloseUp();
   };
+  const unityPetConversation = (json) => {
+    petConversation(json);
+  }
   useEffect(() => {
     unityEnterCloseUp();
     return () => {
@@ -221,6 +225,17 @@ function DiaryWrite({
         console.log(userInfo.nickname);
         setTotalTime(30);
         setTimer(1000);
+        const calc = calEmotion(
+          res.data.document.confidence.positive,
+          res.data.document.confidence.negative,
+          res.data.document.confidence.neutral
+        );
+        const text = petTalk(calc);
+        const conversation = {
+          "text":text,
+          "emotion":calc
+        }
+        unityPetConversation(conversation);
       })
       .catch((err) => {
         console.log(err);

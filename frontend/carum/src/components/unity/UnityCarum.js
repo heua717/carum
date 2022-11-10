@@ -27,12 +27,16 @@ function UnityCarum({}, ref) {
   useImperativeHandle(ref, () => ({
     enterCloseUp,
     exitCloseUp,
+    petConversation
   }));
   async function enterCloseUp() {
     sendMessage("Connector", "PetCloseUp");
   }
   async function exitCloseUp() {
     sendMessage("Connector", "PetEndCloseUp");
+  }
+  async function petConversation(json) {
+    sendMessage("Connector","PetConversation",JSON.stringify(json));
   }
 
   function handleSceneTransition(sceneName) {
