@@ -4,6 +4,8 @@ import com.a101.carum.domain.music.Music;
 import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.question.Question;
 import com.a101.carum.domain.room.Room;
+import com.a101.carum.domain.room.RoomParent;
+import com.a101.carum.domain.room.RoomTemplate;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +21,6 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
     void deleteByRoom(Room room);
 
     List<Playlist> findByRoom(Room room, Sort sort);
+
+    List<Playlist> findByRoom(RoomTemplate roomTemplate);
 }

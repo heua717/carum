@@ -1,6 +1,8 @@
 package com.a101.carum.service;
 
 import com.a101.carum.api.dto.ReqPostRoom;
+import com.a101.carum.domain.interior.Interior;
+import com.a101.carum.domain.playlist.Playlist;
 import com.a101.carum.domain.room.RoomParent;
 import com.a101.carum.domain.room.RoomTemplate;
 import com.a101.carum.domain.user.User;
@@ -62,7 +64,8 @@ public class TemplateConversionService {
                 roomTemplate.getFrame(),
                 roomTemplate.getEmotionTag()
         );
-        roomParentRepository.save(roomParent);
+        roomParent = roomParentRepository.save(roomParent);
+        setRoomDetail(roomParent, roomTemplate);
     }
 
     @Transactional
@@ -73,9 +76,29 @@ public class TemplateConversionService {
 
     @Transactional
     public void setPlaylists(RoomParent roomParent, RoomTemplate roomTemplate) {
+        List<Playlist> playlistList = playlistRepository.findByRoom(roomTemplate);
+        for(Playlist playList: playlistList){
+            playlistRepository.save(Playlist.builder()
+                            .room(roomParent)
+                            .music(playList.getMusic())
+                            .build());
+        }
     }
 
     @Transactional
     public void setInteriors(RoomParent roomParent, RoomTemplate roomTemplate) {
+        List<Interior> interiorList = interiorRepository.findByRoom(roomTemplate);
+        for(Interior interior: interiorList){
+            interiorRepository.save(Interior.builder()
+                            .room(roomParent)
+                            .furniture(interior.getFurniture())
+                            .x(interior.getX())
+                            .y(interior.getY())
+                            .z(interior.getZ())
+                            .rotX(interior.getRotX())
+                            .rotY(interior.getRotY())
+                            .rotZ(interior.getRotZ())
+                            .build());
+        }
     }
 }
