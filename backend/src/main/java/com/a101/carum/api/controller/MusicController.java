@@ -28,8 +28,9 @@ public class MusicController {
         return ResponseEntity.ok(musicService.readMusicList(reqGetMusicList, pageable));
     }
 
-    @GetMapping("file")
-    public StreamingResponseBody readMusic(String resource) {
+    @GetMapping("file/{musicId}")
+    public StreamingResponseBody readMusic(@PathVariable Long musicId) {
+        String resource = musicService.readResource(musicId);
         StringBuilder pathSb = new StringBuilder();
         String filePath = pathSb.append(BASE_PATH).append(resource).toString();
 
