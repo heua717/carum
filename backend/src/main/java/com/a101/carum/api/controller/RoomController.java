@@ -62,18 +62,20 @@ public class RoomController {
     @PutMapping("{roomId}/playlist")
     public ResponseEntity updatePlaylist(@PathVariable Long roomId, @RequestBody ReqPutPlaylist reqPutPlaylist, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
+        roomService.updatePlaylist(reqPutPlaylist, id, roomId, RoomType.ROOM);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("{roomId}/playlist")
     public ResponseEntity readPlaylist(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(roomService.readPlaylist(id, roomId, RoomType.ROOM));
     }
 
     @PutMapping("main")
     public ResponseEntity updateMainRoom(@RequestBody ReqPutMainRoom reqPutMainRoom, HttpServletRequest request) {
         Long id = jwtService.getUserId(request);
+        roomService.updateMainRoom(reqPutMainRoom, id);
         return ResponseEntity.ok().build();
     }
 }

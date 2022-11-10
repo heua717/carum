@@ -20,7 +20,7 @@ public interface PlaylistRepository extends JpaRepository<Playlist, Long> {
 
     void deleteByRoom(RoomParent room);
 
-    List<Playlist> findByRoom(Room room, Sort sort);
+    List<Playlist> findByRoom(RoomParent room, Sort sort);
 
-    List<Playlist> findByRoom(RoomTemplate roomTemplate);
+    List<Playlist> findByRoom(RoomParent roomTemplate);
 }
