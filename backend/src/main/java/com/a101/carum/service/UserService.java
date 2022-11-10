@@ -46,6 +46,7 @@ public class UserService {
     private final RedisTemplate<String, String> tokenRedisTemplate;
 
     private final int REFRESH_MINUTES = 60 * 24 * 7;
+    private final int KEY_STRETCH = 4;
 
     @Transactional
     public void createUser(ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
@@ -218,7 +219,11 @@ public class UserService {
     public String encryptPassword(String userId, String password) throws NoSuchAlgorithmException {
         StringBuilder sb = new StringBuilder();
         sb.append(password).append(encryptUtils.getSalt(userId));
-        return encryptUtils.encrypt(sb.toString());
+        String ret = sb.toString();
+        for(int i = 0; i < KEY_STRETCH; i++){
+            ret = encryptUtils.encrypt(ret);
+        }
+        return ret;
     }
 
     public void setTokenInRedis(String accessToken, String refreshToken) {

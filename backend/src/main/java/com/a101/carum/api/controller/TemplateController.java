@@ -1,8 +1,9 @@
 package com.a101.carum.api.controller;
 
 import com.a101.carum.api.dto.*;
+import com.a101.carum.domain.room.RoomType;
 import com.a101.carum.service.JwtService;
-import com.a101.carum.service.TemplateService;
+import com.a101.carum.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,59 +14,61 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("template")
 @RequiredArgsConstructor
 public class TemplateController {
+
     private final JwtService jwtService;
-    private final TemplateService templateService;
+    private final RoomService roomService;
 
     @PostMapping()
-    public ResponseEntity createTemplate(@RequestBody ReqPostRoom reqPostRoom, HttpServletRequest request){
+    public ResponseEntity createRoom(@RequestBody ReqPostRoom reqPostRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        templateService.createTemplate(reqPostRoom, id);
+        roomService.createRoom(reqPostRoom, id, RoomType.TEMPLATE);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("{templateId}")
-    public ResponseEntity updateTemplate(@PathVariable Long templateId, @RequestBody ReqPatchRoom reqPatchRoom, HttpServletRequest request){
+    @PatchMapping("{roomId}")
+    public ResponseEntity updateRoom(@PathVariable Long roomId, @RequestBody ReqPatchRoom reqPatchRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        templateService.updateTemplate(reqPatchRoom, id, templateId);
+        roomService.updateRoom(reqPatchRoom, id, roomId, RoomType.TEMPLATE);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping()
-    public ResponseEntity readTemplate(HttpServletRequest request){
+    public ResponseEntity readRoom(@ModelAttribute ReqGetRoomList reqGetRoomList, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok(templateService.readTemplateList(id));
+        return ResponseEntity.ok(roomService.readRoomList(reqGetRoomList, id, RoomType.TEMPLATE));
     }
 
-    @PutMapping("{templateId}")
-    public ResponseEntity updateInterior(@PathVariable Long templateId, @RequestBody ReqPutRoom reqPutRoom, HttpServletRequest request){
+    @PutMapping("{roomId}")
+    public ResponseEntity updateInterior(@PathVariable Long roomId, @RequestBody ReqPutRoom reqPutRoom, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        templateService.updateInterior(reqPutRoom, id, templateId);
+        roomService.updateInterior(reqPutRoom, id, roomId, RoomType.TEMPLATE);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{templateId}")
-    public ResponseEntity readInterior(@PathVariable Long templateId, HttpServletRequest request){
+    @GetMapping("{roomId}")
+    public ResponseEntity readInterior(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok(templateService.readInterior(id, templateId));
+        return ResponseEntity.ok(roomService.readInterior(id, roomId, RoomType.TEMPLATE));
     }
 
-    @DeleteMapping("{templateId}")
-    public ResponseEntity deleteInterior(@PathVariable Long templateId, HttpServletRequest request){
+    @DeleteMapping("{roomId}")
+    public ResponseEntity deleteInterior(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        templateService.deleteInterior(id, templateId);
+        roomService.deleteInterior(id, roomId, RoomType.TEMPLATE);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("{templateId}/playlist")
-    public ResponseEntity updatePlaylist(@PathVariable Long templateId, @RequestBody ReqPutPlaylist reqPutPlaylist, HttpServletRequest request){
+    @PutMapping("{roomId}/playlist")
+    public ResponseEntity updatePlaylist(@PathVariable Long roomId, @RequestBody ReqPutPlaylist reqPutPlaylist, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        templateService.updatePlaylist(reqPutPlaylist, id, templateId);
+        roomService.updatePlaylist(reqPutPlaylist, id, roomId, RoomType.TEMPLATE);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("{templateId}/playlist")
-    public ResponseEntity readPlaylist(@PathVariable Long templateId, HttpServletRequest request){
+    @GetMapping("{roomId}/playlist")
+    public ResponseEntity readPlaylist(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
-        return ResponseEntity.ok(templateService.readPlaylist(id, templateId));
+        return ResponseEntity.ok(roomService.readPlaylist(id, roomId, RoomType.TEMPLATE));
     }
+
 }
