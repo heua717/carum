@@ -55,6 +55,7 @@ public class RoomController {
     @DeleteMapping("{roomId}")
     public ResponseEntity deleteInterior(@PathVariable Long roomId, HttpServletRequest request){
         Long id = jwtService.getUserId(request);
+        roomService.deleteInterior(id, roomId, RoomType.ROOM);
         return ResponseEntity.ok().build();
     }
 
