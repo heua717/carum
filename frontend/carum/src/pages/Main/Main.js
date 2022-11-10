@@ -127,13 +127,13 @@ function Main() {
           <h3>이번 달 함께 할 펫을 골라주세요!</h3>
           <div
             className={styles.petImageContainer}
-            onClick={() => handleChoosePet("WHALE")}
+            onClick={() => handleChoosePet("DINO")}
           >
             <img src={dinoImage} />
           </div>
           <div
             className={styles.petImageContainer}
-            onClick={() => handleChoosePet("DINO")}
+            onClick={() => handleChoosePet("WHALE")}
           >
             <img src={whaleImage} />
           </div>

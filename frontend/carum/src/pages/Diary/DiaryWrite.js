@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useInterval, calEmotion, petTalk } from "utils/utils";
+import { useInterval, calEmotion, petTalk, preventRefresh } from "utils/utils";
 import { useAppSelector } from "stores/store";
 
 const EMOTION_VALUE = {
@@ -286,6 +286,11 @@ function DiaryWrite({
       }
     }
   };
+
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
 
   return (
     <div>

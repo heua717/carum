@@ -1,7 +1,7 @@
 import styles from "./MonthlyPet.module.css";
 import TopNav from "components/TopNav";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import { useState, useEffect } from "react";
 import EmotionProgressBar from "./EmotionProgressBar";
 import sadImg from "assets/sad.svg";
@@ -12,6 +12,7 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import { useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
+import { preventRefresh } from "utils/utils";
 
 function MonthlyPet() {
   const { year, month } = useParams();
@@ -80,6 +81,11 @@ function MonthlyPet() {
     }
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
+
   // 가장 높은 감정 이미지 반환 함수
   const bestEmotion = (emotion) => {
     if (emotion === "angry") {
@@ -101,12 +107,12 @@ function MonthlyPet() {
     <div>
       <TopNav text="펫 조회" />
       <div className={styles.navigationBar}>
-        <ArrowBackIosIcon onClick={() => handleChangeDate("minus")} />
+        <KeyboardArrowLeftIcon onClick={() => handleChangeDate("minus")} />
         <div className={styles.navDate}>
           <p className={styles.year}>{yearState}</p>
           <p className={styles.month}>{monthState}</p>
         </div>
-        <ArrowForwardIosIcon onClick={() => handleChangeDate("plus")} />
+        <KeyboardArrowRightIcon onClick={() => handleChangeDate("plus")} />
       </div>
       {emotions ? (
         <div className={styles.contentContainer}>
@@ -127,7 +133,7 @@ function MonthlyPet() {
           </div>
         </div>
       ) : (
-        <p>데이터가 없습니다.</p>
+        <p className={styles.noDataText}>데이터가 없습니다.</p>
       )}
     </div>
   );

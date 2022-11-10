@@ -1,16 +1,18 @@
 .dialog {
   min-width: 296px;
-  min-height: 480px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   align-items: center;
+  padding: 12px 8px;
+  gap: 4px;
 }
 
 .privacyPolicyCheckBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 12px 0;
 }
 
 .privacyPolicyBox {
@@ -27,6 +29,7 @@
 .phoneNumberInput {
   width: 88%;
   height: 40px;
+  margin: 12px 0;
 }
 
 .helpText {

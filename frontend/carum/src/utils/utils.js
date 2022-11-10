@@ -184,6 +184,12 @@ const petTalk = (emotion, nickname) => {
   return emotionSentence[emotion][randomIdx];
 };
 
+// 새로고침 막는 함수
+const preventRefresh = (e) => {
+  e.preventDefault();
+  e.returnValue = "";
+};
+
 export {
   useInterval,
   calWeeklyStartDate,
@@ -191,4 +197,5 @@ export {
   furnitureCategory,
   calEmotion,
   petTalk,
+  preventRefresh,
 };
