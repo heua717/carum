@@ -117,4 +117,21 @@
 }
 
 @media only screen and (min-width: 1224px) {
+  .contentContainer {
+    height: 70vh;
+    width: 30vw;
+  }
+
+  .emotionBox {
+    margin: 8px auto;
+  }
+
+  .contentBox {
+    height: 52vh;
+    margin: 8px auto;
+  }
+
+  .buttonBox {
+    margin: 8px auto;
+  }
 }

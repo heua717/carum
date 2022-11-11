@@ -30,7 +30,7 @@
 .emotionBox {
   display: flex;
   width: 96%;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .emotionImageBox {
@@ -58,5 +58,24 @@
 @media only screen and (min-width: 1224px) {
   .contentContainer {
     height: 70vh;
+    width: 30vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    overflow: hidden;
+  }
+
+  .thisMonthEmotionBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 30vw;
+    height: 140px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 12px 0;
+    margin-top: 4px;
   }
 }

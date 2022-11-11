@@ -11,11 +11,12 @@
 }
 
 .id {
-  font-size: 20px;
+  font-size: 24px;
   text-align: center;
 }
 
 .nickname {
+  font-size: 20px;
 }
 
 .nicknameSettingBox {
@@ -73,5 +74,10 @@
 @media only screen and (min-width: 1224px) {
   .container {
     height: 70vh;
+    margin: 0 auto;
+  }
+
+  .box {
+    width: 30vw;
   }
 }

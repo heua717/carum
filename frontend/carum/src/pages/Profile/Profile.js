@@ -17,6 +17,7 @@ import {
   changePassword,
 } from "apis/user";
 import Swal from "sweetalert2";
+import { preventRefresh, errorAlert } from "utils/utils";
 
 function Profile() {
   const [values, setValues] = useState({
@@ -50,6 +51,8 @@ function Profile() {
 
   const fetchProfileFail = (err) => {
     console.log(err);
+    errorAlert("회원 정보를 불러오지 못했어요 ㅠㅠ");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -181,11 +184,16 @@ function Profile() {
     setValues({ ...values, isDeleting: false });
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
+
   return (
-    <div>
+    <div className={styles.box}>
       <TopNav text="내 정보" />
       <div className={styles.container}>
-        <p className={styles.id}>{values.userInfo?.id}</p>
+        <p className={styles.id}>{values.userInfo?.id}님</p>
         <p className={styles.settingTag}>닉네임</p>
         {values.isEditing ? (
           <div className={styles.nicknameEditbox}>
@@ -236,7 +244,7 @@ function Profile() {
           </div>
         ) : (
           <div className={styles.nicknameSettingBox}>
-            <span className={styles.nickname}>{values.userInfo?.nickname}</span>
+            <p className={styles.nickname}>{values.userInfo?.nickname}</p>
             <EditIcon
               onClick={() => setValues({ ...values, isEditing: true })}
             />

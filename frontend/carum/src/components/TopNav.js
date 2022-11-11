@@ -18,15 +18,6 @@ function TopNav({
     } else if (location.pathname === "/calendar") {
       navigate("/");
     } else {
-      if (timer) {
-        clearInterval(timer);
-        setTimer(null);
-      }
-
-      if (petTimer) {
-        clearInterval(petTimer);
-        setPetTimer(null);
-      }
       navigate(-1);
     }
   };

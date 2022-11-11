@@ -100,7 +100,11 @@
 }
 
 .furniture {
-  height: 160px;
+  height: 200px;
+}
+
+.furnitureImage {
+  height: 100%;
 }
 
 .detailPriceText {
@@ -115,6 +119,7 @@
 }
 
 .myPointText {
+  font-size: 20px;
 }
 
 .inventoryNoDataText {
@@ -133,5 +138,9 @@
 
   .furnitures {
     margin-bottom: 12px;
+  }
+
+  .contentBox {
+    width: 30vw;
   }
 }

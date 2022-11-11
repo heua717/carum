@@ -1,12 +1,13 @@
 import styles from "./WeeklyDiary.module.css";
 import DayComponent from "./DayComponent";
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { changeWeeklyDate } from "utils/utils";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchCalendar } from "apis/diary";
+import { errorAlert } from "utils/utils";
 
 function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
   const [diaryList, setDiaryList] = useState([]);
@@ -19,6 +20,8 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
 
   const fetchCalendarFail = (err) => {
     console.log(err);
+    errorAlert("주간 다이어리를 읽을 수 없습니다");
+    navigate("/");
   };
 
   const prev = () => {
@@ -54,7 +57,15 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
         <p>
           {weeklyStartDate} ~ {changeWeeklyDate(weeklyStartDate, "inc", 6)}
         </p>
-        <KeyboardArrowRightIcon onClick={() => next()} />
+        <KeyboardArrowRightIcon
+          sx={{
+            color:
+              new Date(changeWeeklyDate(weeklyStartDate, "inc", 6)) < new Date()
+                ? "black"
+                : "#BFBFBF",
+          }}
+          onClick={() => next()}
+        />
       </div>
       {diaryList?.length !== 0 ? (
         diaryList?.map((e) => (

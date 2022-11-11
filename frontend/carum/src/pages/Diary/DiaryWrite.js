@@ -31,6 +31,36 @@ const EMOTION_VALUE = {
   ANGRY: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
 };
 
+const EMOTION_IMAGE = [
+  {
+    emotion: "ANGRY",
+    image: angryImg,
+  },
+  {
+    emotion: "PEACE",
+    image: peaceImg,
+  },
+  {
+    emotion: "SAD",
+    image: sadImg,
+  },
+  {
+    emotion: "HAPPY",
+    image: happyImg,
+  },
+  {
+    emotion: "WORRY",
+    image: worryImg,
+  },
+  {
+    emotion: "SURPRISE",
+    image: surpriseImg,
+  },
+];
+
+const TIME = 20;
+const COOL_TIME = 10;
+
 function DiaryWrite({
   state,
   diary,
@@ -46,12 +76,12 @@ function DiaryWrite({
     selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
-  const [tmpContent, setTmpContent] = useState("");
+  const [tmpContent, setTmpContent] = useState(diary ? diary.content : "");
 
-  const [totalTime, setTotalTime] = useState(30);
+  const [totalTime, setTotalTime] = useState(TIME);
   const [timer, setTimer] = useState(1000);
   const [petTimer, setPetTimer] = useState(null);
-  const [coolTime, setCoolTime] = useState(10);
+  const [coolTime, setCoolTime] = useState(COOL_TIME);
   const [canTalk, setCanTalk] = useState(true);
 
   // user redux
@@ -187,13 +217,12 @@ function DiaryWrite({
     return false;
   };
 
-  // cors error 방지 https://cors-anywhere.herokuapp.com/
   // CLOVA API
   const sendSentiment = async (content) => {
     setTimer(null);
     axios
       .post(
-        "https://cors-anywhere.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        "https://carum.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
         { content },
         {
           headers: {
@@ -223,7 +252,7 @@ function DiaryWrite({
           )
         );
         console.log(userInfo.nickname);
-        setTotalTime(30);
+        setTotalTime(TIME);
         setTimer(1000);
         const calc = calEmotion(
           res.data.document.confidence.positive,
@@ -247,8 +276,6 @@ function DiaryWrite({
     if (totalTime > 0) {
       setTotalTime(totalTime - 1);
     } else {
-      setTotalTime(30);
-
       const data = editorRef.current
         .getInstance()
         .getHTML()
@@ -260,9 +287,10 @@ function DiaryWrite({
       if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
         sendSentiment(data);
         setTmpContent(data);
-        console.log("감정분석 예스");
+        console.log("감정분석 함");
       } else {
-        console.log("감정분석엑스");
+        console.log("감정분석 안 함");
+        setTotalTime(TIME);
       }
     }
     console.log(totalTime);
@@ -275,7 +303,7 @@ function DiaryWrite({
     } else {
       setPetTimer(null);
       setCanTalk(true);
-      setCoolTime(10);
+      setCoolTime(COOL_TIME);
     }
   }, petTimer);
 
@@ -291,7 +319,7 @@ function DiaryWrite({
       console.log("tmpContent: ", tmpContent);
 
       if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
-        console.log("감정분석");
+        console.log("감정분석 함");
         sendSentiment(data);
         setCanTalk(false);
         setTmpContent(data);
@@ -346,54 +374,16 @@ function DiaryWrite({
             </div>
           </div>
           <div className={styles.emotions}>
-            <img
-              onClick={() => clickEmotion("ANGRY")}
-              className={`${styles.emotionImg} ${
-                isChecked("ANGRY") ? styles.checked : null
-              }`}
-              src={angryImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("SAD")}
-              className={`${styles.emotionImg} ${
-                isChecked("SAD") ? styles.checked : null
-              }`}
-              src={sadImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("HAPPY")}
-              className={`${styles.emotionImg} ${
-                isChecked("HAPPY") ? styles.checked : null
-              }`}
-              src={happyImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("WORRY")}
-              className={`${styles.emotionImg} ${
-                isChecked("WORRY") ? styles.checked : null
-              }`}
-              src={worryImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("PEACE")}
-              className={`${styles.emotionImg} ${
-                isChecked("PEACE") ? styles.checked : null
-              }`}
-              src={peaceImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("SURPRISE")}
-              className={`${styles.emotionImg} ${
-                isChecked("SURPRISE") ? styles.checked : null
-              }`}
-              src={surpriseImg}
-              alt="emotion"
-            />
+            {EMOTION_IMAGE.map((emotionObj) => (
+              <img
+                onClick={() => clickEmotion(emotionObj.emotion)}
+                className={`${styles.emotionImg} ${
+                  isChecked(emotionObj.emotion) ? styles.checked : null
+                }`}
+                alt={emotionObj.emotion}
+                src={emotionObj.image}
+              />
+            ))}
           </div>
           <div
             className={`${styles.emotionExplainBox} 

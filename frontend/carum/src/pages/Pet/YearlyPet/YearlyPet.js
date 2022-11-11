@@ -1,17 +1,19 @@
 import styles from "./YearlyPet.module.css";
 import TopNav from "components/TopNav";
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import MonthlyPetButton from "./MonthlyPetButton";
 import { useEffect, useState } from "react";
 import { fetchYearlyPet } from "apis/pet";
-import { useParams } from "react-router-dom";
-import { preventRefresh } from "utils/utils";
+import { useNavigate, useParams } from "react-router-dom";
+import { preventRefresh, errorAlert } from "utils/utils";
 
 function YearlyPet() {
   const { year } = useParams();
   const [yearState, setYearState] = useState(year);
   const [petList, setPetList] = useState(null);
+
+  const navigate = useNavigate();
 
   // 년별 펫 데이터 불러오기
   const fetchYearlyPetSuccess = (res) => {
@@ -21,6 +23,8 @@ function YearlyPet() {
 
   const fetchYearlyPetFail = (err) => {
     console.log(err);
+    errorAlert("펫들을 불러오지 못했어요");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -49,6 +53,12 @@ function YearlyPet() {
           <p>{yearState}</p>
           <KeyboardArrowRightIcon
             onClick={() => handleChangeYear(yearState + 1)}
+            sx={{
+              color:
+                new Date().getFullYear() === parseInt(yearState)
+                  ? "#BFBFBF"
+                  : "black",
+            }}
           />
         </div>
         <div>

@@ -2,8 +2,8 @@ import styles from "./Menu.module.css";
 import MenuBtn from "./MenuButton";
 import PetsIcon from "@mui/icons-material/Pets";
 import StoreIcon from "@mui/icons-material/Store";
-import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
+import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -66,8 +66,8 @@ function Menu({ user }) {
           />
           <MenuBtn
             onClick={() => openPage("profile")}
-            icon={<PersonIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />}
-            menuText="내정보"
+            icon={<SettingsIcon sx={{ color: "#3b2a71", fontSize: "48px" }} />}
+            menuText="회원 정보"
           />
         </div>
       </div>
