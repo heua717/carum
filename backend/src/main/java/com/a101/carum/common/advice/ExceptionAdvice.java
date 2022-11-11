@@ -21,13 +21,13 @@ public class ExceptionAdvice {
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
+    @ExceptionHandler({NullPointerException.class})
     public ResponseEntity handleNPE(Exception e) {
         e.printStackTrace();
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler({UnAuthorizedException.class, UnUpdatableException.class})
+    @ExceptionHandler({UnAuthorizedException.class, UnUpdatableException.class, IllegalArgumentException.class})
     public ResponseEntity illegalRequestException(Exception e) {
         e.printStackTrace();
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
