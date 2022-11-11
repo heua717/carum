@@ -134,4 +134,8 @@
   .furnitures {
     margin-bottom: 12px;
   }
+
+  .contentBox {
+    width: 30vw;
+  }
 }
