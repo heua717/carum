@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class ResGetFurniture {
     Long id;
-    String name,resource;
+    String name,resource,image;
     Long price;
     FurnitureType type;
     boolean have;
