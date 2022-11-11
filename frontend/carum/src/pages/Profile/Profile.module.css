@@ -74,5 +74,10 @@
 @media only screen and (min-width: 1224px) {
   .container {
     height: 70vh;
+    margin: 0 auto;
+  }
+
+  .box {
+    width: 30vw;
   }
 }

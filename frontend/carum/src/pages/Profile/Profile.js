@@ -190,7 +190,7 @@ function Profile() {
   }, []);
 
   return (
-    <div>
+    <div className={styles.box}>
       <TopNav text="내 정보" />
       <div className={styles.container}>
         <p className={styles.id}>{values.userInfo?.id}님</p>

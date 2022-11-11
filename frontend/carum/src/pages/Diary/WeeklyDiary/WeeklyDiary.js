@@ -1,7 +1,7 @@
 import styles from "./WeeklyDiary.module.css";
 import DayComponent from "./DayComponent";
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { changeWeeklyDate } from "utils/utils";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,15 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
         <p>
           {weeklyStartDate} ~ {changeWeeklyDate(weeklyStartDate, "inc", 6)}
         </p>
-        <KeyboardArrowRightIcon onClick={() => next()} />
+        <KeyboardArrowRightIcon
+          sx={{
+            color:
+              new Date(changeWeeklyDate(weeklyStartDate, "inc", 6)) < new Date()
+                ? "black"
+                : "#BFBFBF",
+          }}
+          onClick={() => next()}
+        />
       </div>
       {diaryList?.length !== 0 ? (
         diaryList?.map((e) => (

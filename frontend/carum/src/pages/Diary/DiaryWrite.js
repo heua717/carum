@@ -75,7 +75,7 @@ function DiaryWrite({
     selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
-  const [tmpContent, setTmpContent] = useState("");
+  const [tmpContent, setTmpContent] = useState(diary ? diary.content : "");
 
   const [totalTime, setTotalTime] = useState(TIME);
   const [timer, setTimer] = useState(1000);
@@ -213,13 +213,12 @@ function DiaryWrite({
     return false;
   };
 
-  // cors error 방지 https://cors-anywhere.herokuapp.com/
   // CLOVA API
   const sendSentiment = async (content) => {
     setTimer(null);
     axios
       .post(
-        "https://cors-anywhere.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        "https://carum.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
         { content },
         {
           headers: {
@@ -362,11 +361,11 @@ function DiaryWrite({
           <div className={styles.emotions}>
             {EMOTION_IMAGE.map((emotionObj) => (
               <img
-                onClick={() => clickEmotion(emotionObj.name)}
+                onClick={() => clickEmotion(emotionObj.emotion)}
                 className={`${styles.emotionImg} ${
-                  isChecked(emotionObj.name) ? styles.checked : null
+                  isChecked(emotionObj.emotion) ? styles.checked : null
                 }`}
-                alt={emotionObj.name}
+                alt={emotionObj.emotion}
                 src={emotionObj.image}
               />
             ))}

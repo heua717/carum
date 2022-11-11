@@ -235,6 +235,7 @@ function Shop() {
                     point={el.price}
                     onClick={() => handleOpen(idx)}
                     key={idx}
+                    furniture={el.image}
                   />
                 );
               })}
@@ -259,7 +260,13 @@ function Shop() {
             close={() => handleClose()}
           >
             <div className={styles.dialog}>
-              <div className={styles.furniture}>가구</div>
+              <div className={styles.furniture}>
+                <img
+                  className={styles.furnitureImage}
+                  alt="furniture"
+                  src={shopFurnitureList?.[currentFurnitureIndex]?.image}
+                />
+              </div>
               <p className={styles.detailPriceTag}>
                 {shopFurnitureList?.[currentFurnitureIndex]?.price}
               </p>

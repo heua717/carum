@@ -2,7 +2,6 @@ import styles from "./Menu.module.css";
 import MenuBtn from "./MenuButton";
 import PetsIcon from "@mui/icons-material/Pets";
 import StoreIcon from "@mui/icons-material/Store";
-import PersonIcon from "@mui/icons-material/Person";
 import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";

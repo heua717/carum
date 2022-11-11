@@ -15,17 +15,7 @@ import peaceImg from "assets/peace.svg";
 import DiaryWrite from "./DiaryWrite";
 import { deleteDiaryContent, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
-import { errorAlert } from "utils/utils";
-
-const WEEK_DAY = [
-  "일요일",
-  "월요일",
-  "화요일",
-  "수요일",
-  "목요일",
-  "금요일",
-  "토요일",
-];
+import { errorAlert, WEEK_DAY } from "utils/utils";
 
 const setBackgroundColor = (color) => {
   if (color === "red") {
