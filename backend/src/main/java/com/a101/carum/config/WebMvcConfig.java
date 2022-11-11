@@ -16,16 +16,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://j7a705.q.ssafy.io" ,"http://localhost:8080", "http://localhost:8081", "http://localhost:3000")
+                .allowedOrigins("https://k7a101.p.ssafy.io/", "http://localhost:3000")
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // TODO 필요 url에 적용 필요
-        //registry.addInterceptor(jwtInterceptor)
-        //      .addPathPatterns("/**");
+        registry.addInterceptor(jwtInterceptor)
+                .addPathPatterns("/diary/*")
+                .addPathPatterns("/inventroy/*")
+                .addPathPatterns("/pet/*")
+                .addPathPatterns("/room/*")
+                .addPathPatterns("/template/*")
+                .addPathPatterns("/shop/*");
     }
 
 }
