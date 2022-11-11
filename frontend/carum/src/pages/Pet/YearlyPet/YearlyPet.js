@@ -5,13 +5,15 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import MonthlyPetButton from "./MonthlyPetButton";
 import { useEffect, useState } from "react";
 import { fetchYearlyPet } from "apis/pet";
-import { useParams } from "react-router-dom";
-import { preventRefresh } from "utils/utils";
+import { useNavigate, useParams } from "react-router-dom";
+import { preventRefresh, errorAlert } from "utils/utils";
 
 function YearlyPet() {
   const { year } = useParams();
   const [yearState, setYearState] = useState(year);
   const [petList, setPetList] = useState(null);
+
+  const navigate = useNavigate();
 
   // 년별 펫 데이터 불러오기
   const fetchYearlyPetSuccess = (res) => {
@@ -21,6 +23,8 @@ function YearlyPet() {
 
   const fetchYearlyPetFail = (err) => {
     console.log(err);
+    errorAlert("펫들을 불러오지 못했어요");
+    navigate("/");
   };
 
   useEffect(() => {

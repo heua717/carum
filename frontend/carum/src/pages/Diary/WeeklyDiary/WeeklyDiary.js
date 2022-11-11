@@ -7,6 +7,7 @@ import moment from "moment";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { fetchCalendar } from "apis/diary";
+import { errorAlert } from "utils/utils";
 
 function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
   const [diaryList, setDiaryList] = useState([]);
@@ -19,6 +20,8 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
 
   const fetchCalendarFail = (err) => {
     console.log(err);
+    errorAlert("주간 다이어리를 읽을 수 없습니다");
+    navigate("/");
   };
 
   const prev = () => {

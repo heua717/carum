@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import moment from "moment";
+import Swal from "sweetalert2";
 
 // 정해진 시간마다 실행되는 함수
 function useInterval(callback, delay) {
@@ -190,6 +191,16 @@ const preventRefresh = (e) => {
   e.returnValue = "";
 };
 
+// 에러날 시 알림 띄우기
+const errorAlert = (text) => {
+  Swal.fire({
+    title: text,
+    icon: "error",
+    showConfirmButton: false,
+    timer: 800,
+  });
+};
+
 export {
   useInterval,
   calWeeklyStartDate,
@@ -198,4 +209,5 @@ export {
   calEmotion,
   petTalk,
   preventRefresh,
+  errorAlert,
 };

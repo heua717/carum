@@ -93,10 +93,10 @@ function Item(props) {
     <div>
       <div>
         {props.item?.id === props.mainRoomId ? (
-          <i class={`bx bxs-star ${styles.starImage}`}></i>
+          <i className={`bx bxs-star ${styles.starImage}`}></i>
         ) : (
           <i
-            class={`bx bx-star ${styles.starImage}`}
+            className={`bx bx-star ${styles.starImage}`}
             onClick={handleChangeMainRoom}
           ></i>
         )}

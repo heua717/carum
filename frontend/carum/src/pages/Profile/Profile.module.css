@@ -11,11 +11,12 @@
 }
 
 .id {
-  font-size: 20px;
+  font-size: 24px;
   text-align: center;
 }
 
 .nickname {
+  font-size: 20px;
 }
 
 .nicknameSettingBox {

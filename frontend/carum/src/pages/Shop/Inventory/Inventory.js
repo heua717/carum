@@ -5,8 +5,9 @@ import Pagination from "@mui/material/Pagination";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import { setInventoryList } from "stores/slices/shop";
 import { fetchMyItem } from "apis/furniture";
+import { errorAlert } from "utils/utils";
 
-function Inventory({ place }) {
+function Inventory({ place, setPlace }) {
   // redux
   const { inventoryList } = useAppSelector((state) => state.shop);
 
@@ -30,6 +31,8 @@ function Inventory({ place }) {
 
   const fetchMyItemFail = (err) => {
     console.log(err);
+    errorAlert("가구를 불러오지 못했어요.");
+    setPlace("category");
   };
 
   useEffect(() => {

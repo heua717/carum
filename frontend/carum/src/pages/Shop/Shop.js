@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { setShopFurnitureList } from "stores/slices/shop";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import Swal from "sweetalert2";
+import { errorAlert } from "utils/utils";
 
 function Shop() {
   const [place, setPlace] = useState("category");
@@ -56,6 +57,8 @@ function Shop() {
 
   const fetchShopItemFail = (err) => {
     console.log(err);
+    errorAlert("가구를 불러오지 못했어요");
+    setPlace("category");
   };
 
   //페이지 이동 시, 카테고리 변경 시 가구 검색
@@ -152,12 +155,9 @@ function Shop() {
   const purchaseFurnitureFail = (err) => {
     console.log(err);
     if (err.status === 412) {
-      Swal.fire({
-        showConfirmButton: false,
-        icon: "error",
-        title: "돈이 부족합니다",
-        timer: 800,
-      });
+      errorAlert("돈이 부족해요...");
+    } else {
+      errorAlert("가구를 구매하지 못했어요");
     }
   };
 
@@ -283,7 +283,11 @@ function Shop() {
       ) : place === "category" ? (
         <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
       ) : (
-        <Inventory furnitureList={shopFurnitureList} place={place} />
+        <Inventory
+          setPlace={setPlace}
+          furnitureList={shopFurnitureList}
+          place={place}
+        />
       )}
     </div>
   );

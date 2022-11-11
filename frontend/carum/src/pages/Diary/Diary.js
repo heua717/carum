@@ -1,7 +1,7 @@
 import styles from "./Diary.module.css";
 import TopNav from "../../components/TopNav";
 import Button from "../../components/Button";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { fetchDiary } from "apis/diary";
 import { Viewer } from "@toast-ui/react-editor";
@@ -15,6 +15,7 @@ import peaceImg from "assets/peace.svg";
 import DiaryWrite from "./DiaryWrite";
 import { deleteDiaryContent, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
+import { errorAlert } from "utils/utils";
 
 const WEEK_DAY = [
   "일요일",
@@ -56,6 +57,7 @@ function Diary({ unityRef }) {
 
   const diaryRef = useRef();
   const curBackgroundColorRef = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     diaryRef.current = diary;
@@ -87,6 +89,8 @@ function Diary({ unityRef }) {
 
   const fetchDiaryFail = (err) => {
     console.log(err);
+    errorAlert("다이어리를 읽을 수 없어요ㅠㅠ");
+    navigate("/calendar");
   };
 
   useEffect(() => {

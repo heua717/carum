@@ -10,15 +10,17 @@ import worryImg from "assets/worry.svg";
 import happyImg from "assets/happy.svg";
 import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
-import { preventRefresh } from "utils/utils";
+import { preventRefresh, errorAlert } from "utils/utils";
 
 function MonthlyPet() {
   const { year, month } = useParams();
   const [yearState, setYearState] = useState(year);
   const [monthState, setMonthState] = useState(month);
   const [emotions, setEmotions] = useState(null);
+
+  const navigate = useNavigate();
 
   // 월별 펫 상태 조회
   const fetchMonthlyPetSuccess = (res) => {
@@ -42,6 +44,8 @@ function MonthlyPet() {
   const fetchMonthlyPetFail = (err) => {
     console.log(err);
     setEmotions(null);
+    errorAlert("펫을 데려오지 못했어요 ㅠㅠ");
+    navigate(`yearly-pet/${yearState}`);
   };
 
   useEffect(() => {

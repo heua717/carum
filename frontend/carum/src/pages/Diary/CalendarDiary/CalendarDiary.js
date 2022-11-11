@@ -14,7 +14,12 @@ import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
 import { fetchCalendar } from "apis/diary";
-import { calWeeklyStartDate, useInterval, preventRefresh } from "utils/utils";
+import {
+  calWeeklyStartDate,
+  useInterval,
+  preventRefresh,
+  errorAlert,
+} from "utils/utils";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
@@ -57,6 +62,8 @@ function CalendarDiary() {
 
   const fetchCalendarFail = (err) => {
     console.log(err);
+    errorAlert("달력을 불러올 수 없어요");
+    navigate("/");
   };
 
   // 조회
@@ -75,19 +82,6 @@ function CalendarDiary() {
       fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
     }
   }, [activeStartDate, isMonthly]);
-
-  // useEffect(() => {
-  //   // 주간 조회
-  //   if (!isMonthly) {
-  //     const payload = {
-  //       year: parseInt(moment(activeStartDate).format("YYYY")),
-  //       month: parseInt(moment(activeStartDate).format("M")),
-  //       day: parseInt(weeklyStartDate.split("-")[2]),
-  //     };
-
-  //     fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
-  //   }
-  // }, [weeklyStartDate]);
 
   // 달력 일 클릭 시
   const onChange = (e) => {
