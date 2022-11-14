@@ -124,14 +124,17 @@
 
   .emotionBox {
     margin: 8px auto;
+    width: 30vw;
   }
 
   .contentBox {
     height: 52vh;
+    width: 100%;
     margin: 8px auto;
   }
 
   .buttonBox {
     margin: 8px auto;
+    width: 30vw;
   }
 }

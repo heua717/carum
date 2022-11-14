@@ -1,7 +1,7 @@
 import styles from "./MonthlyPet.module.css";
 import TopNav from "components/TopNav";
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useState, useEffect } from "react";
 import EmotionProgressBar from "./EmotionProgressBar";
 import sadImg from "assets/sad.svg";
@@ -13,6 +13,7 @@ import peaceImg from "assets/peace.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
 import { preventRefresh, errorAlert } from "utils/utils";
+import cryImage from "assets/cry.png";
 
 function MonthlyPet() {
   const { year, month } = useParams();
@@ -21,6 +22,12 @@ function MonthlyPet() {
   const [emotions, setEmotions] = useState(null);
 
   const navigate = useNavigate();
+
+  const validDate = Boolean(
+    yearState < new Date().getFullYear() ||
+      (parseInt(yearState) === new Date().getFullYear() &&
+        monthState < new Date().getMonth())
+  );
 
   // 월별 펫 상태 조회
   const fetchMonthlyPetSuccess = (res) => {
@@ -45,7 +52,7 @@ function MonthlyPet() {
     console.log(err);
     setEmotions(null);
     errorAlert("펫을 데려오지 못했어요 ㅠㅠ");
-    navigate(`yearly-pet/${yearState}`);
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -61,11 +68,7 @@ function MonthlyPet() {
     let tmpYear = yearState;
 
     if (state === "plus") {
-      if (
-        yearState < new Date().getFullYear() ||
-        (parseInt(yearState) === new Date().getFullYear() &&
-          monthState < new Date().getMonth() + 1)
-      ) {
+      if (validDate) {
         tmpMonth += 1;
         if (tmpMonth > 12) {
           tmpYear += 1;
@@ -116,7 +119,12 @@ function MonthlyPet() {
           <p className={styles.year}>{yearState}</p>
           <p className={styles.month}>{monthState}</p>
         </div>
-        <KeyboardArrowRightIcon onClick={() => handleChangeDate("plus")} />
+        <KeyboardArrowRightIcon
+          onClick={() => handleChangeDate("plus")}
+          sx={{
+            color: validDate ? "black" : "#BFBFBF",
+          }}
+        />
       </div>
       {emotions ? (
         <div className={styles.contentContainer}>
@@ -137,7 +145,10 @@ function MonthlyPet() {
           </div>
         </div>
       ) : (
-        <p className={styles.noDataText}>데이터가 없습니다.</p>
+        <div className={styles.noData}>
+          <img alt="cry" src={cryImage} className={styles.cryImage} />
+          <p className={styles.noDataText}>펫이 없어요 ㅠㅠ</p>
+        </div>
       )}
     </div>
   );

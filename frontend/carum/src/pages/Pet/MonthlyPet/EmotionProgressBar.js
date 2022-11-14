@@ -47,7 +47,7 @@ function EmotionProgressBar({ emotion, count, maxCount }) {
         style={{
           backgroundColor: `#${emotionColor(emotion)}`,
           height: "8px",
-          width: `${220 * (count / (maxCount + 1))}px`,
+          width: `${100 * (count / (maxCount + 1))}%`,
           borderRadius: "4px",
           margin: "0 8px",
         }}

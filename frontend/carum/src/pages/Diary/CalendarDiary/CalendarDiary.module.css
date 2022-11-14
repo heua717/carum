@@ -4,7 +4,7 @@
   overflow: auto;
   margin-left: auto;
   margin-right: auto;
-  padding: 12px 0;
+  padding: 8px 0;
 }
 
 .contentContainer::-webkit-scrollbar {
@@ -63,7 +63,6 @@
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    overflow: hidden;
   }
 
   .thisMonthEmotionBox {

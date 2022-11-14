@@ -45,35 +45,29 @@ function Inventory({ place, setPlace }) {
 
   return (
     <div>
-      <div className={styles.contentBox}>
-        {inventoryList?.length > 0 ? (
-          <div>
-            <div className={styles.furnitures}>
-              {inventoryList
-                .slice((newPage - 1) * 9, newPage * 9)
-                .map((el, idx) => {
-                  return (
-                    <FurnitureComponent
-                      key={idx}
-                      name={el.name}
-                      place={place}
-                    />
-                  );
-                })}
-            </div>
-            <Pagination
-              size="small"
-              count={newTotalPage}
-              className={styles.pagination}
-              onChange={handleInventoryPage}
-              defaultPage={1}
-              page={newPage}
-            />
+      {inventoryList?.length > 0 ? (
+        <div className={styles.contentBox}>
+          <div className={styles.furnitures}>
+            {inventoryList
+              .slice((newPage - 1) * 9, newPage * 9)
+              .map((el, idx) => {
+                return (
+                  <FurnitureComponent key={idx} name={el.name} place={place} />
+                );
+              })}
           </div>
-        ) : (
-          <p className={styles.inventoryNoDataText}>가구가 없습니다.</p>
-        )}
-      </div>
+          <Pagination
+            size="small"
+            count={newTotalPage}
+            className={styles.pagination}
+            onChange={handleInventoryPage}
+            defaultPage={1}
+            page={newPage}
+          />
+        </div>
+      ) : (
+        <p className={styles.inventoryNoDataText}>가구가 없습니다.</p>
+      )}
     </div>
   );
 }

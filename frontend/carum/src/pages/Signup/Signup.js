@@ -51,6 +51,26 @@ function Signup() {
     });
   };
 
+  const handleIdCheck = () => {
+    const validationId = values.id.replace(/^[a-zA-Z0-9]$/g, "");
+
+    if (values.id === "") {
+      setValues({
+        ...values,
+        isIdInvalid: true,
+        idHelperText: "아이디는 필수로 입력해야 합니다.",
+      });
+    } else if (validationId !== "") {
+      setValues({
+        ...values,
+        isIdInvalid: true,
+        idHelperText: "아이디에는 영문 및 숫자만 포함될 수 있습니다.",
+      });
+    } else {
+      checkValidId(values.id, checkValidIdSuccess, checkValidIdFail);
+    }
+  };
+
   const checkValidNicknameSuccess = (res) => {
     if (res.status === 200) {
       setValues({
@@ -67,6 +87,22 @@ function Signup() {
       isNicknameInvalid: true,
       nicknameHelperText: "중복된 닉네임입니다.",
     });
+  };
+
+  const handleNicknameCheck = () => {
+    if (values.nickname === "") {
+      setValues({
+        ...values,
+        isNicknameInvalid: true,
+        nicknameHelperText: "닉네임은 필수로 입력해야 합니다.",
+      });
+    } else {
+      checkValidNickname(
+        values.nickname,
+        checkValidNicknameSuccess,
+        checkValidNicknameFail
+      );
+    }
   };
 
   const handlePhoneCheckModal = () => {
@@ -119,9 +155,7 @@ function Signup() {
         id="outlined-required-id"
         value={values.id}
         onChange={handleChange("id")}
-        onBlur={() =>
-          checkValidId(values.id, checkValidIdSuccess, checkValidIdFail)
-        }
+        onBlur={handleIdCheck}
         helperText={values.idHelperText}
         error={values.isIdInvalid}
       />
@@ -133,13 +167,7 @@ function Signup() {
         value={values.nickname}
         onChange={handleChange("nickname")}
         helperText={values.nicknameHelperText}
-        onBlur={() =>
-          checkValidNickname(
-            values.nickname,
-            checkValidNicknameSuccess,
-            checkValidNicknameFail
-          )
-        }
+        onBlur={handleNicknameCheck}
         error={values.isNicknameInvalid}
       />
       <input
