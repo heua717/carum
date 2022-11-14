@@ -1,3 +1,7 @@
+.carousel {
+  min-height: 50vh;
+}
+
 .emotionImage {
   width: 40px;
   height: 40px;
@@ -36,7 +40,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 0 0 12px 12px;
   gap: 4px;
 }
 
@@ -65,6 +69,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 12px 12px 0 0;
 }
 
 .usingText {
@@ -73,4 +78,27 @@
 }
 
 @media only screen and (min-width: 1224px) {
+  .carousel {
+    min-height: 70vh;
+  }
+
+  .doorImageContainer {
+    height: 50vh;
+  }
+
+  .doorImage {
+    max-height: 100%;
+  }
+
+  .using {
+    height: 100%;
+  }
+
+  .roomInfo {
+    min-height: 104px;
+  }
+
+  .roomName {
+    font-size: 30px;
+  }
 }
