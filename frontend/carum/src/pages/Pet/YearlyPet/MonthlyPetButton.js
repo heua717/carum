@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./MonthlyPetButton.module.css";
 import eggImage from "assets/egg.png";
-import friedEggImage from "assets/friedEgg.png";
 import cryImage from "assets/cry.png";
 import moment from "moment";
 
@@ -22,14 +21,9 @@ function MonthlyPetButton({ year, month, pet }) {
         <img src={eggImage} alt="egg" className={styles.eggImage} />
       ) : (
         <div className={styles.noDataBox}>
-          <img className={styles.cryImage} src={cryImage} />
+          <img className={styles.cryImage} src={cryImage} alt="egg" />
           <p className={styles.pet}>펫이 없어요</p>
         </div>
-        // <img
-        //   src={friedEggImage}
-        //   alt="friedEgg"
-        //   className={styles.friedEggImage}
-        // />
       )}
       <p className={styles.text}>{month}월</p>
     </div>

@@ -1,2 +1,6 @@
 @media only screen and (min-width: 1224px) {
+  .container {
+    width: 30vw;
+    height: 70vh;
+  }
 }

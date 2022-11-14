@@ -14,18 +14,17 @@ import RoomSetting from "./RoomSetting";
 import { changeMainRoom } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
-import { Chip } from "@mui/material";
 
 function RoomCarousel(props) {
   return (
-    <div className={styles.carousel}>
+    <div>
       <Carousel
         animation="slide"
         navButtonsAlwaysVisible={true}
         indicators={false}
         autoPlay={false}
         fullHeightHover={false}
-        sx={{ minHeight: "50vh" }}
+        className={styles.carousel}
         onChange={(e) => props.setCurDoorIndex(e)}
       >
         {props.roomInfo?.rooms?.map((item, i) => (
