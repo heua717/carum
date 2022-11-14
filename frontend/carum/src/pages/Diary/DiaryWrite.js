@@ -76,7 +76,9 @@ function DiaryWrite({
     selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
-  const [tmpContent, setTmpContent] = useState(diary ? diary.content : "");
+  const [tmpContent, setTmpContent] = useState(
+    diary ? diary.content.replace(/<[^>]*>?/g, "") : ""
+  );
 
   const [totalTime, setTotalTime] = useState(TIME);
   const [timer, setTimer] = useState(1000);
@@ -94,7 +96,7 @@ function DiaryWrite({
   };
   const unityPetConversation = (json) => {
     petConversation(json);
-  }
+  };
   useEffect(() => {
     unityEnterCloseUp();
     return () => {
@@ -261,13 +263,15 @@ function DiaryWrite({
         );
         const text = petTalk(calc);
         const conversation = {
-          "text":text,
-          "emotion":calc
-        }
+          text: text,
+          emotion: calc,
+        };
         unityPetConversation(conversation);
       })
       .catch((err) => {
         console.log(err);
+        setTotalTime(TIME);
+        setTimer(1000);
       });
   };
 

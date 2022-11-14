@@ -56,14 +56,16 @@ function Inventory({ place, setPlace }) {
                 );
               })}
           </div>
-          <Pagination
-            size="small"
-            count={newTotalPage}
-            className={styles.pagination}
-            onChange={handleInventoryPage}
-            defaultPage={1}
-            page={newPage}
-          />
+          <div className={styles.paginationBox}>
+            <Pagination
+              size="small"
+              count={newTotalPage}
+              className={styles.pagination}
+              onChange={handleInventoryPage}
+              defaultPage={1}
+              page={newPage}
+            />
+          </div>
         </div>
       ) : (
         <p className={styles.inventoryNoDataText}>가구가 없습니다.</p>
