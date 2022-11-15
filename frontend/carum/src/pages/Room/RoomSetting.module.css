@@ -55,6 +55,10 @@ p {
   font-size: 14px;
 }
 
+.emotionTag {
+  max-width: 320px;
+}
+
 .emotionImg {
   width: 60px;
   height: 60px;

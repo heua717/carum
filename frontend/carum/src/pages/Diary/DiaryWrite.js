@@ -254,19 +254,19 @@ function DiaryWrite({
           )
         );
         console.log(userInfo.nickname);
-        setTotalTime(TIME);
-        setTimer(1000);
         const calc = calEmotion(
           res.data.document.confidence.positive,
           res.data.document.confidence.negative,
           res.data.document.confidence.neutral
         );
-        const text = petTalk(calc);
+        const text = petTalk(calc, userInfo.nickname);
         const conversation = {
           text: text,
           emotion: calc,
         };
         unityPetConversation(conversation);
+        setTotalTime(TIME);
+        setTimer(1000);
       })
       .catch((err) => {
         console.log(err);
