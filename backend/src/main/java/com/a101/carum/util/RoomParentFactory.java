@@ -47,8 +47,12 @@ public class RoomParentFactory {
             return roomTemplateRepository.findById(id)
                     .orElseThrow(() -> new NullPointerException("Template이 없습니다."));
         } else {
-            return roomRepository.findByIdAndUser(id, user)
+            Room room = roomRepository.findById(id)
                     .orElseThrow(() -> new NullPointerException("Room이 없습니다."));
+            if(!room.getUser().equals(user)){
+                throw new UnAuthorizedException("권한이 없습니다.");
+            }
+            return room;
         }
     }
 }

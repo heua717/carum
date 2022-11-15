@@ -69,16 +69,10 @@ public class CustomRoomRepository extends QuerydslRepositorySupport {
         BooleanBuilder booleanBuilder =  new BooleanBuilder();
         if(roomType == RoomType.ROOM){
             booleanBuilder.and(room.user.eq(user));
-            if(tags != null){
-                for(String tag:tags){
-                    booleanBuilder.and(room.emotionTag.contains(tag));
-                }
-            }
-        } else {
-            if(tags != null){
-                for(String tag:tags){
-                    booleanBuilder.and(roomTemplate.emotionTag.contains(tag));
-                }
+        }
+        if(tags != null){
+            for(String tag:tags){
+                booleanBuilder.and(roomTemplate.emotionTag.contains(tag));
             }
         }
         return booleanBuilder;

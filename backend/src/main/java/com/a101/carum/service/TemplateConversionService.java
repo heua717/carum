@@ -23,7 +23,6 @@ public class TemplateConversionService {
 
     private final RoomParentFactory roomParentFactory;
     private final RoomParentRepository roomParentRepository;
-    private final RoomRepository roomRepository;
     private final RoomTemplateRepository roomTemplateRepository;
     private final InteriorRepository interiorRepository;
     private final PlaylistRepository playlistRepository;

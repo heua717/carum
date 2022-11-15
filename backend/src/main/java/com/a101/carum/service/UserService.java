@@ -14,6 +14,7 @@ import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
 import com.a101.carum.util.EncryptUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -36,18 +37,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final RoomRepository roomRepository;
-
-    private final DiaryRepository diaryRepository;
     private final JwtService jwtService;
-
     private final TemplateConversionService templateConversionService;
     private final EncryptUtils encryptUtils;
-
     private final RedisTemplate<String, String> tokenRedisTemplate;
 
-    private final int REFRESH_MINUTES = 60 * 24 * 7;
+    private int REFRESH_MINUTES;
     private final int KEY_STRETCH = 4;
 
+    @Value("${jwt.token.time.refresh}")
+    public void setREFRESH_MINUTES(String refreshMinutes){
+        this.REFRESH_MINUTES = Integer.parseInt(refreshMinutes);
+    }
     @Transactional
     public void createUser(ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
 
@@ -70,7 +71,7 @@ public class UserService {
 
         UserDetail userDetail = UserDetail.builder()
                 .user(user)
-                .room(room)
+                .mainRoom(room)
                 .build();
         userDetail.updateMoney(500L, '+');
 
@@ -80,10 +81,8 @@ public class UserService {
     public ResLoginUser loginUser(ReqLoginUser reqLoginUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
         String password = encryptPassword(reqLoginUser.getUserId(), reqLoginUser.getPassword());
 
-        User user = userRepository.findByUserIdAndPasswordAndIsDeleted(
-                reqLoginUser.getUserId(),
-                password,
-                false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        User user = userRepository.findByUserIdAndPasswordAndIsDeleted(reqLoginUser.getUserId(), password, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
         String accessToken = jwtService.createToken(user);
         String refreshToken = jwtService.createRefreshToken();
@@ -114,7 +113,8 @@ public class UserService {
                 .phone(user.getPhone());
 
         // User Detail에서 정보 가져오기
-        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
         resGetUserBuilder
                 .money(userDetail.getMoney())
                 .petType(userDetail.getPetType());
@@ -152,28 +152,28 @@ public class UserService {
     }
 
     public void readUserId(ReqGetUserId reqGetUserId) throws SQLIntegrityConstraintViolationException {
-        User user = userRepository.findByUserIdAndIsDeleted(reqGetUserId.getUserId(), false);
-        if (user != null) {
+        if (userRepository.existsByUserIdAndIsDeleted(reqGetUserId.getUserId(), false)) {
             throw new SQLIntegrityConstraintViolationException("아이디 중복입니다.");
         }
     }
 
     public void readNickName(ReqGetNickName reqGetNickName) throws SQLIntegrityConstraintViolationException {
-        User user = userRepository.findByNickNameAndIsDeleted(reqGetNickName.getNickName(), false);
-        if (user != null) {
+        if (userRepository.existsByNickNameAndIsDeleted(reqGetNickName.getNickName(), false)) {
             throw new SQLIntegrityConstraintViolationException("닉네임 중복입니다.");
         }
     }
 
     @Transactional
     public void updateUser(ReqPatchUser reqPatchUser, Long id) {
-        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         user.updateNickName(reqPatchUser.getNickName());
     }
 
     @Transactional
     public void updateUserPassword(ReqPatchUserPassword reqPatchUserPassword, Long id) throws NoSuchAlgorithmException {
-        User user = userRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(id, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
         String oldPassword = encryptPassword(user.getUserId(), reqPatchUserPassword.getOldPassword());
 

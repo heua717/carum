@@ -51,9 +51,9 @@ public class UserDetail {
     private User user;
 
     @Builder
-    public UserDetail(User user, Room room) {
+    public UserDetail(User user, Room mainRoom) {
         this.user = user;
-        this.mainRoom = room;
+        this.mainRoom = mainRoom;
     }
 
     public void updateMoney(Long money, char type){

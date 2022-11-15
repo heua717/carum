@@ -63,18 +63,9 @@ public class DiaryService {
         userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), LocalDate.now());
 
         for(String emotion: reqPostDiary.getEmotionTag()) {
-            History history = historyRepository.findByEmotion(emotion);
-            if (history == null) {
-                history = historyRepository.save(History.builder()
-                                .user(user)
-                                .year(LocalDate.now().getYear())
-                                .month(LocalDate.now().getMonthValue())
-                                .emotion(emotion)
-                                .count(0L)
-                                .build());
-            }
-
-            history.updateCount();
+            History history = historyRepository.findByEmotionAndUser(emotion,user)
+                    .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+            history.plusCount();
         }
 
         diary = Diary.builder()
@@ -91,19 +82,37 @@ public class DiaryService {
     public void updateDiary(ReqPostDiary reqPostDiary, Long userId, Long diaryId) {
         User user = userRepository.findByIdAndIsDeleted(userId, false)
                 .orElseThrow(()-> new NullPointerException("User를 칮을 수 없습니다"));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("유저 정보가 손상되었습니다."));
         Diary diary = diaryRepository.findById(diaryId)
                 .orElseThrow(()-> new NullPointerException("Diary를 찾을 수 없습니다"));
+
         if(!diary.getUser().equals(user)) {
             throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
         } else if(diary.getCreateDate().getDayOfMonth() != LocalDateTime.now().getDayOfMonth()){
             throw new UnAuthorizedException("일기는 당일 수정만 가능합니다.");
         }
+
+        PetDaily petDaily = petDailyRepository.getPetDaily(reqPostDiary.getEmotionTag(), userDetail.getPetType());
+        userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), userDetail.getLastDiary());
+
+        String[] emotionTag = diary.getEmotionTag().split(",");
+        for(String emotion: emotionTag){
+            History history = historyRepository.findByEmotionAndUser(emotion, user)
+                    .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+            history.minusCount();
+        }
+
         StringBuilder sb = new StringBuilder();
         if(reqPostDiary.getEmotionTag().size()!=0){
-            for (String a: reqPostDiary.getEmotionTag()) {
-                sb.append(a).append(",");
+            for (String emotion: reqPostDiary.getEmotionTag()) {
+                sb.append(emotion).append(",");
+                History history = historyRepository.findByEmotionAndUser(emotion, user)
+                        .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+                history.plusCount();
             }
         }
+
         diary.updateDiary(reqPostDiary.getContent(), sb.toString() , reqPostDiary.getBackground());
         diaryRepository.save(diary);
 
