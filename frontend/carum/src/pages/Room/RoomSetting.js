@@ -10,6 +10,7 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import { editRoomInfo } from "apis/room";
+import { errorAlert } from "utils/utils";
 
 function RoomSetting({ roomList, curDoorIndex, closeModal }) {
   const [newEmotionTag, setNewEmotionTag] = useState([
@@ -40,11 +41,11 @@ function RoomSetting({ roomList, curDoorIndex, closeModal }) {
     // 감정 선택이 안 됐을 때는 선택
     if (idx === -1) {
       emotionList.push(emotion);
-      setNewEmotionTag([...emotionList]);
     } else {
       emotionList.splice(idx, 1);
-      setNewEmotionTag([...emotionList]);
     }
+
+    setNewEmotionTag([...emotionList]);
   };
 
   const editRoomInfoSuccess = (res) => {
@@ -54,6 +55,7 @@ function RoomSetting({ roomList, curDoorIndex, closeModal }) {
 
   const editRoomInfoFail = (err) => {
     console.log(err);
+    errorAlert("방 정보 수정에 실패했습니다 ㅠㅠ");
   };
 
   const handleEditRoomInfo = () => {

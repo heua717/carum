@@ -256,6 +256,9 @@ function Profile() {
                 size="small"
                 variant="contained"
                 color="primary"
+                disabled={
+                  !(values.isValidNickname && values.newNickname !== "")
+                }
               >
                 수정
               </MUIButton>
