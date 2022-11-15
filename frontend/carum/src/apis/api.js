@@ -19,7 +19,6 @@ api.interceptors.request.use(
         const refreshToken = sessionStorage.getItem("refresh-token");
         const response = await axios.post(
           `https://k7a101.p.ssafy.io/api/user/token`,
-          {},
           {
             headers: {
               "access-token": token,
