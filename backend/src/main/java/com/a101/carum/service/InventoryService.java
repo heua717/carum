@@ -56,6 +56,7 @@ public class InventoryService {
                     .name(furniture.getName())
                     .price(furniture.getPrice())
                     .resource(furniture.getResource())
+                    .image(furniture.getImage())
                     .type(furniture.getType())
                     .have(true)
                     .build());
