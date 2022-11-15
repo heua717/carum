@@ -73,13 +73,15 @@ public class RoomService {
             room.updateName(reqPatchRoom.getName());
         }
 
-        if(reqPatchRoom.getEmotionTags() != null) {
+        if(reqPatchRoom.getEmotionTags() != null && reqPatchRoom.getEmotionTags().size() > 0) {
             StringBuilder sb = new StringBuilder();
             Collections.sort(reqPatchRoom.getEmotionTags());
             for(String tag: reqPatchRoom.getEmotionTags()){
                 sb.append(tag).append(",");
             }
             room.updateEmotionTag(sb.toString());
+        } else {
+            room.updateEmotionTag(null);
         }
 
     }
