@@ -3,12 +3,10 @@ package com.a101.carum.service;
 import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
-import com.a101.carum.domain.diary.Diary;
 import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
-import com.a101.carum.repository.DiaryRepository;
 import com.a101.carum.repository.RoomRepository;
 import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
@@ -16,7 +14,6 @@ import com.a101.carum.util.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +21,6 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +36,7 @@ public class UserService {
     private final TemplateConversionService templateConversionService;
     private final EncryptUtils encryptUtils;
     private final RedisTemplate<String, String> tokenRedisTemplate;
+    private final RedisTemplate<String, Long> idRedisTemplate;
 
     private int REFRESH_MINUTES;
     private final int KEY_STRETCH = 4;
@@ -87,7 +83,7 @@ public class UserService {
         String accessToken = jwtService.createToken(user);
         String refreshToken = jwtService.createRefreshToken();
 
-        setTokenInRedis(accessToken, refreshToken);
+        setTokenInRedis(accessToken, refreshToken, user.getId());
 
         return ResLoginUser.builder()
                 .accessToken(accessToken)
@@ -200,7 +196,7 @@ public class UserService {
             throw new RefreshFailException("다시 로그인 하십시오");
         }
 
-        Long id = jwtService.getUserId(accessToken);
+        Long id = idRedisTemplate.opsForValue().get(accessToken);
         User user = userRepository.findByIdAndIsDeleted(id, false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
 
@@ -208,7 +204,8 @@ public class UserService {
         String newRefreshToken = jwtService.createRefreshToken();
 
         tokenRedisTemplate.rename(accessToken, newAccessToken);
-        setTokenInRedis(newAccessToken, newRefreshToken);
+        idRedisTemplate.rename(accessToken, newAccessToken);
+        setTokenInRedis(newAccessToken, newRefreshToken, user.getId());
 
         return ResLoginUser.builder()
                 .accessToken(newAccessToken)
@@ -226,8 +223,9 @@ public class UserService {
         return ret;
     }
 
-    public void setTokenInRedis(String accessToken, String refreshToken) {
+    public void setTokenInRedis(String accessToken, String refreshToken, Long id) {
         tokenRedisTemplate.opsForValue().set(accessToken, refreshToken);
         tokenRedisTemplate.expire(accessToken, REFRESH_MINUTES * 60 ,TimeUnit.SECONDS);
+        idRedisTemplate.opsForValue().set(accessToken, id);
     }
 }
