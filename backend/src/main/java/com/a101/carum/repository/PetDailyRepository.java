@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PetDailyRepository extends JpaRepository<PetDaily, Long> {
+    PetDaily findByEmotionTag(String normal);
 }

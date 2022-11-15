@@ -4,6 +4,7 @@ import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.UnUpdatableException;
 import com.a101.carum.domain.history.History;
 import com.a101.carum.domain.pet.Pet;
+import com.a101.carum.domain.pet.PetDaily;
 import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -25,28 +26,17 @@ public class PetService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
-    private final DiaryRepository diaryRepository;
     private final UserDetailRepository userDetailRepository;
     private final HistoryRepository historyRepository;
     private static String[] emotions = {"HAPPY", "SAD", "ANGRY", "WORRY", "SURPRISE", "PEACE"};
     private final Integer MAX_MONTH = 12;
-    @Transactional
-    public void createPet(ReqPostPet reqPostPet, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Pet pet = Pet.builder()
-                .year(LocalDateTime.now().getYear())
-                .month(LocalDateTime.now().getMonthValue())
-                .type(reqPostPet.getType())
-                .user(user)
-                .build();
-        petRepository.save(pet);
-
-    }
 
     @Transactional
     public ResGetPetDaily getPetDaily(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        UserDetail userDetail = userDetailRepository.findByUser(user).orElseThrow(() -> new NullPointerException("User정보가 손상 되었습니다."));
+        User user = userRepository.findByIdAndIsDeleted(userId,false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("User정보가 손상 되었습니다."));
 
         if (userDetail.getLastDiary().equals(LocalDate.now())) {
             return ResGetPetDaily.builder()
@@ -59,7 +49,6 @@ public class PetService {
                     .face(FaceType.NORMAL)
                     .build();
         }
-
 
     }
 
@@ -77,11 +66,6 @@ public class PetService {
             throw new UnUpdatableException("이 달의 펫을 수정하실 수 없습니다.");
         }
     }
-
-    public boolean inMonth(LocalDate lastDiary){
-        return lastDiary.getMonthValue() == LocalDate.now().getMonthValue();
-    }
-
 
     @Transactional
     public ResGetPet getPet(Long id, Long petId) {
@@ -160,5 +144,9 @@ public class PetService {
         resGetPetBuilder.emotionMap(emotionMap);
 
         return resGetPetBuilder.build();
+    }
+
+    public boolean inMonth(LocalDate lastDiary){
+        return lastDiary.getMonthValue() == LocalDate.now().getMonthValue();
     }
 }
