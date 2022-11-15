@@ -1,5 +1,6 @@
 import React from "react";
 import "./Modal.css";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Modal = (props) => {
   const { open, close, header } = props;
@@ -12,7 +13,7 @@ const Modal = (props) => {
             <div>{header}</div>
             <div>
               <button className="close" onClick={close}>
-                &times;
+                <CloseIcon />
               </button>
             </div>
           </header>

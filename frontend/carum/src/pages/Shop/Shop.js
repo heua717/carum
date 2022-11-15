@@ -268,7 +268,7 @@ function Shop() {
                 />
               </div>
               <p className={styles.detailPriceTag}>
-                {shopFurnitureList?.[currentFurnitureIndex]?.price}
+                {shopFurnitureList?.[currentFurnitureIndex]?.price} point
               </p>
               <div className={styles.myPointBox}>
                 <p className={styles.myPointText}>내 포인트</p>

@@ -8,6 +8,7 @@ import React, {
   forwardRef,
 } from "react";
 import styles from "./UnityCarum.module.css";
+import { useAppSelector } from "stores/store";
 
 function UnityCarum({}, ref) {
   const {
@@ -28,8 +29,10 @@ function UnityCarum({}, ref) {
   useImperativeHandle(ref, () => ({
     enterCloseUp,
     exitCloseUp,
-    petConversation
+    petConversation,
   }));
+
+  const { nowRoomId } = useAppSelector((state) => state.roomInfo);
   async function enterCloseUp() {
     sendMessage("Connector", "PetCloseUp");
   }
@@ -37,7 +40,7 @@ function UnityCarum({}, ref) {
     sendMessage("Connector", "PetEndCloseUp");
   }
   async function petConversation(json) {
-    sendMessage("Connector","PetConversation",JSON.stringify(json));
+    sendMessage("Connector", "PetConversation", JSON.stringify(json));
   }
 
   function handleSceneTransition(sceneName) {
@@ -58,7 +61,7 @@ function UnityCarum({}, ref) {
         refreshToken: sessionStorage.getItem("refresh-token"),
       };
       const param = {
-        mainRoomId: 1,
+        mainRoomId: nowRoomId,
         token,
       };
 
