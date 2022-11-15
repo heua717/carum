@@ -80,7 +80,7 @@ function WeeklyDiary({ weeklyStartDate, setActiveStartDate, activeStartDate }) {
           />
         ))
       ) : (
-        <p className={styles.noDataText}>데이터가 없습니다.</p>
+        <p className={styles.noDataText}>일기가 없습니다.</p>
       )}
     </div>
   );

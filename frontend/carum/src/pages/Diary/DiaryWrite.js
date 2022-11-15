@@ -19,7 +19,13 @@ import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useInterval, calEmotion, petTalk, preventRefresh } from "utils/utils";
+import {
+  useInterval,
+  calEmotion,
+  petTalk,
+  preventRefresh,
+  errorAlert,
+} from "utils/utils";
 import { useAppSelector } from "stores/store";
 
 const EMOTION_VALUE = {
@@ -167,6 +173,8 @@ function DiaryWrite({
 
   const editDiaryFail = (err) => {
     console.log(err);
+    errorAlert("일기를 수정하지 못했어요 ㅠㅠ");
+    setCurState("read");
   };
 
   const handleWriteDiary = () => {
@@ -184,7 +192,7 @@ function DiaryWrite({
         diaryId: diaryId ? diaryId : null,
         content: editorRef.current?.getInstance().getHTML(),
         emotionTag: values.selectedEmotionList,
-        background: "indigo",
+        background: diary ? diary.background : "indigo",
       };
 
       if (state === "edit") {
