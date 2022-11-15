@@ -32,6 +32,8 @@ function Profile() {
     isDeleting: false,
   });
 
+  const [nicknameErrorText, setNicknameErrorText] = useState("");
+
   const navigate = useNavigate();
 
   // 회원 정보 조회
@@ -61,16 +63,24 @@ function Profile() {
 
   // 닉네임 중복 확인
   const handleValidCheck = () => {
-    if (values.userInfo.nickname !== values.newNickname) {
+    if (
+      values.userInfo.nickname !== values.newNickname &&
+      values.newNickname !== ""
+    ) {
       checkValidNickname(
         values.newNickname,
         () => {
           setValues({ ...values, isValidNickname: true });
+          setNicknameErrorText("사용 가능한 닉네임입니다.");
         },
         () => {
           setValues({ ...values, isValidNickname: false });
+          setNicknameErrorText("중복된 닉네임입니다.");
         }
       );
+    } else if (values.newNickname === "") {
+      setNicknameErrorText("닉네임은 필수로 입력해야 합니다");
+      setValues({ ...values, isValidNickname: false });
     }
   };
 
@@ -85,6 +95,7 @@ function Profile() {
       isEditing: false,
       isValidNickname: null,
     });
+    setNicknameErrorText("");
   };
 
   const editNicknameFail = (err) => {
@@ -92,12 +103,25 @@ function Profile() {
   };
 
   const handleEditNickname = (state) => {
-    if (
-      state === "edit" &&
-      values.isValidNickname === true &&
-      values.userInfo.nickname !== values.newNickname
-    ) {
-      editNickname(values.newNickname, editNicknameSuccess, editNicknameFail);
+    if (state === "edit") {
+      if (values.newNickname === values.userInfo.nickname) {
+        setValues({
+          ...values,
+          isEditing: false,
+          isValidNickname: null,
+          newNickname: values.userInfo.nickname,
+        });
+        setNicknameErrorText("");
+      } else if (values.isValidNickname !== true) {
+        Swal.fire({
+          icon: "error",
+          title: "중복 확인을 받아주세요",
+          showConfirmButton: false,
+          timer: 800,
+        });
+      } else {
+        editNickname(values.newNickname, editNicknameSuccess, editNicknameFail);
+      }
     } else {
       setValues({
         ...values,
@@ -105,6 +129,7 @@ function Profile() {
         isValidNickname: null,
         newNickname: values.userInfo.nickname,
       });
+      setNicknameErrorText("");
     }
   };
 
@@ -199,13 +224,7 @@ function Profile() {
           <div className={styles.nicknameEditbox}>
             <div className={styles.editRow}>
               <TextField
-                helperText={
-                  values.isValidNickname === true
-                    ? "사용 가능한 닉네임입니다."
-                    : values.isValidNickname === false
-                    ? "중복된 닉네임입니다."
-                    : null
-                }
+                helperText={nicknameErrorText}
                 error={
                   values.isValidNickname === true
                     ? false
@@ -237,6 +256,9 @@ function Profile() {
                 size="small"
                 variant="contained"
                 color="primary"
+                disabled={
+                  !(values.isValidNickname && values.newNickname !== "")
+                }
               >
                 수정
               </MUIButton>

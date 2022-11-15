@@ -1,7 +1,7 @@
 import styles from "./Diary.module.css";
 import TopNav from "../../components/TopNav";
 import Button from "../../components/Button";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { fetchDiary } from "apis/diary";
 import { Viewer } from "@toast-ui/react-editor";
@@ -48,6 +48,7 @@ function Diary({ unityRef }) {
   const diaryRef = useRef();
   const curBackgroundColorRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     diaryRef.current = diary;

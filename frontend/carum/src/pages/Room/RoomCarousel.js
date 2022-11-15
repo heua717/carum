@@ -24,8 +24,8 @@ function RoomCarousel(props) {
         indicators={false}
         autoPlay={false}
         fullHeightHover={false}
-        className={styles.carousel}
         onChange={(e) => props.setCurDoorIndex(e)}
+        className={styles.carousel}
       >
         {props.roomInfo?.rooms?.map((item, i) => (
           <Item

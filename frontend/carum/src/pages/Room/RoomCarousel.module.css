@@ -1,7 +1,3 @@
-.carousel {
-  min-height: 50vh;
-}
-
 .emotionImage {
   width: 40px;
   height: 40px;
@@ -16,6 +12,8 @@
   min-width: 360px;
   margin-left: auto;
   margin-right: auto;
+  min-height: 50vh;
+  overflow: hidden;
 }
 
 .starImage {

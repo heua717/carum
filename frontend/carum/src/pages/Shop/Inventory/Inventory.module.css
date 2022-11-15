@@ -1,9 +1,6 @@
 .contentBox {
   width: 300px;
-  display: flex;
   height: 50vh;
-  justify-content: space-evenly;
-  flex-direction: column;
   margin: 4px auto;
   overflow: auto;
 }
@@ -20,6 +17,10 @@
   min-height: 46vh;
 }
 
+.paginationBox {
+  display: flex;
+}
+
 .pagination {
   margin-left: auto;
   margin-right: auto;
@@ -32,7 +33,7 @@
 
 @media only screen and (min-width: 1224px) {
   .contentBox {
-    height: 65vh;
+    height: 70vh;
     width: 30vw;
     justify-content: flex-start;
     gap: 12px;

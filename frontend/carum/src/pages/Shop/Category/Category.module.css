@@ -25,9 +25,18 @@
   justify-content: center;
 }
 
+.category:hover {
+  cursor: pointer;
+}
+
 @media only screen and (min-width: 1224px) {
   .contentContainer {
     height: 65vh;
     width: 30vw;
+  }
+
+  .category {
+    width: 48%;
+    height: 10%;
   }
 }

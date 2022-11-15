@@ -24,6 +24,10 @@
   background-color: white;
 }
 
+.backBtn {
+  cursor: pointer;
+}
+
 .buttonBox {
   min-width: 64px;
 }
@@ -129,7 +133,7 @@
 
 @media only screen and (min-width: 1224px) {
   .contentContainer {
-    height: 65vh;
+    height: 70vh;
   }
 
   .searchBox {

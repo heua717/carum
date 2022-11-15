@@ -17,7 +17,7 @@
 
 .privacyPolicyBox {
   max-height: 80px;
-  max-width: 90%;
+  max-width: 80%;
   overflow: auto;
   padding: 8px 0;
 }
@@ -62,4 +62,14 @@
 
 .errorInputBox {
   border: 1px solid rgb(240, 34, 34);
+}
+
+@media only screen and (min-width: 1224px) {
+  .dialog {
+    min-width: 552px;
+  }
+
+  .codeCheckInput {
+    width: 88%;
+  }
 }

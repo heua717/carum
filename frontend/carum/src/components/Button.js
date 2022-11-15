@@ -14,7 +14,13 @@ const StyledButton = styled(MUIButton)(
         background-color: ${getColor(variant)};
       };
       @media only screen and (min-width: 1224px) {
-        width: ${location !== "/signup" && size === "big" ? "100%" : null}
+        width: ${
+          location !== "signup" && size === "big"
+            ? "100%"
+            : location === "diary" && size === "small"
+            ? "48%"
+            : null
+        }
       }
     `
 );
@@ -83,7 +89,7 @@ function Button({ text, size, variant, onClick, disabled }) {
       variant={variant}
       onClick={onClick}
       disabled={disabled}
-      location={location.pathname}
+      location={location.pathname.split("/")[1]}
     >
       {text}
     </StyledButton>
