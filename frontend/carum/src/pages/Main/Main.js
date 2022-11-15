@@ -35,7 +35,7 @@ function Main() {
   };
   const petConversation = (json) => {
     childRef.current.petConversation(json);
-  }
+  };
 
   const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
@@ -66,6 +66,9 @@ function Main() {
       money: res.data.money,
       mainRoom: res.data.mainRoom,
       todayDiary: res.data.todayDiary,
+      petType: res.data.petType,
+      dailyColor: res.data.dailyColor,
+      dailyFace: res.data.dailyFace,
     };
     changeRoom(res.data.mainRoom.id);
     setUser(userInfo);

@@ -12,7 +12,7 @@
   text-align: center;
 }
 
-.container:hover {
+.hover {
   cursor: pointer;
 }
 

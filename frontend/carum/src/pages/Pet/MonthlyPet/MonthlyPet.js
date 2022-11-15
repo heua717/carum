@@ -57,8 +57,8 @@ function MonthlyPet() {
 
   useEffect(() => {
     const payload = {
-      year: yearState,
-      month: monthState,
+      year: parseInt(yearState),
+      month: parseInt(monthState),
     };
     fetchMonthlyPet(payload, fetchMonthlyPetSuccess, fetchMonthlyPetFail);
   }, [monthState]);

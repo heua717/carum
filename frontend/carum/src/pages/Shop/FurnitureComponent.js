@@ -8,7 +8,7 @@ function FurnitureComponent({ furniture, name, have, place, point, onClick }) {
       {place === "shop" ? (
         have ? (
           <div className={styles.alreadyHave}>
-            <p>보유중</p>
+            <p className={styles.usingText}>보유중</p>
           </div>
         ) : null
       ) : null}
