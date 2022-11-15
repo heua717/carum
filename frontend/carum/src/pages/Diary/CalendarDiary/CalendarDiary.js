@@ -14,7 +14,12 @@ import peaceImg from "../../../assets/peace.svg";
 import WeeklyDiary from "../WeeklyDiary/WeeklyDiary";
 import { useNavigate } from "react-router-dom";
 import { fetchCalendar } from "apis/diary";
-import { calWeeklyStartDate, useInterval } from "utils/utils";
+import {
+  calWeeklyStartDate,
+  useInterval,
+  preventRefresh,
+  errorAlert,
+} from "utils/utils";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
@@ -32,15 +37,16 @@ function CalendarDiary() {
   const fetchCalendarSuccess = (res) => {
     console.log(res);
     setDiary(res.data.diaryList);
+    console.log("월간");
 
     if (isMonthly) {
       const emotionName = [
-        "angry",
-        "sad",
-        "happy",
-        "worry",
-        "peace",
-        "surprise",
+        "ANGRY",
+        "SAD",
+        "HAPPY",
+        "WORRY",
+        "PEACE",
+        "SURPRISE",
       ];
       const emotionCnt = [0, 0, 0, 0, 0, 0];
 
@@ -56,6 +62,8 @@ function CalendarDiary() {
 
   const fetchCalendarFail = (err) => {
     console.log(err);
+    errorAlert("달력을 불러올 수 없어요");
+    navigate("/");
   };
 
   // 조회
@@ -64,27 +72,16 @@ function CalendarDiary() {
     setWeeklyStartDate(calWeeklyStartDate(activeStartDate));
 
     // 월간
-    const payload = {
-      year: parseInt(moment(activeStartDate).format("YYYY")),
-      month: parseInt(moment(activeStartDate).format("M")),
-      day: 0,
-    };
-
-    fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
-  }, [activeStartDate]);
-
-  useEffect(() => {
-    // 주간 조회
-    if (!isMonthly) {
+    if (isMonthly) {
       const payload = {
         year: parseInt(moment(activeStartDate).format("YYYY")),
         month: parseInt(moment(activeStartDate).format("M")),
-        day: parseInt(weeklyStartDate.split("-")[2]),
+        day: 0,
       };
 
       fetchCalendar(payload, fetchCalendarSuccess, fetchCalendarFail);
     }
-  }, [weeklyStartDate]);
+  }, [activeStartDate, isMonthly]);
 
   // 달력 일 클릭 시
   const onChange = (e) => {
@@ -96,7 +93,7 @@ function CalendarDiary() {
     });
 
     if (idx !== -1) {
-      navigate(`/main/diary/${diary[idx].id}`);
+      navigate(`/diary/${diary[idx].id}`);
     }
     setValue(e);
     console.log(e);
@@ -136,6 +133,11 @@ function CalendarDiary() {
     }
     setIsMonthly(!isMonthly);
   };
+
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
 
   return (
     <div>
@@ -177,17 +179,17 @@ function CalendarDiary() {
                   return (
                     <img
                       src={
-                        emotionName === "angry"
+                        emotionName === "ANGRY"
                           ? angryImg
-                          : emotionName === "sad"
+                          : emotionName === "SAD"
                           ? sadImg
-                          : emotionName === "happy"
+                          : emotionName === "HAPPY"
                           ? happyImg
-                          : emotionName === "peace"
+                          : emotionName === "PEACE"
                           ? peaceImg
-                          : emotionName === "worry"
+                          : emotionName === "WORRY"
                           ? worryImg
-                          : emotionName === "surprise"
+                          : emotionName === "SURPRISE"
                           ? surpriseImg
                           : null
                       }
@@ -264,6 +266,7 @@ function CalendarDiary() {
             diaryList={diary}
             weeklyStartDate={weeklyStartDate}
             setActiveStartDate={setActiveStartDate}
+            activeStartDate={activeStartDate}
           />
         )}
       </div>

@@ -1,8 +1,9 @@
 import { Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/system";
+import { useLocation } from "react-router-dom";
 
 const StyledButton = styled(MUIButton)(
-  ({ size, variant }) =>
+  ({ size, variant, location }) =>
     `
       width: ${getWidth(size)};
       height: ${getHeight(size)};
@@ -12,6 +13,15 @@ const StyledButton = styled(MUIButton)(
       &: focus{
         background-color: ${getColor(variant)};
       };
+      @media only screen and (min-width: 1224px) {
+        width: ${
+          location !== "signup" && size === "big"
+            ? "100%"
+            : location === "diary" && size === "small"
+            ? "48%"
+            : null
+        }
+      }
     `
 );
 
@@ -72,12 +82,14 @@ function getHeight(size) {
 }
 
 function Button({ text, size, variant, onClick, disabled }) {
+  const location = useLocation();
   return (
     <StyledButton
       size={size}
       variant={variant}
       onClick={onClick}
       disabled={disabled}
+      location={location.pathname.split("/")[1]}
     >
       {text}
     </StyledButton>

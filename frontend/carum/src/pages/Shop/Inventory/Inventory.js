@@ -5,8 +5,9 @@ import Pagination from "@mui/material/Pagination";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import { setInventoryList } from "stores/slices/shop";
 import { fetchMyItem } from "apis/furniture";
+import { errorAlert } from "utils/utils";
 
-function Inventory({ place }) {
+function Inventory({ place, setPlace }) {
   // redux
   const { inventoryList } = useAppSelector((state) => state.shop);
 
@@ -30,6 +31,8 @@ function Inventory({ place }) {
 
   const fetchMyItemFail = (err) => {
     console.log(err);
+    errorAlert("가구를 불러오지 못했어요.");
+    setPlace("category");
   };
 
   useEffect(() => {
@@ -45,20 +48,24 @@ function Inventory({ place }) {
       {inventoryList?.length > 0 ? (
         <div className={styles.contentBox}>
           <div className={styles.furnitures}>
-            {inventoryList.map((el, idx) => {
-              return (
-                <FurnitureComponent key={idx} name={el.name} place={place} />
-              );
-            })}
+            {inventoryList
+              .slice((newPage - 1) * 9, newPage * 9)
+              .map((el, idx) => {
+                return (
+                  <FurnitureComponent key={idx} name={el.name} place={place} />
+                );
+              })}
           </div>
-          <Pagination
-            size="small"
-            count={newTotalPage}
-            className={styles.pagination}
-            onChange={handleInventoryPage}
-            defaultPage={1}
-            page={newPage}
-          />
+          <div className={styles.paginationBox}>
+            <Pagination
+              size="small"
+              count={newTotalPage}
+              className={styles.pagination}
+              onChange={handleInventoryPage}
+              defaultPage={1}
+              page={newPage}
+            />
+          </div>
         </div>
       ) : (
         <p className={styles.inventoryNoDataText}>가구가 없습니다.</p>

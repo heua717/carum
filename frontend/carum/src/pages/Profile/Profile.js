@@ -17,6 +17,7 @@ import {
   changePassword,
 } from "apis/user";
 import Swal from "sweetalert2";
+import { preventRefresh, errorAlert } from "utils/utils";
 
 function Profile() {
   const [values, setValues] = useState({
@@ -30,6 +31,8 @@ function Profile() {
     newPasswordConfirm: "",
     isDeleting: false,
   });
+
+  const [nicknameErrorText, setNicknameErrorText] = useState("");
 
   const navigate = useNavigate();
 
@@ -50,6 +53,8 @@ function Profile() {
 
   const fetchProfileFail = (err) => {
     console.log(err);
+    errorAlert("회원 정보를 불러오지 못했어요 ㅠㅠ");
+    navigate("/");
   };
 
   useEffect(() => {
@@ -58,16 +63,24 @@ function Profile() {
 
   // 닉네임 중복 확인
   const handleValidCheck = () => {
-    if (values.userInfo.nickname !== values.newNickname) {
+    if (
+      values.userInfo.nickname !== values.newNickname &&
+      values.newNickname !== ""
+    ) {
       checkValidNickname(
         values.newNickname,
         () => {
           setValues({ ...values, isValidNickname: true });
+          setNicknameErrorText("사용 가능한 닉네임입니다.");
         },
         () => {
           setValues({ ...values, isValidNickname: false });
+          setNicknameErrorText("중복된 닉네임입니다.");
         }
       );
+    } else if (values.newNickname === "") {
+      setNicknameErrorText("닉네임은 필수로 입력해야 합니다");
+      setValues({ ...values, isValidNickname: false });
     }
   };
 
@@ -82,6 +95,7 @@ function Profile() {
       isEditing: false,
       isValidNickname: null,
     });
+    setNicknameErrorText("");
   };
 
   const editNicknameFail = (err) => {
@@ -89,12 +103,25 @@ function Profile() {
   };
 
   const handleEditNickname = (state) => {
-    if (
-      state === "edit" &&
-      values.isValidNickname === true &&
-      values.userInfo.nickname !== values.newNickname
-    ) {
-      editNickname(values.newNickname, editNicknameSuccess, editNicknameFail);
+    if (state === "edit") {
+      if (values.newNickname === values.userInfo.nickname) {
+        setValues({
+          ...values,
+          isEditing: false,
+          isValidNickname: null,
+          newNickname: values.userInfo.nickname,
+        });
+        setNicknameErrorText("");
+      } else if (values.isValidNickname !== true) {
+        Swal.fire({
+          icon: "error",
+          title: "중복 확인을 받아주세요",
+          showConfirmButton: false,
+          timer: 800,
+        });
+      } else {
+        editNickname(values.newNickname, editNicknameSuccess, editNicknameFail);
+      }
     } else {
       setValues({
         ...values,
@@ -102,6 +129,7 @@ function Profile() {
         isValidNickname: null,
         newNickname: values.userInfo.nickname,
       });
+      setNicknameErrorText("");
     }
   };
 
@@ -146,7 +174,7 @@ function Profile() {
   const logoutSuccess = (res) => {
     sessionStorage.removeItem("access-token");
     sessionStorage.removeItem("refresh-token");
-    navigate("/");
+    navigate("/login");
   };
 
   const logoutFail = (err) => {
@@ -181,23 +209,22 @@ function Profile() {
     setValues({ ...values, isDeleting: false });
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
+
   return (
-    <div>
+    <div className={styles.box}>
       <TopNav text="내 정보" />
       <div className={styles.container}>
-        <p className={styles.id}>{values.userInfo?.id}</p>
+        <p className={styles.id}>{values.userInfo?.id}님</p>
         <p className={styles.settingTag}>닉네임</p>
         {values.isEditing ? (
           <div className={styles.nicknameEditbox}>
             <div className={styles.editRow}>
               <TextField
-                helperText={
-                  values.isValidNickname === true
-                    ? "사용 가능한 닉네임입니다."
-                    : values.isValidNickname === false
-                    ? "중복된 닉네임입니다."
-                    : null
-                }
+                helperText={nicknameErrorText}
                 error={
                   values.isValidNickname === true
                     ? false
@@ -229,6 +256,9 @@ function Profile() {
                 size="small"
                 variant="contained"
                 color="primary"
+                disabled={
+                  !(values.isValidNickname && values.newNickname !== "")
+                }
               >
                 수정
               </MUIButton>
@@ -236,7 +266,7 @@ function Profile() {
           </div>
         ) : (
           <div className={styles.nicknameSettingBox}>
-            <span className={styles.nickname}>{values.userInfo?.nickname}</span>
+            <p className={styles.nickname}>{values.userInfo?.nickname}</p>
             <EditIcon
               onClick={() => setValues({ ...values, isEditing: true })}
             />

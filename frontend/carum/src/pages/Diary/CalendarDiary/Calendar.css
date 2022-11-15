@@ -94,6 +94,8 @@
 .react-calendar__tile:enabled:hover,
 .react-calendar__tile:enabled:focus {
   background-color: #b7bdee;
+  border-radius: 12px;
+  height: 50px;
 }
 .react-calendar__tile--now {
   background: #f0f0f0;
@@ -122,4 +124,14 @@
 }
 .react-calendar--selectRange .react-calendar__tile--hover {
   background-color: #e6e6e6;
+}
+
+@media only screen and (min-width: 1224px) {
+  .react-calendar {
+    width: 30vw;
+  }
+
+  .react-calendar__tile--now {
+    height: 50px;
+  }
 }

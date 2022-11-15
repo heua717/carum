@@ -1,15 +1,22 @@
 .container {
   width: 300px;
+  height: 48vh;
+  overflow: auto;
   margin-left: auto;
   margin-right: auto;
 }
 
+.container::-webkit-scrollbar {
+  display: none;
+}
+
 .id {
-  font-size: 20px;
+  font-size: 24px;
   text-align: center;
 }
 
 .nickname {
+  font-size: 20px;
 }
 
 .nicknameSettingBox {
@@ -56,10 +63,21 @@
 }
 
 .deleteDialog {
-  min-height: 160px;
+  min-height: 140px;
 }
 
 .dialogBtnBox {
   display: flex;
   justify-content: space-around;
+}
+
+@media only screen and (min-width: 1224px) {
+  .container {
+    height: 70vh;
+    margin: 0 auto;
+  }
+
+  .box {
+    width: 30vw;
+  }
 }

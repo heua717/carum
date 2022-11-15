@@ -1,21 +1,23 @@
 .dialog {
   min-width: 296px;
-  min-height: 480px;
+  min-height: 420px;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   align-items: center;
+  padding: 12px 8px;
+  gap: 4px;
 }
 
 .privacyPolicyCheckBox {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 12px 0;
 }
 
 .privacyPolicyBox {
   max-height: 80px;
-  max-width: 90%;
+  max-width: 80%;
   overflow: auto;
   padding: 8px 0;
 }
@@ -27,6 +29,7 @@
 .phoneNumberInput {
   width: 88%;
   height: 40px;
+  margin: 12px 0;
 }
 
 .helpText {
@@ -59,4 +62,14 @@
 
 .errorInputBox {
   border: 1px solid rgb(240, 34, 34);
+}
+
+@media only screen and (min-width: 1224px) {
+  .dialog {
+    min-width: 552px;
+  }
+
+  .codeCheckInput {
+    width: 88%;
+  }
 }

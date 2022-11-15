@@ -14,29 +14,95 @@ import worryImg from "../../assets/worry.svg";
 import happyImg from "../../assets/happy.svg";
 import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { useInterval } from "utils/utils";
+import { useInterval, calEmotion, petTalk, preventRefresh } from "utils/utils";
+import { useAppSelector } from "stores/store";
 
 const EMOTION_VALUE = {
-  sad: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
-  worry: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
-  happy: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
-  surprise: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
-  peace: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
-  angry: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
+  SAD: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
+  WORRY: ["떨리는", "막막한", "의심하는", "불안한", "겁먹은", "걱정스런"],
+  HAPPY: ["흐뭇한", "신나는", "즐거운", "행복한", "들뜬", "정다운"],
+  SURPRISE: ["이상한", "신기한", "당황한", "감동한", "어이없는", "혼란스런"],
+  PEACE: ["산뜻한", "시원한", "익숙한", "만족스런", "따뜻한", "든든한"],
+  ANGRY: ["답답한", "싫어하는", "짜증난", "미워하는", "불쾌한", "언짢은"],
 };
 
-function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
+const EMOTION_IMAGE = [
+  {
+    emotion: "ANGRY",
+    image: angryImg,
+  },
+  {
+    emotion: "PEACE",
+    image: peaceImg,
+  },
+  {
+    emotion: "SAD",
+    image: sadImg,
+  },
+  {
+    emotion: "HAPPY",
+    image: happyImg,
+  },
+  {
+    emotion: "WORRY",
+    image: worryImg,
+  },
+  {
+    emotion: "SURPRISE",
+    image: surpriseImg,
+  },
+];
+
+const TIME = 20;
+const COOL_TIME = 10;
+
+function DiaryWrite({
+  state,
+  diary,
+  diaryId,
+  setCurState,
+  setDiary,
+  enterCloseUp,
+  exitCloseUp,
+  petConversation,
+}) {
   const [values, setValues] = useState({
     isSelecting: false,
-    selectedEmotion: "angry",
+    selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
-  const [tmpContent, setTmpContent] = useState("");
+  const [tmpContent, setTmpContent] = useState(
+    diary ? diary.content.replace(/<[^>]*>?/g, "") : ""
+  );
+
+  const [totalTime, setTotalTime] = useState(TIME);
+  const [timer, setTimer] = useState(1000);
+  const [petTimer, setPetTimer] = useState(null);
+  const [coolTime, setCoolTime] = useState(COOL_TIME);
+  const [canTalk, setCanTalk] = useState(true);
+
+  // user redux
+  const { userInfo } = useAppSelector((state) => state.user);
+  const unityEnterCloseUp = () => {
+    enterCloseUp();
+  };
+  const unityExitCloseUp = () => {
+    exitCloseUp();
+  };
+  const unityPetConversation = (json) => {
+    petConversation(json);
+  };
+  useEffect(() => {
+    unityEnterCloseUp();
+    return () => {
+      unityExitCloseUp();
+    };
+  }, []);
 
   // 감정 이모티콘 클릭 시
   const clickEmotion = (emotion) => {
@@ -85,7 +151,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
     console.log(res);
-    navigate("/main/calendar");
+    navigate("/calendar");
   };
 
   const writeDiaryFail = (err) => {
@@ -118,7 +184,7 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
         diaryId: diaryId ? diaryId : null,
         content: editorRef.current?.getInstance().getHTML(),
         emotionTag: values.selectedEmotionList,
-        background: "purple",
+        background: "indigo",
       };
 
       if (state === "edit") {
@@ -153,12 +219,12 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
     return false;
   };
 
-  // cors error 방지 https://cors-anywhere.herokuapp.com/
   // CLOVA API
   const sendSentiment = async (content) => {
+    setTimer(null);
     axios
       .post(
-        "https://cors-anywhere.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
+        "https://carum.herokuapp.com/https://naveropenapi.apigw.ntruss.com/sentiment-analysis/v1/analyze",
         { content },
         {
           headers: {
@@ -170,33 +236,118 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
       )
       .then((res) => {
         console.log(res);
+        console.log(
+          calEmotion(
+            res.data.document.confidence.positive,
+            res.data.document.confidence.negative,
+            res.data.document.confidence.neutral
+          )
+        );
+        console.log(
+          petTalk(
+            calEmotion(
+              res.data.document.confidence.positive,
+              res.data.document.confidence.negative,
+              res.data.document.confidence.neutral
+            ),
+            userInfo.nickname
+          )
+        );
+        console.log(userInfo.nickname);
+        setTotalTime(TIME);
+        setTimer(1000);
+        const calc = calEmotion(
+          res.data.document.confidence.positive,
+          res.data.document.confidence.negative,
+          res.data.document.confidence.neutral
+        );
+        const text = petTalk(calc);
+        const conversation = {
+          text: text,
+          emotion: calc,
+        };
+        unityPetConversation(conversation);
       })
       .catch((err) => {
         console.log(err);
+        setTotalTime(TIME);
+        setTimer(1000);
       });
   };
 
-  // useInterval(() => {
-  //   const data = editorRef.current
-  //     .getInstance()
-  //     .getHTML()
-  //     .replace(/<[^>]*>?/g, "");
+  // 자동 타이머
+  useInterval(() => {
+    if (totalTime > 0) {
+      setTotalTime(totalTime - 1);
+    } else {
+      const data = editorRef.current
+        .getInstance()
+        .getHTML()
+        .replace(/<[^>]*>?/g, "");
 
-  //   console.log(data);
-  //   console.log(tmpContent);
+      console.log("data: ", data);
+      console.log("tmpContent: ", tmpContent);
 
-  //   if (data.trim() && data.trim() !== tmpContent.trim()) {
-  //     console.log("데이터 보낸다");
-  //     sendSentiment(data);
-  //     setTmpContent(data);
-  //   } else {
-  //     console.log("데이터 안보낸다 바뀐 거 없다");
-  //   }
-  // }, 15000);
+      if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
+        sendSentiment(data);
+        setTmpContent(data);
+        console.log("감정분석 함");
+      } else {
+        console.log("감정분석 안 함");
+        setTotalTime(TIME);
+      }
+    }
+    console.log(totalTime);
+  }, timer);
+
+  useInterval(() => {
+    if (coolTime > 0) {
+      setCoolTime(coolTime - 1);
+      console.log("cooltime", coolTime);
+    } else {
+      setPetTimer(null);
+      setCanTalk(true);
+      setCoolTime(COOL_TIME);
+    }
+  }, petTimer);
+
+  // 펫 터치시 쿨타임 시작, 자동 타이머 시간 초기화
+  const touchPet = () => {
+    if (canTalk) {
+      const data = editorRef.current
+        .getInstance()
+        .getHTML()
+        .replace(/<[^>]*>?/g, "");
+
+      console.log("data: ", data);
+      console.log("tmpContent: ", tmpContent);
+
+      if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
+        console.log("감정분석 함");
+        sendSentiment(data);
+        setCanTalk(false);
+        setTmpContent(data);
+        setPetTimer(1000);
+      } else {
+        console.log("감정 분석 안 함");
+      }
+    }
+  };
+
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+  }, []);
 
   return (
     <div>
-      <TopNav text="다이어리 작성" />
+      <TopNav
+        text="다이어리 작성"
+        timer={timer}
+        setTimer={setTimer}
+        petTimer={petTimer}
+        setPetTimer={setPetTimer}
+      />
       <div className={styles.contentContainer}>
         <div className={styles.editor}>
           <Editor
@@ -227,83 +378,46 @@ function DiaryWrite({ state, diary, diaryId, setCurState, setDiary }) {
             </div>
           </div>
           <div className={styles.emotions}>
-            <img
-              onClick={() => clickEmotion("angry")}
-              className={`${styles.emotionImg} ${
-                isChecked("angry") ? styles.checked : null
-              }`}
-              src={angryImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("sad")}
-              className={`${styles.emotionImg} ${
-                isChecked("sad") ? styles.checked : null
-              }`}
-              src={sadImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("happy")}
-              className={`${styles.emotionImg} ${
-                isChecked("happy") ? styles.checked : null
-              }`}
-              src={happyImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("worry")}
-              className={`${styles.emotionImg} ${
-                isChecked("worry") ? styles.checked : null
-              }`}
-              src={worryImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("peace")}
-              className={`${styles.emotionImg} ${
-                isChecked("peace") ? styles.checked : null
-              }`}
-              src={peaceImg}
-              alt="emotion"
-            />
-            <img
-              onClick={() => clickEmotion("surprise")}
-              className={`${styles.emotionImg} ${
-                isChecked("surprise") ? styles.checked : null
-              }`}
-              src={surpriseImg}
-              alt="emotion"
-            />
+            {EMOTION_IMAGE.map((emotionObj) => (
+              <img
+                onClick={() => clickEmotion(emotionObj.emotion)}
+                className={`${styles.emotionImg} ${
+                  isChecked(emotionObj.emotion) ? styles.checked : null
+                }`}
+                alt={emotionObj.emotion}
+                src={emotionObj.image}
+              />
+            ))}
           </div>
           <div
             className={`${styles.emotionExplainBox} 
             ${
-              values.selectedEmotion === "angry"
+              values.selectedEmotion === "ANGRY"
                 ? styles.angryBg
-                : values.selectedEmotion === "sad"
+                : values.selectedEmotion === "SAD"
                 ? styles.sadBg
-                : values.selectedEmotion === "happy"
+                : values.selectedEmotion === "HAPPY"
                 ? styles.happyBg
-                : values.selectedEmotion === "worry"
+                : values.selectedEmotion === "WORRY"
                 ? styles.worryBg
-                : values.selectedEmotion === "peace"
+                : values.selectedEmotion === "PEACE"
                 ? styles.peaceBg
                 : styles.surpriseBg
             }`}
           >
             <div className={styles.emotionExplainRow}>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][0]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][1]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][2]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[0]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[1]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[2]}</span>
             </div>
             <div className={styles.emotionExplainRow}>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][3]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][4]}</span>
-              <span>#{EMOTION_VALUE[values.selectedEmotion][5]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[3]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[4]}</span>
+              <span>#{EMOTION_VALUE[values.selectedEmotion]?.[5]}</span>
             </div>
           </div>
         </div>
+        <button onClick={touchPet}>펫 클릭</button>
         <Button
           onClick={handleWriteDiary}
           size="big"

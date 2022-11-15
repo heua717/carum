@@ -7,6 +7,23 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 
 function EmotionProgressBar({ emotion, count, maxCount }) {
+  // 감정별 그래프 색
+  const emotionColor = (emotion) => {
+    if (emotion === "angry") {
+      return "C23C3C";
+    } else if (emotion === "sad") {
+      return "395796";
+    } else if (emotion === "peace") {
+      return "5EB88A";
+    } else if (emotion === "worry") {
+      return "6649AF";
+    } else if (emotion === "happy") {
+      return "E8CA51";
+    } else if (emotion === "surprise") {
+      return "E7E7E7";
+    }
+  };
+
   return (
     <div className={styles.container}>
       <img
@@ -28,9 +45,9 @@ function EmotionProgressBar({ emotion, count, maxCount }) {
       />
       <div
         style={{
-          backgroundColor: "#E18DAE",
+          backgroundColor: `#${emotionColor(emotion)}`,
           height: "8px",
-          width: `${220 * (count / (maxCount + 1))}px`,
+          width: `${100 * (count / (maxCount + 1))}%`,
           borderRadius: "4px",
           margin: "0 8px",
         }}

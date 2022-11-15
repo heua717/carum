@@ -1,3 +1,12 @@
+.contentContainer {
+  height: 48vh;
+  overflow: auto;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
 .topNav {
   display: flex;
   justify-content: space-between;
@@ -15,12 +24,18 @@
   background-color: white;
 }
 
+.backBtn {
+  cursor: pointer;
+}
+
 .buttonBox {
   min-width: 64px;
 }
 
 .searchBox {
   display: flex;
+  max-width: 300px;
+  margin: 0 auto;
   justify-content: space-around;
   padding: 4px 0;
 }
@@ -28,9 +43,10 @@
 .inputBox {
   border: none;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
-  width: 280px;
+  width: 260px;
   height: 28px;
   border-radius: 8px;
+  padding: 0 8px;
 }
 
 .contentBox {
@@ -88,7 +104,11 @@
 }
 
 .furniture {
-  height: 160px;
+  height: 200px;
+}
+
+.furnitureImage {
+  height: 100%;
 }
 
 .detailPriceText {
@@ -103,9 +123,28 @@
 }
 
 .myPointText {
+  font-size: 20px;
 }
 
 .inventoryNoDataText {
   text-align: center;
   font-size: 18px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentContainer {
+    height: 70vh;
+  }
+
+  .searchBox {
+    margin-bottom: 12px;
+  }
+
+  .furnitures {
+    margin-bottom: 12px;
+  }
+
+  .contentBox {
+    width: 30vw;
+  }
 }

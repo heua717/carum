@@ -18,7 +18,7 @@ function Login() {
     sessionStorage.setItem("access-token", res.data["accessToken"]);
     sessionStorage.setItem("refresh-token", res.data["refreshToken"]);
     setLoginFailed(false);
-    navigate("/main");
+    navigate("/");
   };
 
   const loginFail = (err) => {
@@ -34,6 +34,8 @@ function Login() {
         password: values.password,
       };
       login(payload, loginSuccess, loginFail);
+    } else {
+      setLoginFailed(true);
     }
   };
 
@@ -62,6 +64,7 @@ function Login() {
             id="id"
             type="text"
             onChange={handleChange("id")}
+            required
           />
           <label className={styles.inputLabel} htmlFor="password">
             비밀번호
@@ -72,6 +75,7 @@ function Login() {
             value={values.password}
             id="password"
             onChange={handleChange("password")}
+            required
           />
         </div>
         {loginFailed ? (

@@ -14,25 +14,24 @@ import RoomSetting from "./RoomSetting";
 import { changeMainRoom } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
-import { Chip } from "@mui/material";
 
 function RoomCarousel(props) {
   return (
-    <div className={styles.carousel}>
+    <div>
       <Carousel
         animation="slide"
         navButtonsAlwaysVisible={true}
         indicators={false}
         autoPlay={false}
         fullHeightHover={false}
-        sx={{ minHeight: "50vh" }}
         onChange={(e) => props.setCurDoorIndex(e)}
+        className={styles.carousel}
       >
-        {props.roomInfo.rooms.map((item, i) => (
+        {props.roomInfo?.rooms?.map((item, i) => (
           <Item
             key={i}
             item={item}
-            mainRoomId={props.roomInfo.mainRoomId}
+            mainRoomId={props.roomInfo?.mainRoomId}
             setRoomInfo={props.setRoomInfo}
             roomInfo={props.roomInfo}
           />
@@ -71,7 +70,7 @@ function Item(props) {
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
       //끝나면 main으로 돌아가라
-      navigate(`/main`);
+      navigate(`/`);
     }
   };
 
@@ -86,44 +85,44 @@ function Item(props) {
 
   const handleChangeMainRoom = () => {
     changeMainRoom(props.item.id, changeMainRoomSuccess, changeMainRoomFail);
-    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item.id });
+    props.setRoomInfo({ ...props.roomInfo, mainRoomId: props.item?.id });
   };
 
   return (
     <div>
       <div>
-        {props.item.id === props.mainRoomId ? (
-          <i class={`bx bxs-star ${styles.starImage}`}></i>
+        {props.item?.id === props.mainRoomId ? (
+          <i className={`bx bxs-star ${styles.starImage}`}></i>
         ) : (
           <i
-            class={`bx bx-star ${styles.starImage}`}
+            className={`bx bx-star ${styles.starImage}`}
             onClick={handleChangeMainRoom}
           ></i>
         )}
       </div>
       <div className={styles.doorImageContainer}>
-        {props.item.id === nowRoomId ? (
-          <Chip label="이용중" color="secondary" />
-        ) : (
-          <div style={{ height: "32px" }}></div>
-        )}
+        {props.item?.id === nowRoomId ? (
+          <div className={styles.using}>
+            <p className={styles.usingText}>이용중</p>
+          </div>
+        ) : null}
         <img
           className={styles.doorImage}
           src={doorImg}
-          alt={props.item.roomName}
+          alt={props.item?.roomName}
           onClick={() => handleChangeRoom(props.item.id)}
         />
       </div>
       <div className={styles.roomInfo}>
-        <Emotion emotionTag={props.item.emotionTag} />
-        <div className={styles.roomName}>{props.item.name}</div>
+        <Emotion emotionTag={props.item?.emotionTag} />
+        <div className={styles.roomName}>{props.item?.name}</div>
       </div>
     </div>
   );
 }
 
 function Emotion(props) {
-  const emotionLink = props.emotionTag.map(function (item) {
+  const emotionLink = props.emotionTag?.map(function (item) {
     if (item === "SAD") return sadImg;
     else if (item === "WORRY") return worryImg;
     else if (item === "ANGRY") return angryImg;
@@ -133,7 +132,7 @@ function Emotion(props) {
   });
   return (
     <div>
-      {emotionLink.map((item, i) => (
+      {emotionLink?.map((item, i) => (
         <img key={i} src={item} alt="emotion" className={styles.emotionImage} />
       ))}
     </div>

@@ -1,8 +1,6 @@
 .contentBox {
   width: 300px;
-  display: flex;
-  justify-content: space-evenly;
-  flex-direction: column;
+  height: 50vh;
   margin: 4px auto;
   overflow: auto;
 }
@@ -16,6 +14,11 @@
   align-items: center;
   justify-content: space-around;
   flex-wrap: wrap;
+  min-height: 46vh;
+}
+
+.paginationBox {
+  display: flex;
 }
 
 .pagination {
@@ -26,4 +29,13 @@
 .inventoryNoDataText {
   text-align: center;
   font-size: 18px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentBox {
+    height: 70vh;
+    width: 30vw;
+    justify-content: flex-start;
+    gap: 12px;
+  }
 }

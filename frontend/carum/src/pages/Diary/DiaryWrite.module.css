@@ -40,6 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 4px;
 }
 
 .emotions {
@@ -102,4 +103,28 @@
 
 .btn {
   margin-bottom: 12px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentContainer {
+    height: 80vh;
+    width: 25vw;
+  }
+
+  .editor {
+    width: 100%;
+    border: 1px solid #8682ce;
+    padding: 2px;
+    border-radius: 8px;
+  }
+
+  .emotionCheckBox {
+    width: 25vw;
+  }
+
+  .emotionImg {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
 }
