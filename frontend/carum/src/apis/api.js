@@ -14,7 +14,7 @@ api.interceptors.request.use(
     if (token) {
       if (jwt_decode(token).exp * 1000 < Date.now()) {
         const refreshToken = sessionStorage.getItem("refresh-token");
-        const response = await api.post(
+        const response = await axios.post(
           `/user/token`,
           {},
           {
