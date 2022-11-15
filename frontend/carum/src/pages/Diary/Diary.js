@@ -43,6 +43,7 @@ function Diary({ unityRef }) {
   const [colorBar, setColorBar] = useState(color);
   const [showColorPickerBar, setShowColorPickerBar] = useState(false);
   const [curBackgroundColor, setCurBackgroundColor] = useState("indigo");
+  const [isTodayDiary, setIsTodayDiary] = useState(null);
   const { id } = useParams();
 
   const diaryRef = useRef();
@@ -76,6 +77,12 @@ function Diary({ unityRef }) {
     tmpColors.splice(color.indexOf(res.data.background), 1);
     setColorBar(tmpColors);
     setCurBackgroundColor(res.data.background);
+    setIsTodayDiary(
+      Boolean(
+        moment(res.data.createDate).format("YYYY-MM-DD") ===
+          moment(new Date()).format("YYYY-MM-DD")
+      )
+    );
   };
 
   const fetchDiaryFail = (err) => {
@@ -197,13 +204,15 @@ function Diary({ unityRef }) {
             >
               <p>{moment(diary?.createDate).format("YYYY-MM-DD")}</p>
               <p>{WEEK_DAY[new Date(diary?.createDate).getDay()]}</p>
-              <div
-                className={`${styles.colorPicker} ${setBackgroundColor(
-                  curBackgroundColor
-                )}`}
-                onClick={() => setShowColorPickerBar(!showColorPickerBar)}
-              ></div>
-              {showColorPickerBar ? (
+              {isTodayDiary ? (
+                <div
+                  className={`${styles.colorPicker} ${setBackgroundColor(
+                    curBackgroundColor
+                  )}`}
+                  onClick={() => setShowColorPickerBar(!showColorPickerBar)}
+                ></div>
+              ) : null}
+              {showColorPickerBar && isTodayDiary ? (
                 <div className={styles.colorPickerBar}>
                   {colorBar.map((col, idx) => (
                     <div
