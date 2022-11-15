@@ -7,6 +7,7 @@ import { checkValidId, checkValidNickname } from "apis/user";
 import PhoneCheck from "./PhoneCheck";
 import { signup } from "apis/user";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Signup() {
   const [values, setValues] = useState({
@@ -52,9 +53,9 @@ function Signup() {
   };
 
   const handleIdCheck = () => {
-    const ex = /^[a-zA-Z0-9]/;
-    ex.test(values.id);
-    console.log(ex.test(values.id));
+    const idCheck = /^[a-zA-Z0-9]/;
+    idCheck.test(values.id);
+    console.log(idCheck.test(values.id));
 
     if (values.id === "") {
       setValues({
@@ -62,7 +63,7 @@ function Signup() {
         isIdInvalid: true,
         idHelperText: "아이디는 필수로 입력해야 합니다.",
       });
-    } else if (!ex.test(values.id)) {
+    } else if (!idCheck.test(values.id)) {
       setValues({
         ...values,
         isIdInvalid: true,
@@ -117,8 +118,15 @@ function Signup() {
     setValues({ ...values, isPhoneCheckModalOpened: false });
   };
 
+  // 회원가입
   const signupSuccess = (res) => {
     console.log(res);
+    Swal.fire({
+      showConfirmButton: false,
+      title: "가입되었습니다!",
+      icon: "success",
+      timer: 800,
+    });
   };
 
   const signupFail = (err) => {

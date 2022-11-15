@@ -33,6 +33,8 @@ function UnityCarum({}, ref) {
   }));
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
+  const { userInfo } = useAppSelector((state) => state.user);
+
   async function enterCloseUp() {
     sendMessage("Connector", "PetCloseUp");
   }
@@ -63,6 +65,9 @@ function UnityCarum({}, ref) {
       const param = {
         mainRoomId: nowRoomId,
         token,
+        petType: userInfo.petType,
+        dailyFace: userInfo.dailyFace,
+        dailyColor: userInfo.dailyColor,
       };
 
       sendMessage("Connector", "StartUnity", JSON.stringify(param));
@@ -111,8 +116,8 @@ function UnityCarum({}, ref) {
 
       {/* <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
-      <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button>
-      <button onClick={()=>handleClick()}>requestFullscreen</button> */}
+      <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button> */}
+      <button onClick={()=>handleClick()}>requestFullscreen</button>
     </div>
   );
 }

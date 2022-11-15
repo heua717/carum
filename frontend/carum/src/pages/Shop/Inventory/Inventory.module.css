@@ -12,8 +12,11 @@
 .furnitures {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  gap: 4%;
+  width: 99%;
+  margin: 0 auto;
 }
 
 .paginationBox {
