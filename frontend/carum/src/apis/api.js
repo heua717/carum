@@ -11,11 +11,14 @@ const api = axios.create({
 api.interceptors.request.use(
   async function (config) {
     const token = sessionStorage.getItem("access-token");
+    const requestUrl = config.url.split("/");
+    const endPoint = requestUrl[requestUrl.length - 1];
+
     if (token) {
-      if (jwt_decode(token).exp * 1000 < Date.now()) {
+      if (endPoint !== "token" && jwt_decode(token).exp * 1000 < Date.now()) {
         const refreshToken = sessionStorage.getItem("refresh-token");
-        const response = await api.post(
-          `/user/token`,
+        const response = await axios.post(
+          `https://k7a101.p.ssafy.io/api/user/token`,
           {},
           {
             headers: {

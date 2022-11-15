@@ -26,7 +26,11 @@ function Inventory({ place, setPlace }) {
   const fetchMyItemSuccess = (res) => {
     console.log(res.data);
     setInventory(res.data.furnitureList);
-    setNewTotalPage(parseInt(res.data.furnitureList.length / 9) + 1);
+    setNewTotalPage(
+      res.data.furnitureList.length % 9
+        ? parseInt(res.data.furnitureList.length / 9) + 1
+        : parseInt(res.data.furnitureList.length / 9)
+    );
   };
 
   const fetchMyItemFail = (err) => {
