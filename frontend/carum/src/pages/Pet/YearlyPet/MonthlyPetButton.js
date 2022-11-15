@@ -13,7 +13,10 @@ function MonthlyPetButton({ year, month, pet }) {
   };
 
   return (
-    <div className={styles.container} onClick={handleClick}>
+    <div
+      className={`${styles.container} ${pet ? styles.hover : null}`}
+      onClick={handleClick}
+    >
       {pet ? (
         <div className={styles.pet}></div>
       ) : moment(new Date()).format("YYYY-MM") <=

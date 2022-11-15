@@ -56,12 +56,12 @@
 }
 
 .doorImage {
-  max-height: 240px;
+  max-height: 33vh;
 }
 
 .using {
   position: absolute;
-  height: 240px;
+  height: 33vh;
   width: 100%;
   background-color: rgba(44, 44, 44, 0.5);
   display: flex;
