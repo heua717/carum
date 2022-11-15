@@ -52,7 +52,9 @@ function Signup() {
   };
 
   const handleIdCheck = () => {
-    const validationId = values.id.replace(/^[a-zA-Z0-9]$/g, "");
+    const ex = /^[a-zA-Z0-9]/;
+    ex.test(values.id);
+    console.log(ex.test(values.id));
 
     if (values.id === "") {
       setValues({
@@ -60,7 +62,7 @@ function Signup() {
         isIdInvalid: true,
         idHelperText: "아이디는 필수로 입력해야 합니다.",
       });
-    } else if (validationId !== "") {
+    } else if (!ex.test(values.id)) {
       setValues({
         ...values,
         isIdInvalid: true,

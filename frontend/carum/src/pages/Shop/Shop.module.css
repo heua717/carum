@@ -70,8 +70,11 @@
 .furnitures {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 4%;
   flex-wrap: wrap;
+  margin: 0 auto;
+  width: 99%;
 }
 
 .pagination {
