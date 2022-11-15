@@ -28,26 +28,16 @@ public class InventoryService {
     private final CustomInventoryRepository customInventoryRepository;
 
     @Transactional
-    public ResGetFurnitureList readInventory(Long id) {
-        User user = userRepository.findByIdAndIsDeleted(id,false)
-                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        UserDetail userDetail = userDetailRepository.findByUser(user)
-                .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
-        List<Inventory> inventoryList = inventoryRepository.findByUser(user);
-
-        return listInventoryToFurinitureList(user, userDetail, inventoryList);
-    }
-
     public ResGetFurnitureList readInventory(ReqGetInventory reqGetInventory, Long id) {
         User user = userRepository.findByIdAndIsDeleted(id,false)
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
         List<Inventory> inventoryList = customInventoryRepository.readInventory(reqGetInventory, user);
-        return listInventoryToFurinitureList(user, userDetail, inventoryList);
+        return listInventoryToFurinitureList(userDetail, inventoryList);
     }
 
-    public ResGetFurnitureList listInventoryToFurinitureList(User user, UserDetail userDetail, List<Inventory> inventoryList){
+    public ResGetFurnitureList listInventoryToFurinitureList(UserDetail userDetail, List<Inventory> inventoryList){
         List<ResGetFurniture> furnitureList = new ArrayList<>();
         for(Inventory inventory: inventoryList){
             Furniture furniture = inventory.getFurniture();
@@ -56,6 +46,7 @@ public class InventoryService {
                     .name(furniture.getName())
                     .price(furniture.getPrice())
                     .resource(furniture.getResource())
+                    .image(furniture.getImage())
                     .type(furniture.getType())
                     .have(true)
                     .build());

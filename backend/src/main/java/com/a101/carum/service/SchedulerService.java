@@ -26,6 +26,8 @@ public class SchedulerService {
     private final HistoryRepository historyRepository;
     private final PetRepository petRepository;
     private final CustomPetDailyRepository petDailyRepository;
+    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISED", "WORRY", "PEACE"};
+
     @Transactional
     @Scheduled(cron = "1 0 0 1 * *")
     public void initializeRoom(){
@@ -70,6 +72,16 @@ public class SchedulerService {
 
             // 매 달 들어왔는지 확인하기 위하는 부분
             userDetail.updatePetType(null);
+
+            for(String e: emotions){
+                historyRepository.save(History.builder()
+                        .user(user)
+                        .year(LocalDate.now().getYear())
+                        .month(LocalDate.now().getMonthValue())
+                        .emotion(e)
+                        .count(0L)
+                        .build());
+            }
         }
     }
 }

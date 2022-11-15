@@ -39,7 +39,11 @@ public class History {
     @Column(name = "count")
     private Long count;
 
-    public void updateCount() {
+    public void plusCount() {
         this.count++;
+    }
+
+    public void minusCount() {
+        this.count--;
     }
 }

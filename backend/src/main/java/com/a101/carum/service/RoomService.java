@@ -30,9 +30,6 @@ public class RoomService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final RoomRepository roomRepository;
-
-    private final RoomTemplateRepository roomTemplateRepository;
-    private final RoomParentRepository roomParentRepository;
     private final CustomRoomRepository customRoomRepository;
     private final InteriorRepository interiorRepository;
     private final FurnitureRepository furnitureRepository;
@@ -73,13 +70,15 @@ public class RoomService {
             room.updateName(reqPatchRoom.getName());
         }
 
-        if(reqPatchRoom.getEmotionTags() != null) {
+        if(reqPatchRoom.getEmotionTags() != null && reqPatchRoom.getEmotionTags().size() > 0) {
             StringBuilder sb = new StringBuilder();
             Collections.sort(reqPatchRoom.getEmotionTags());
             for(String tag: reqPatchRoom.getEmotionTags()){
                 sb.append(tag).append(",");
             }
             room.updateEmotionTag(sb.toString());
+        } else {
+            room.updateEmotionTag(null);
         }
 
     }
@@ -136,19 +135,11 @@ public class RoomService {
                         );
                         break;
                     case DEL:
-                        Interior interiorDelete = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
-                        if (interiorDelete.getRoom().getId() != room.getId()){
-                            throw new UnAuthorizedException("권한이 없습니다");
-                        }
+                        Interior interiorDelete = getInterior(reqPutRoomDetail.getInteriorId(),room);
                         interiorRepository.delete(interiorDelete);
                         break;
                     case MOD:
-                        Interior interiorUpdate = interiorRepository.findById(reqPutRoomDetail.getInteriorId())
-                                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
-                        if (interiorUpdate.getRoom().getId() != room.getId()){
-                            throw new UnAuthorizedException("권한이 없습니다");
-                        }
+                        Interior interiorUpdate = getInterior(reqPutRoomDetail.getInteriorId(),room);
                         interiorUpdate.updatePlace(
                                 reqPutRoomDetail.getX(),
                                 reqPutRoomDetail.getY(),
@@ -259,8 +250,20 @@ public class RoomService {
                 .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User 정보가 손상되었습니다."));
-        Room room = roomRepository.findByIdAndUser(reqPutMainRoom.getRoomId(), user)
+        Room room = roomRepository.findById(reqPutMainRoom.getRoomId())
                 .orElseThrow(() -> new NullPointerException("Room을 찾을 수 없습니다."));
+        if (!room.getUser().equals(user)){
+            throw new UnAuthorizedException("권한이 없습니다");
+        }
         userDetail.updateMainRoom(room);
+    }
+
+    public Interior getInterior(Long id, RoomParent room){
+        Interior interior = interiorRepository.findById(id)
+                .orElseThrow(() -> new NullPointerException("Interior를 등록한 적 없습니다."));
+        if (!interior.getRoom().equals(room)){
+            throw new UnAuthorizedException("권한이 없습니다");
+        }
+        return interior;
     }
 }
