@@ -425,7 +425,7 @@ function DiaryWrite({
             <span>오늘의 감정</span>
             <div className={styles.checkSwitch}>
               <span>설명</span>
-              <AntSwitch onChange={handleChange} />
+              <AntSwitch onChange={handleChange} defaultChecked />
               <span>선택</span>
             </div>
           </div>
