@@ -152,11 +152,11 @@ public class DiaryService {
             reqGetDiaryList.setDay(Calendar.getInstance().getMaximum(reqGetDiaryList.getMonth()));
             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
                     dateUtils.startDateTime(dateUtils.startDate(reqGetDiaryList))
-                    ,dateUtils.endDateTime(dateUtils.endDate(reqGetDiaryList)),user);
+                    ,dateUtils.endDateTime(dateUtils.getDate(reqGetDiaryList)),user);
         } else { // Day의 값이 0보다 크면 day로부터 7일간 조회
             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
-                    dateUtils.startDateTime(dateUtils.startDate(reqGetDiaryList))
-                    ,dateUtils.endDateTime(dateUtils.endDate(reqGetDiaryList)).plusDays(6),user);
+                    dateUtils.startDateTime(dateUtils.getDate(reqGetDiaryList))
+                    ,dateUtils.endDateTime(dateUtils.getDate(reqGetDiaryList)).plusDays(6),user);
         }
 
         ResGetDiaryList resGetDiaryList = new ResGetDiaryList();

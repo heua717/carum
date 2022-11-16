@@ -3,10 +3,12 @@ package com.a101.carum.service;
 import com.a101.carum.api.dto.*;
 import com.a101.carum.common.exception.RefreshFailException;
 import com.a101.carum.common.exception.UnAuthorizedException;
+import com.a101.carum.domain.history.History;
 import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.room.Room;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.repository.HistoryRepository;
 import com.a101.carum.repository.RoomRepository;
 import com.a101.carum.repository.UserDetailRepository;
 import com.a101.carum.repository.UserRepository;
@@ -32,6 +34,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserDetailRepository userDetailRepository;
     private final RoomRepository roomRepository;
+    private final HistoryRepository historyRepository;
     private final JwtService jwtService;
     private final TemplateConversionService templateConversionService;
     private final EncryptUtils encryptUtils;
@@ -40,6 +43,7 @@ public class UserService {
 
     private int REFRESH_MINUTES;
     private final int KEY_STRETCH = 4;
+    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISED", "WORRY", "PEACE"};
 
     @Value("${jwt.token.time.refresh}")
     public void setREFRESH_MINUTES(String refreshMinutes){
@@ -72,6 +76,16 @@ public class UserService {
         userDetail.updateMoney(500L, '+');
 
         userDetailRepository.save(userDetail);
+
+        for(String e: emotions){
+            historyRepository.save(History.builder()
+                    .user(user)
+                    .year(LocalDate.now().getYear())
+                    .month(LocalDate.now().getMonthValue())
+                    .emotion(e)
+                    .count(0L)
+                    .build());
+        }
     }
 
     public ResLoginUser loginUser(ReqLoginUser reqLoginUser) throws UnsupportedEncodingException, NoSuchAlgorithmException {
