@@ -34,6 +34,7 @@ function RoomCarousel(props) {
             mainRoomId={props.roomInfo?.mainRoomId}
             setRoomInfo={props.setRoomInfo}
             roomInfo={props.roomInfo}
+            sendChangeRoomSignal={props.sendChangeRoomSignal}
           />
         ))}
       </Carousel>
@@ -69,6 +70,7 @@ function Item(props) {
     console.log(roomId);
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
+      props.sendChangeRoomSignal({ roomId: roomId });
       //끝나면 main으로 돌아가라
       navigate(`/`);
     }

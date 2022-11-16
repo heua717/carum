@@ -20,10 +20,10 @@ function UnityCarum({}, ref) {
     removeEventListener,
     requestFullscreen,
   } = useUnityContext({
-    loaderUrl: "build/"+buildTarget+".loader.js",
-    dataUrl: "build/"+buildTarget+".data",
-    frameworkUrl: "build/"+buildTarget+".framework.js",
-    codeUrl: "build/"+buildTarget+".wasm",
+    loaderUrl: "build/" + buildTarget + ".loader.js",
+    dataUrl: "build/" + buildTarget + ".data",
+    frameworkUrl: "build/" + buildTarget + ".framework.js",
+    codeUrl: "build/" + buildTarget + ".wasm",
   });
   const navigate = useNavigate();
   // 첫번째 방법
@@ -31,6 +31,9 @@ function UnityCarum({}, ref) {
     enterCloseUp,
     exitCloseUp,
     petConversation,
+    petCreate,
+    sendDiaryWriteSignal,
+    sendChangeRoomSignal,
   }));
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
@@ -44,6 +47,17 @@ function UnityCarum({}, ref) {
   }
   async function petConversation(json) {
     sendMessage("Connector", "PetConversation", JSON.stringify(json));
+  }
+  async function petCreate(json) {
+    sendMessage("Connector", "PetCreate", JSON.stringify(json));
+  }
+
+  async function sendDiaryWriteSignal() {
+    sendMessage("Connector", "DiaryWrite");
+  }
+
+  async function sendChangeRoomSignal(json) {
+    sendMessage("Connector", "ChangeRoom", JSON.stringify(json));
   }
 
   function handleSceneTransition(sceneName) {
@@ -66,7 +80,7 @@ function UnityCarum({}, ref) {
       const param = {
         mainRoomId: nowRoomId,
         token,
-        petType: userInfo.petType,
+        petType: userInfo.petType ? userInfo.petType : "NONE",
         dailyFace: userInfo.dailyFace,
         dailyColor: userInfo.dailyColor,
       };
@@ -118,7 +132,7 @@ function UnityCarum({}, ref) {
       {/* <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
       <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button> */}
-      <button onClick={()=>handleClick()}>requestFullscreen</button>
+      <button onClick={() => handleClick()}>requestFullscreen</button>
     </div>
   );
 }

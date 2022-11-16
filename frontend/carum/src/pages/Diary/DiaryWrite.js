@@ -17,6 +17,7 @@ import peaceImg from "../../assets/peace.svg";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
+import { fetchUserEmotion } from "apis/emotion";
 import Swal from "sweetalert2";
 import axios from "axios";
 import {
@@ -27,6 +28,7 @@ import {
   errorAlert,
 } from "utils/utils";
 import { useAppSelector } from "stores/store";
+import whaleImage from "assets/whale.png";
 
 const EMOTION_VALUE = {
   SAD: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
@@ -76,9 +78,10 @@ function DiaryWrite({
   enterCloseUp,
   exitCloseUp,
   petConversation,
+  sendDiaryWriteSignal,
 }) {
   const [values, setValues] = useState({
-    isSelecting: false,
+    isSelecting: true,
     selectedEmotion: "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
@@ -154,9 +157,50 @@ function DiaryWrite({
     setValues({ ...values, isSelecting: event.target.checked });
   };
 
+  // 2주간 유저 감정 분석
+  const fetchUserEmotionSuccess = (res) => {
+    console.log(res);
+    if (res.data.result === "normal") {
+      Swal.fire({
+        title: "일기를 작성했어요!",
+        icon: "success",
+        showConfirmButton: false,
+        timer: 800,
+      });
+    } else if (res.data.result === "sad") {
+      Swal.fire({
+        imageUrl: whaleImage,
+        html: `요즘 자주 슬퍼하시는 것 같아 마음이 아파요 ㅠㅠ 
+        <br> 한 번 마음 상태를 진단해 보시는 건 어떨까요? <br>`,
+        confirmButtonText: "자가진단 하러 가기",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open("https://nct.go.kr/distMental/rating/rating02_2.do");
+        }
+      });
+    } else if (res.data.result === "worry") {
+      Swal.fire({
+        imageUrl: whaleImage,
+        html: `불안함을 많이 느끼고 계시네요...
+        <br> 마음을 진단하고 도움을 받아보는 건 어떠세요? <br>`,
+        confirmButtonText: "자가진단 하러 가기",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.open("https://nct.go.kr/distMental/rating/rating02_3.do");
+        }
+      });
+    }
+  };
+
+  const fetchUserEmotionFail = (err) => {
+    console.log(err);
+  };
+
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
     console.log(res);
+    // fetchUserEmotion(fetchUserEmotionSuccess, fetchUserEmotionFail);
+    sendDiaryWriteSignal();
     navigate("/calendar");
   };
 
@@ -167,6 +211,7 @@ function DiaryWrite({
   // 다이어리 수정
   const editDiarySuccess = (res) => {
     console.log(res);
+    sendDiaryWriteSignal();
     setDiary(null);
     setCurState("read");
   };
@@ -181,7 +226,6 @@ function DiaryWrite({
     // 감정 하나도 선택하지 않았을 때
     if (values.selectedEmotionList.length === 0) {
       Swal.fire({
-        position: "bottom-end",
         text: "감정을 최소 한 개 골라주세요!",
         icon: "error",
         showConfirmButton: false,
@@ -381,7 +425,7 @@ function DiaryWrite({
             <span>오늘의 감정</span>
             <div className={styles.checkSwitch}>
               <span>설명</span>
-              <AntSwitch onChange={handleChange} />
+              <AntSwitch onChange={handleChange} defaultChecked />
               <span>선택</span>
             </div>
           </div>
