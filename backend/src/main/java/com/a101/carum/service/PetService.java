@@ -5,6 +5,7 @@ import com.a101.carum.common.exception.UnUpdatableException;
 import com.a101.carum.domain.history.History;
 import com.a101.carum.domain.pet.Pet;
 import com.a101.carum.domain.pet.PetDaily;
+import com.a101.carum.domain.pet.PetType;
 import com.a101.carum.domain.question.FaceType;
 import com.a101.carum.domain.user.User;
 import com.a101.carum.domain.user.UserDetail;
@@ -38,17 +39,17 @@ public class PetService {
         UserDetail userDetail = userDetailRepository.findByUser(user)
                 .orElseThrow(() -> new NullPointerException("User정보가 손상 되었습니다."));
 
-        if (userDetail.getLastDiary().equals(LocalDate.now())) {
-            return ResGetPetDaily.builder()
-                    .face(userDetail.getDailyFace())
-                    .color(userDetail.getDailyColor())
-                    .build();
+        ResGetPetDaily.ResGetPetDailyBuilder resGetPetDaily = ResGetPetDaily.builder();
+        if (userDetail.getLastDiary()!=null && userDetail.getLastDiary().equals(LocalDate.now())) {
+            resGetPetDaily
+                .face(userDetail.getDailyFace())
+                .color(userDetail.getDailyColor());
         } else {
-            return ResGetPetDaily.builder()
-                    .color(0)
+            resGetPetDaily
                     .face(FaceType.NORMAL)
-                    .build();
+                    .color(userDetail.getPetType().equals(PetType.WHALE)? 24:25);
         }
+        return resGetPetDaily.build();
 
     }
 
