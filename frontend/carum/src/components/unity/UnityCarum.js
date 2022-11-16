@@ -80,7 +80,7 @@ function UnityCarum({}, ref) {
       const param = {
         mainRoomId: nowRoomId,
         token,
-        petType: userInfo.petType,
+        petType: userInfo.petType ? userInfo.petType : "NONE",
         dailyFace: userInfo.dailyFace,
         dailyColor: userInfo.dailyColor,
       };
