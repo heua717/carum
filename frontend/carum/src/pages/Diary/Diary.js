@@ -68,6 +68,10 @@ function Diary({ unityRef }) {
     unityRef.current.exitCloseUp();
   };
 
+  const sendDiaryWriteSignal = () => {
+    unityRef.current.sendDiaryWriteSignal();
+  };
+
   const fetchDiarySuccess = (res) => {
     console.log(res);
     setDiary(res.data);
@@ -262,6 +266,7 @@ function Diary({ unityRef }) {
           diaryId={id}
           enterCloseUp={enterCloseUp}
           exitCloseUp={exitCloseUp}
+          sendDiaryWriteSignal={sendDiaryWriteSignal}
         />
       ) : null}
     </div>

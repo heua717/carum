@@ -9,7 +9,7 @@ import Button from "components/Button";
 import { preventRefresh, errorAlert } from "utils/utils";
 import { useNavigate } from "react-router-dom";
 
-function Room() {
+function Room({ sendChangeRoomSignal }) {
   const [roomInfo, setRoomInfo] = useState({
     mainRoomId: null,
     rooms: [],
@@ -101,6 +101,7 @@ function Room() {
         curDoorIndex={curDoorIndex}
         modalOpen={modalOpen}
         closeModal={closeModal}
+        sendChangeRoomSignal={sendChangeRoomSignal}
       />
     </div>
   );

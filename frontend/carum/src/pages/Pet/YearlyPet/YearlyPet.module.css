@@ -16,7 +16,7 @@
   justify-content: space-between;
   margin: 0 auto;
   margin-bottom: 20px;
-  max-width: 20vw;
+  width: 300px;
 }
 
 .row {
@@ -28,6 +28,10 @@
   .contentContainer {
     height: 80vh;
     width: 30vw;
+  }
+
+  .navigationBar {
+    max-width: 20vw;
   }
 
   .row {

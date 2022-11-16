@@ -28,7 +28,9 @@ const chooseMonthlyPet = (type, success, fail) => {
     .put("/pet", {
       type,
     })
-    .then(success)
+    .then((res) => {
+      success(res, type);
+    })
     .catch(fail);
 };
 
