@@ -37,6 +37,18 @@ function Main() {
     childRef.current.petConversation(json);
   };
 
+  const petCreate = (json) => {
+    childRef.current.petCreate(json);
+  };
+
+  const sendDiaryWriteSignal = () => {
+    childRef.current.sendDiaryWriteSignal();
+  };
+
+  const sendChangeRoomSignal = (json) => {
+    childRef.current.sendChangeRoomSignal(json);
+  };
+
   const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
@@ -90,9 +102,17 @@ function Main() {
   }, [location.pathname]);
 
   // 펫 고르기
-  const chooseMonthlyPetSuccess = (res) => {
+  const chooseMonthlyPetSuccess = (res, petType) => {
     console.log(res);
     setPetChooseModalOpen(false);
+
+    const petInfoParams = {
+      petType: petType,
+      dailyFace: "NORMAL",
+      dailyColor: 0,
+    };
+
+    petCreate(petInfoParams);
   };
 
   const chooseMonthlyPetFail = (err) => {
@@ -117,12 +137,17 @@ function Main() {
                 enterCloseUp={enterCloseUp}
                 exitCloseUp={exitCloseUp}
                 petConversation={petConversation}
+                sendDiaryWriteSignal={sendDiaryWriteSignal}
               />
             }
           />
           <Route path="diary/:id" element={<Diary unityRef={childRef} />} />
           <Route path="calendar" element={<CalendarDiary />} />
-          <Route path="room" element={<Room />} />
+          <Route
+            path="room"
+            element={<Room />}
+            sendChangeRoomSignal={sendChangeRoomSignal}
+          />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
