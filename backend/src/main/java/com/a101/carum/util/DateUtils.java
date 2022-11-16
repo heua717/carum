@@ -19,10 +19,10 @@ public class DateUtils {
     }
 
     public LocalDate startDate(ReqGetDiaryList reqGetDiaryList){
-        return LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay());
+        return LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), 1);
     }
 
-    public LocalDate endDate(ReqGetDiaryList reqGetDiaryList){
+    public LocalDate getDate(ReqGetDiaryList reqGetDiaryList){
         return LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay());
     }
 
