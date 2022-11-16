@@ -11,6 +11,7 @@ import styles from "./UnityCarum.module.css";
 import { useAppSelector } from "stores/store";
 
 function UnityCarum({}, ref) {
+  const buildTarget = "build3";
   const {
     isLoaded,
     unityProvider,
@@ -19,10 +20,10 @@ function UnityCarum({}, ref) {
     removeEventListener,
     requestFullscreen,
   } = useUnityContext({
-    loaderUrl: "build/build3.loader.js",
-    dataUrl: "build/build3.data",
-    frameworkUrl: "build/build3.framework.js",
-    codeUrl: "build/build3.wasm",
+    loaderUrl: "build/"+buildTarget+".loader.js",
+    dataUrl: "build/"+buildTarget+".data",
+    frameworkUrl: "build/"+buildTarget+".framework.js",
+    codeUrl: "build/"+buildTarget+".wasm",
   });
   const navigate = useNavigate();
   // 첫번째 방법
