@@ -17,9 +17,8 @@ api.interceptors.request.use(
     if (token) {
       if (endPoint !== "token" && jwt_decode(token).exp * 1000 < Date.now()) {
         const refreshToken = sessionStorage.getItem("refresh-token");
-        const response = await axios.post(
+        const response = await axios.get(
           `https://k7a101.p.ssafy.io/api/user/token`,
-          {},
           {
             headers: {
               "access-token": token,
@@ -28,9 +27,9 @@ api.interceptors.request.use(
           }
         );
 
-        console.log(response);
-        sessionStorage.setItem("access-token", response.data["access-token"]);
-        sessionStorage.setItem("refresh-token", response.data["refresh-token"]);
+        sessionStorage.setItem("access-token", response.data["accessToken"]);
+        sessionStorage.setItem("refresh-token", response.data["refreshToken"]);
+        token = response.data["accessToken"];
       }
 
       config.headers["access-token"] = token;
