@@ -56,7 +56,12 @@ function Inventory({ place, setPlace }) {
               .slice((newPage - 1) * 9, newPage * 9)
               .map((el, idx) => {
                 return (
-                  <FurnitureComponent key={idx} name={el.name} place={place} />
+                  <FurnitureComponent
+                    key={idx}
+                    name={el.name}
+                    place={place}
+                    furniture={el.image}
+                  />
                 );
               })}
           </div>

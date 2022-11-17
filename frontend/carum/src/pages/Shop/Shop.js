@@ -95,7 +95,7 @@ function Shop() {
     if (searchText) {
       const payload = {
         keyword: searchText,
-        type: null,
+        type: furnitureCategory[categoryIndex].type,
         page: 0,
         size: 9,
       };
@@ -215,7 +215,11 @@ function Shop() {
             <input
               className={styles.inputBox}
               value={searchText}
-              placeholder="전체 검색"
+              placeholder={`${
+                categoryIndex !== null
+                  ? furnitureCategory[categoryIndex].name
+                  : null
+              } 검색`}
               onChange={(e) => setSearchText(e.target.value)}
             />
             <SearchIcon onClick={handleFurnitureSearch} />
@@ -252,7 +256,7 @@ function Shop() {
                 page={page}
               />
             ) : (
-              <p>가구가 없습니다.</p>
+              <p className={styles.noDataText}>가구가 없습니다.</p>
             )}
           </div>
           {/* 가구 dialog */}
@@ -290,13 +294,17 @@ function Shop() {
           </Modal>
         </div>
       ) : place === "category" ? (
-        <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
+        <div className={styles.contentContainer}>
+          <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
+        </div>
       ) : (
-        <Inventory
-          setPlace={setPlace}
-          furnitureList={shopFurnitureList}
-          place={place}
-        />
+        <div className={styles.contentContainer}>
+          <Inventory
+            setPlace={setPlace}
+            furnitureList={shopFurnitureList}
+            place={place}
+          />
+        </div>
       )}
     </div>
   );
