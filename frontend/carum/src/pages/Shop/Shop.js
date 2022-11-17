@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import FurnitureComponent from "./FurnitureComponent";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/modal/Modal";
-import { furnitureCategory, preventRefresh } from "utils/utils";
+import { furnitureCategory, goToMain, preventRefresh } from "utils/utils";
 import { fetchShopItem, purchaseFurniture } from "apis/furniture";
 import Inventory from "./Inventory/Inventory";
 import Category from "./Category/Category";
@@ -91,11 +91,12 @@ function Shop() {
     }
   }, [categoryIndex]);
 
+  // 가구 검색
   const handleFurnitureSearch = () => {
     if (searchText) {
       const payload = {
         keyword: searchText,
-        type: null,
+        type: furnitureCategory[categoryIndex].type,
         page: 0,
         size: 9,
       };
@@ -187,7 +188,15 @@ function Shop() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
+
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleFurnitureSearch();
+    }
+  };
 
   return (
     <div>
@@ -213,8 +222,13 @@ function Shop() {
             <input
               className={styles.inputBox}
               value={searchText}
-              placeholder="전체 검색"
+              placeholder={`${
+                categoryIndex !== null
+                  ? furnitureCategory[categoryIndex].name
+                  : null
+              } 검색`}
               onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleEnter}
             />
             <SearchIcon onClick={handleFurnitureSearch} />
           </div>
@@ -250,7 +264,7 @@ function Shop() {
                 page={page}
               />
             ) : (
-              <p>가구가 없습니다.</p>
+              <p className={styles.noDataText}>가구가 없습니다.</p>
             )}
           </div>
           {/* 가구 dialog */}
@@ -288,13 +302,17 @@ function Shop() {
           </Modal>
         </div>
       ) : place === "category" ? (
-        <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
+        <div className={styles.contentContainer}>
+          <Category setPlace={setPlace} setCategoryIndex={setCategoryIndex} />
+        </div>
       ) : (
-        <Inventory
-          setPlace={setPlace}
-          furnitureList={shopFurnitureList}
-          place={place}
-        />
+        <div className={styles.contentContainer}>
+          <Inventory
+            setPlace={setPlace}
+            furnitureList={shopFurnitureList}
+            place={place}
+          />
+        </div>
       )}
     </div>
   );

@@ -14,6 +14,7 @@ function PhoneCheck({
   phoneNo,
   setPhoneNumber,
   setIsPhoneChecked,
+  setCheckCodeString,
 }) {
   const [checkCode, setCheckCode] = useState(null);
   const [checkTime, setCheckTime] = useState(180);
@@ -64,6 +65,7 @@ function PhoneCheck({
       setIsPhoneChecked(true);
       setCheckTime(180);
       setCheckCode(null);
+      setCheckCodeString(String(checkCode));
       handleClose();
     } else {
       if (checkCode !== codeInput) {

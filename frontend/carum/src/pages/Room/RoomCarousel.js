@@ -70,6 +70,7 @@ function Item(props) {
     console.log(roomId);
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
+      localStorage.setItem("nowRoomId", roomId);
       props.sendChangeRoomSignal({ roomId: roomId });
       //끝나면 main으로 돌아가라
       navigate(`/`);

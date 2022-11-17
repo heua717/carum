@@ -1,4 +1,3 @@
-import Header from "../../components/Header/Header";
 import styles from "./Main.module.css";
 import { useLocation, Routes, Route } from "react-router-dom";
 import Diary from "../Diary/Diary";
@@ -14,7 +13,7 @@ import { useEffect, useState, useCallback } from "react";
 import { fetchProfile } from "apis/user";
 import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
-import { useAppDispatch } from "stores/store";
+import { useAppDispatch, useAppSelector } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
 import React, { useRef } from "react";
 import { Dialog } from "@mui/material";
@@ -52,11 +51,13 @@ function Main() {
   const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
+  const { nowRoomId } = useAppSelector((state) => state.roomInfo);
   const dispatch = useAppDispatch();
 
   const changeRoom = useCallback(
     (id) => {
       dispatch(setNowRoomId(id));
+      localStorage.setItem("nowRoomId", id);
     },
     [dispatch]
   );
@@ -82,7 +83,9 @@ function Main() {
       dailyColor: res.data.dailyColor,
       dailyFace: res.data.dailyFace,
     };
-    changeRoom(res.data.mainRoom.id);
+    if (!nowRoomId) {
+      changeRoom(res.data.mainRoom.id);
+    }
     setUser(userInfo);
     handleUserInfo(userInfo);
 
@@ -145,8 +148,7 @@ function Main() {
           <Route path="calendar" element={<CalendarDiary />} />
           <Route
             path="room"
-            element={<Room />}
-            sendChangeRoomSignal={sendChangeRoomSignal}
+            element={<Room sendChangeRoomSignal={sendChangeRoomSignal} />}
           />
           <Route path="shop" element={<Shop />} />
           <Route path="profile" element={<Profile />} />

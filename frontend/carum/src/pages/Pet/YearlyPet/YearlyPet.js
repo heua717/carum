@@ -6,7 +6,7 @@ import MonthlyPetButton from "./MonthlyPetButton";
 import { useEffect, useState } from "react";
 import { fetchYearlyPet } from "apis/pet";
 import { useNavigate, useParams } from "react-router-dom";
-import { preventRefresh, errorAlert } from "utils/utils";
+import { preventRefresh, errorAlert, goToMain } from "utils/utils";
 
 function YearlyPet() {
   const { year } = useParams();
@@ -40,6 +40,8 @@ function YearlyPet() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

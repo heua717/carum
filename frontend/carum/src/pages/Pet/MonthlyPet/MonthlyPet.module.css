@@ -43,12 +43,21 @@
 .statisticsBox {
   width: 98%;
   display: flex;
+  min-height: 396px;
   flex-direction: column;
   align-items: center;
   padding: 12px 8px;
   border-radius: 12px;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
   margin: 0 auto;
+}
+
+.chartBox {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bestEmotionImage {
@@ -96,6 +105,54 @@
 .cryImage {
   width: 20%;
   height: 20%;
+}
+
+.pieChartContainer {
+}
+
+.emotionMarks {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.emotionMark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.emotionDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.emotionName {
+}
+
+.angryDot {
+  background-color: #c23c3c;
+}
+
+.happyDot {
+  background-color: #e8ca51;
+}
+
+.sadDot {
+  background-color: #395796;
+}
+
+.surpriseDot {
+  background-color: #d8d8d8;
+}
+
+.peaceDot {
+  background-color: #5eb88a;
+}
+
+.worryDot {
+  background-color: #6649af;
 }
 
 @media only screen and (min-width: 1224px) {
