@@ -31,14 +31,19 @@ const phoneCertificate = (phoneNo, success, fail) => {
     .catch(fail);
 };
 
-const signup = (payload, success, fail) => {
+const signup = (
+  { nickName, userId, password, birth, phone, code },
+  success,
+  fail
+) => {
   api
     .post(`/user`, {
-      nickName: payload.nickname,
-      userId: payload.userId,
-      password: payload.password,
-      birth: payload.date,
-      phone: payload.phoneNumber,
+      nickName,
+      userId,
+      password,
+      birth,
+      phone,
+      code,
     })
     .then(success)
     .catch(fail);
