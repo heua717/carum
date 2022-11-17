@@ -163,12 +163,12 @@ function MonthlyPet() {
                   />
                 ))
               ) : (
-                <div>
-                  <PieChart width={300} height={300}>
+                <div className={styles.pieChartContainer}>
+                  <PieChart width={300} height={260}>
                     <Pie
                       data={emotions}
                       cx={150}
-                      cy={150}
+                      cy={120}
                       labelLine={false}
                       label={renderCustomizedLabel}
                       outerRadius={100}
@@ -180,7 +180,16 @@ function MonthlyPet() {
                       ))}
                     </Pie>
                   </PieChart>
-                  <div></div>
+                  <div className={styles.emotionMarks}>
+                    {emotions?.map((emotion, index) => {
+                      return (
+                        <EmotionMark
+                          name={emotion.name}
+                          key={`emotion-${index}`}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               )}
             </div>
@@ -221,5 +230,46 @@ const renderCustomizedLabel = ({
     </text>
   );
 };
+
+function EmotionMark({ name }) {
+  const translateName = (name) => {
+    if (name === "angry") {
+      return "분노";
+    } else if (name === "sad") {
+      return "슬픔";
+    } else if (name === "happy") {
+      return "행복";
+    } else if (name === "peace") {
+      return "평화";
+    } else if (name === "worry") {
+      return "걱정";
+    } else if (name === "surprise") {
+      return "놀람";
+    }
+  };
+
+  return (
+    <div className={styles.emotionMark}>
+      <div
+        className={`${styles.emotionDot} ${
+          name === "angry"
+            ? styles.angryDot
+            : name === "happy"
+            ? styles.happyDot
+            : name === "sad"
+            ? styles.sadDot
+            : name === "surprise"
+            ? styles.surpriseDot
+            : name === "peace"
+            ? styles.peaceDot
+            : name === "worry"
+            ? styles.worryDot
+            : null
+        }`}
+      ></div>
+      <p className={styles.emotionName}>{translateName(name)}</p>
+    </div>
+  );
+}
 
 export default MonthlyPet;
