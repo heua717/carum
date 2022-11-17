@@ -11,7 +11,7 @@ public enum FurnitureType {
     ,ELECTRIC
     ,FOOD
     ,ANIMAL_PLANT
-    ,STAND
+    ,CABINET
     ,BOX
     ,LIFE
     ,MUSIC

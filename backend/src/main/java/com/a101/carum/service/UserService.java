@@ -52,6 +52,11 @@ public class UserService {
     @Transactional
     public void createUser(ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
 
+        if(userRepository.existsByNickNameAndIsDeleted(reqPostUser.getNickName(), false) ||
+        userRepository.existsByUserIdAndIsDeleted(reqPostUser.getUserId(), false)){
+            throw new UnAuthorizedException("정보가 중복됩니다.");
+        }
+
         String password = encryptPassword(reqPostUser.getUserId(), reqPostUser.getPassword());
 
         User user = User.builder()
