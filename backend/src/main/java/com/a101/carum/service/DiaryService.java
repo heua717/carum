@@ -63,7 +63,10 @@ public class DiaryService {
         userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), LocalDate.now());
 
         for(String emotion: reqPostDiary.getEmotionTag()) {
-            History history = historyRepository.findByEmotionAndUser(emotion,user)
+            LocalDate today = LocalDate.now();
+            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(
+                            emotion, user, today.getMonthValue(), today.getYear()
+                    )
                     .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
             history.plusCount();
         }
