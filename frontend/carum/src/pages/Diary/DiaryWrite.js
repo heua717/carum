@@ -160,14 +160,14 @@ function DiaryWrite({
   // 2주간 유저 감정 분석
   const fetchUserEmotionSuccess = (res) => {
     console.log(res);
-    if (res.data.result === "normal") {
+    if (res.data.result === "NORMAL") {
       Swal.fire({
         title: "일기를 작성했어요!",
         icon: "success",
         showConfirmButton: false,
-        timer: 800,
+        timer: 1000,
       });
-    } else if (res.data.result === "sad") {
+    } else if (res.data.result === "SAD") {
       Swal.fire({
         imageUrl: whaleImage,
         html: `요즘 자주 슬퍼하시는 것 같아 마음이 아파요 ㅠㅠ 
@@ -178,7 +178,7 @@ function DiaryWrite({
           window.open("https://nct.go.kr/distMental/rating/rating02_2.do");
         }
       });
-    } else if (res.data.result === "worry") {
+    } else if (res.data.result === "WORRY") {
       Swal.fire({
         imageUrl: whaleImage,
         html: `불안함을 많이 느끼고 계시네요...
@@ -199,7 +199,7 @@ function DiaryWrite({
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
     console.log(res);
-    // fetchUserEmotion(fetchUserEmotionSuccess, fetchUserEmotionFail);
+    fetchUserEmotion(fetchUserEmotionSuccess, fetchUserEmotionFail);
     sendDiaryWriteSignal();
     navigate("/calendar");
   };

@@ -1,4 +1,3 @@
-import Header from "../../components/Header/Header";
 import styles from "./Main.module.css";
 import { useLocation, Routes, Route } from "react-router-dom";
 import Diary from "../Diary/Diary";
@@ -57,6 +56,7 @@ function Main() {
   const changeRoom = useCallback(
     (id) => {
       dispatch(setNowRoomId(id));
+      localStorage.setItem("nowRoomId", id);
     },
     [dispatch]
   );
