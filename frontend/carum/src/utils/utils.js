@@ -194,7 +194,7 @@ const preventRefresh = (e) => {
 // 메인으로 보내는 함수
 const goToMain = () => {
   if (window.performance.getEntriesByType("navigation")[0].type === "reload") {
-    window.location.replace("http://localhost:3000/");
+    window.location.replace("https://k7a101.p.ssafy.io/");
   }
 };
 
