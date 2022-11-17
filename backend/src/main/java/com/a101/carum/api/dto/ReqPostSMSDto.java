@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReqPostSMSDto {
-    String phoneNo;
+    private String phoneNo;
 }
 

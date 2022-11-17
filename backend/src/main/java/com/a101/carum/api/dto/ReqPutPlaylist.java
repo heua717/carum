@@ -12,5 +12,5 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPutPlaylist {
-    List<Long> playlist;
+    private List<Long> playlist;
 }

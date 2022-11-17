@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetQuestion {
-
-    String content;
-    FaceType face;
+    private String content;
+    private FaceType face;
 }

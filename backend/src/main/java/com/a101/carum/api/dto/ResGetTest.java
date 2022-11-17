@@ -13,8 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetTest {
-    Long id;
-    String string;
-    LocalDate date;
-    TestType type;
+    private Long id;
+    private String string;
+    private LocalDate date;
+    private TestType type;
 }

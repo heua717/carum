@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResPostSMSDto {
-    String code;
+    private String code;
 }
 

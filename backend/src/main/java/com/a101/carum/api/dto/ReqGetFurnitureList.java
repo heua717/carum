@@ -11,6 +11,6 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class ReqGetFurnitureList {
-    String keyword;
-    FurnitureType type;
+    private String keyword;
+    private FurnitureType type;
 }

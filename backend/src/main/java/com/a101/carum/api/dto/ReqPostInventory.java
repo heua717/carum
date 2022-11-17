@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPostInventory {
-    Long furnitureId;
+    private Long furnitureId;
 }

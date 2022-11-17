@@ -12,5 +12,5 @@ import java.util.Map;
 @NoArgsConstructor
 @Builder
 public class ResGetPetList {
-    List<ResGetPet> petList;
+    private List<ResGetPet> petList;
 }

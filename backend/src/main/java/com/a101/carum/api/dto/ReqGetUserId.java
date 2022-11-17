@@ -6,5 +6,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqGetUserId {
-    String userId;
+    private String userId;
 }
