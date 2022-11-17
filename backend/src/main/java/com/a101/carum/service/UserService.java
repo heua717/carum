@@ -43,7 +43,7 @@ public class UserService {
 
     private int REFRESH_MINUTES;
     private final int KEY_STRETCH = 4;
-    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISED", "WORRY", "PEACE"};
+    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISE", "WORRY", "PEACE"};
 
     @Value("${jwt.token.time.refresh}")
     public void setREFRESH_MINUTES(String refreshMinutes){
