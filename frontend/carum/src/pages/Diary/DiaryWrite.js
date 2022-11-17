@@ -215,6 +215,12 @@ function DiaryWrite({
     sendDiaryWriteSignal();
     setDiary(null);
     setCurState("read");
+    Swal.fire({
+      title: "일기가 수정됐습니다!",
+      icon: "success",
+      timer: 1000,
+      showConfirmButton: false,
+    });
   };
 
   const editDiaryFail = (err) => {
