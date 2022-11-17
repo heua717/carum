@@ -91,6 +91,7 @@ function Shop() {
     }
   }, [categoryIndex]);
 
+  // 가구 검색
   const handleFurnitureSearch = () => {
     if (searchText) {
       const payload = {
@@ -191,6 +192,12 @@ function Shop() {
     goToMain();
   }, []);
 
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleFurnitureSearch();
+    }
+  };
+
   return (
     <div>
       <div className={styles.topNav}>
@@ -221,6 +228,7 @@ function Shop() {
                   : null
               } 검색`}
               onChange={(e) => setSearchText(e.target.value)}
+              onKeyDown={handleEnter}
             />
             <SearchIcon onClick={handleFurnitureSearch} />
           </div>

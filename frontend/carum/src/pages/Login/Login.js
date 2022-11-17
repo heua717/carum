@@ -47,6 +47,12 @@ function Login() {
     setValues({ ...values, [prop]: event.target.value });
   };
 
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -76,6 +82,7 @@ function Login() {
             id="password"
             onChange={handleChange("password")}
             required
+            onKeyDown={handleEnter}
           />
         </div>
         {loginFailed ? (
