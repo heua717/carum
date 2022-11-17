@@ -26,6 +26,7 @@ import {
   petTalk,
   preventRefresh,
   errorAlert,
+  goToMain,
 } from "utils/utils";
 import { useAppSelector } from "stores/store";
 import whaleImage from "assets/whale.png";
@@ -389,6 +390,8 @@ function DiaryWrite({
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

@@ -15,7 +15,7 @@ import peaceImg from "assets/peace.svg";
 import DiaryWrite from "./DiaryWrite";
 import { deleteDiaryContent, editDiary } from "apis/diary";
 import Swal from "sweetalert2";
-import { errorAlert, WEEK_DAY } from "utils/utils";
+import { errorAlert, WEEK_DAY, preventRefresh, goToMain } from "utils/utils";
 
 const setBackgroundColor = (color) => {
   if (color === "red") {
@@ -102,6 +102,10 @@ function Diary({ unityRef }) {
   }, [curState]);
 
   useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
+
     return () => {
       if (diaryRef.current?.background !== curBackgroundColorRef.current) {
         console.log(

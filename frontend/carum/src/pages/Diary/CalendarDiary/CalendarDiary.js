@@ -19,6 +19,7 @@ import {
   useInterval,
   preventRefresh,
   errorAlert,
+  goToMain,
 } from "utils/utils";
 
 function CalendarDiary() {
@@ -137,6 +138,8 @@ function CalendarDiary() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

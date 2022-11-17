@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import FurnitureComponent from "./FurnitureComponent";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Modal from "components/modal/Modal";
-import { furnitureCategory, preventRefresh } from "utils/utils";
+import { furnitureCategory, goToMain, preventRefresh } from "utils/utils";
 import { fetchShopItem, purchaseFurniture } from "apis/furniture";
 import Inventory from "./Inventory/Inventory";
 import Category from "./Category/Category";
@@ -187,6 +187,8 @@ function Shop() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

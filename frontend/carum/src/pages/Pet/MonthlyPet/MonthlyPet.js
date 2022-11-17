@@ -12,7 +12,7 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
-import { preventRefresh, errorAlert } from "utils/utils";
+import { preventRefresh, errorAlert, goToMain } from "utils/utils";
 import cryImage from "assets/cry.png";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
@@ -99,6 +99,8 @@ function MonthlyPet() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   // 가장 높은 감정 이미지 반환 함수
