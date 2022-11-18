@@ -112,7 +112,7 @@ const furnitureCategory = [
   { name: "생활 소품", type: "LIFE" },
   { name: "음악 소품", type: "MUSIC" },
   { name: "의자, 테이블, 소파", type: "CHAIR_TABLE" },
-  { name: "스탠드", type: "STAND" },
+  { name: "수납장", type: "CABINET" },
   { name: "전자기기", type: "ELECTRIC" },
   { name: "바구니, 박스", type: "BOX" },
   { name: "동물, 식물", type: "ANIMAL_PLANT" },
