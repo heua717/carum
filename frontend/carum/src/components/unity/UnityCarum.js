@@ -127,6 +127,8 @@ function UnityCarum({}, ref) {
       className={
         location.pathname !== "/login" && location.pathname !== "/signup"
           ? styles.unityCarum
+          : location.pathname === "/signup"
+          ? styles.unitySignup
           : null
       }
     >
@@ -134,7 +136,9 @@ function UnityCarum({}, ref) {
         className={
           location.pathname !== "/login" && location.pathname !== "/signup"
             ? `${styles.unityMain}`
-            : `${styles.unityLogin}`
+            : location.pathname === "/login"
+            ? `${styles.unityLogin}`
+            : styles.unitySignup
         }
         style={{ visibility: isLoaded ? "visible" : "hidden" }}
         unityProvider={unityProvider}

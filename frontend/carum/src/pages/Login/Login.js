@@ -4,7 +4,6 @@ import styles from "./Login.module.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "apis/user";
-import UnityCarum from "components/unity/UnityCarum";
 
 function Login() {
   const [values, setValues] = useState({
@@ -70,9 +69,7 @@ function Login() {
       </header>
       <div className={styles.content}>
         {/* <img className={styles.contentImg}></img> */}
-        <div className={styles.unity}>
-          <UnityCarum />
-        </div>
+        <div className={styles.unity}></div>
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel} htmlFor="id">
             아이디
