@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ResGetMusicList {
-    List<ResGetMusic> musicList;
-    Long musicCount;
+    private List<ResGetMusic> musicList;
+    private Long musicCount;
 }

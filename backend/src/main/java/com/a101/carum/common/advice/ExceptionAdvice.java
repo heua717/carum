@@ -17,31 +17,31 @@ public class ExceptionAdvice {
 
     @ExceptionHandler({SQLException.class, NoSuchAlgorithmException.class})
     public ResponseEntity handleSQLException(SQLException e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
         return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class})
     public ResponseEntity handleNPE(Exception e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({UnAuthorizedException.class, UnUpdatableException.class})
     public ResponseEntity illegalRequestException(Exception e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public  ResponseEntity duplicatedException(Exception e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
         return new ResponseEntity(HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({AccessFailException.class, RefreshFailException.class, LessMoneyException.class})
     public ResponseEntity refreshFailException(Exception e) {
-        e.printStackTrace();
+        System.out.println(e.getMessage());
         return new ResponseEntity(HttpStatus.PRECONDITION_FAILED);
     }
 

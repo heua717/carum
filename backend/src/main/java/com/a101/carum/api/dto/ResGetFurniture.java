@@ -8,9 +8,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetFurniture {
-    Long id;
-    String name,resource,image;
-    Long price;
-    FurnitureType type;
-    boolean have;
+    private Long id;
+    private String name,resource,image;
+    private Long price;
+    private FurnitureType type;
+    private boolean have;
 }

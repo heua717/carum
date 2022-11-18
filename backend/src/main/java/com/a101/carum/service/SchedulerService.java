@@ -26,7 +26,7 @@ public class SchedulerService {
     private final HistoryRepository historyRepository;
     private final PetRepository petRepository;
     private final CustomPetDailyRepository petDailyRepository;
-    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISED", "WORRY", "PEACE"};
+    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISE", "WORRY", "PEACE"};
 
     @Transactional
     @Scheduled(cron = "1 0 0 1 * *")

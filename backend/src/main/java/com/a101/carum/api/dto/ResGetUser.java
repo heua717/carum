@@ -15,12 +15,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetUser {
-    String userId, nickName, phone;
-    LocalDate birth;
-    Long money;
-    ResGetRoom mainRoom;
-    PetType petType;
-    FaceType dailyFace;
-    Integer dailyColor;
-    boolean todayDiary;
+    private String userId, nickName, phone;
+    private LocalDate birth;
+    private Long money;
+    private ResGetRoom mainRoom;
+    private PetType petType;
+    private FaceType dailyFace;
+    private Integer dailyColor;
+    private boolean todayDiary;
 }

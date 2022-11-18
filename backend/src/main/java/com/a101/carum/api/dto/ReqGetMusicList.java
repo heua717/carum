@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ReqGetMusicList {
-    List<String> tags;
+    private List<String> tags;
 }

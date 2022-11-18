@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqGetNickName {
-    String nickName;
+    private String nickName;
 }

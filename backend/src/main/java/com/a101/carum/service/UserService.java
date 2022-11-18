@@ -43,7 +43,7 @@ public class UserService {
 
     private int REFRESH_MINUTES;
     private final int KEY_STRETCH = 4;
-    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISED", "WORRY", "PEACE"};
+    private final String[] emotions = {"HAPPY", "ANGRY", "SAD", "SURPRISE", "WORRY", "PEACE"};
 
     @Value("${jwt.token.time.refresh}")
     public void setREFRESH_MINUTES(String refreshMinutes){
@@ -51,6 +51,11 @@ public class UserService {
     }
     @Transactional
     public void createUser(ReqPostUser reqPostUser) throws NoSuchAlgorithmException {
+
+        if(userRepository.existsByNickNameAndIsDeleted(reqPostUser.getNickName(), false) ||
+        userRepository.existsByUserIdAndIsDeleted(reqPostUser.getUserId(), false)){
+            throw new UnAuthorizedException("정보가 중복됩니다.");
+        }
 
         String password = encryptPassword(reqPostUser.getUserId(), reqPostUser.getPassword());
 

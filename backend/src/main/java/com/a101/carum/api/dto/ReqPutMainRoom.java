@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPutMainRoom {
-    Long roomId;
+    private Long roomId;
 }

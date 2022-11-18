@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqLoginUser {
-    String userId, password;
+    private String userId, password;
 }

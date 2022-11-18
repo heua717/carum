@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetMusic {
-    Long id;
-    String artist, title, resource;
+    private Long id;
+    private String artist, title, resource;
 }
