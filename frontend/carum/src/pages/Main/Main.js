@@ -137,9 +137,12 @@ function Main({
     console.log(err);
   };
 
+  // 다이어리 작성 후 일기 작성 감지
   useEffect(() => {
-    fetchProfile(fetchProfileSuccess, fetchProfileFail);
-  }, []);
+    if (location.pathname === "/") {
+      fetchProfile(fetchProfileSuccess, fetchProfileFail);
+    }
+  }, [location.pathname]);
 
   // 펫 고르기
   const chooseMonthlyPetSuccess = (res, petType) => {
