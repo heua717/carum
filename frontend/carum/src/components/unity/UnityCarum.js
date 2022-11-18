@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import React, {
   useEffect,
@@ -26,6 +26,7 @@ function UnityCarum({}, ref) {
     codeUrl: "build/" + buildTarget + ".wasm",
   });
   const navigate = useNavigate();
+  const location = useLocation();
   // 첫번째 방법
   useImperativeHandle(ref, () => ({
     enterCloseUp,
@@ -122,9 +123,19 @@ function UnityCarum({}, ref) {
   }
 
   return (
-    <div className={styles.unityCarum}>
+    <div
+      className={
+        location.pathname !== "/login" && location.pathname !== "/signup"
+          ? styles.unityCarum
+          : null
+      }
+    >
       <Unity
-        className={styles.unity}
+        className={
+          location.pathname !== "/login" && location.pathname !== "/signup"
+            ? `${styles.unityMain}`
+            : `${styles.unityLogin}`
+        }
         style={{ visibility: isLoaded ? "visible" : "hidden" }}
         unityProvider={unityProvider}
       />
