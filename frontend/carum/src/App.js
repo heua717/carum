@@ -7,7 +7,6 @@ import CheckAuth from "components/CheckAuth";
 import UnityCarum from "components/unity/UnityCarum";
 import { useRef } from "react";
 import styles from "./App.module.css";
-import logoWithName from "assets/logoWithName.png";
 import { useAppDispatch, useAppSelector } from "stores/store";
 
 function App() {
@@ -42,20 +41,9 @@ function App() {
   };
 
   return (
-    <div
-      className={
-        curPage !== "login" && curPage !== "signup" ? styles.appContainer : null
-      }
-    >
-      {curPage === "login" ? (
-        <header className={styles.header}>
-          <img className={styles.logoImg} src={logoWithName} alt="logo"></img>
-        </header>
-      ) : null}
+    <div className={curPage !== "signup" ? styles.appContainer : null}>
       <Router>
-        <div
-          className={curPage === "login" ? styles.unityMobile : styles.unity}
-        >
+        <div className={curPage !== "signup" ? styles.unity : null}>
           <UnityCarum ref={childRef} />
         </div>
         <Routes>

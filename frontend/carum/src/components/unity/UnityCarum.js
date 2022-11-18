@@ -129,7 +129,7 @@ function UnityCarum({}, ref) {
   return (
     <div
       className={
-        location.pathname !== "/login" && location.pathname !== "/signup"
+        location.pathname !== "/signup"
           ? styles.unityCarumMain
           : location.pathname === "/signup"
           ? styles.unitySignup
@@ -138,7 +138,7 @@ function UnityCarum({}, ref) {
     >
       <Unity
         className={
-          location.pathname !== "/login" && location.pathname !== "/signup"
+          location.pathname !== "/signup"
             ? `${styles.unityMain}`
             : location.pathname === "/login"
             ? `${styles.unityLogin}`
