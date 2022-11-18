@@ -98,9 +98,10 @@ function UnityCarum({}, ref) {
         sendMessage("Connector", "StartUnity", JSON.stringify(param));
       }
     };
-
-    this.closeUpPet = function () {
-      alert("클로즈업");
+    this.checkLogin = function() {
+      if (!!sessionStorage.getItem("access-token")) {
+        sendMessage("Connector","MoveScene","SceneD");
+      }
     };
   };
 
