@@ -2,12 +2,14 @@ import TextField from "@mui/material/TextField";
 import Checkbox from "@mui/material/Checkbox";
 import Button from "../../components/Button";
 import styles from "./Signup.module.css";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { checkValidId, checkValidNickname } from "apis/user";
 import PhoneCheck from "./PhoneCheck";
 import { signup } from "apis/user";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAppDispatch } from "stores/store";
+import { setCurPage } from "stores/slices/page";
 
 function Signup() {
   const [values, setValues] = useState({
@@ -27,6 +29,16 @@ function Signup() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
   const [checkCodeString, setCheckCodeString] = useState(null);
+
+  const dispatch = useAppDispatch();
+
+  const changePage = useCallback(() => {
+    dispatch(setCurPage("signup"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    changePage();
+  }, []);
 
   const navigate = useNavigate();
 

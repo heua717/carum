@@ -1,5 +1,5 @@
 .container {
-  height: 100vh;
+  margin: 0 auto;
 }
 
 .header {
@@ -11,7 +11,7 @@
   border-radius: 0 0 12px 12px;
 }
 .content {
-  height: 80vh;
+  height: 30vh;
   display: flex;
   flex-direction: column;
   align-items: center;

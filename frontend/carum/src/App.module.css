@@ -1,0 +1,33 @@
+.unityMobile {
+  width: 300px;
+  height: 300px;
+  margin: 0 auto;
+  margin-top: 5vh;
+}
+
+.logoImg {
+  width: 120px;
+  height: 120px;
+}
+
+.header {
+  background-color: #b7bdee;
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0 0 12px 12px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .appContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 5vh;
+    margin-left: 1vw;
+  }
+
+  .unity {
+    width: 65vw;
+  }
+}

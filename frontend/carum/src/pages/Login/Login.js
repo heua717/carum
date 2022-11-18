@@ -1,9 +1,11 @@
 import Button from "../../components/Button";
 import logoWithName from "../../assets/logoWithName.png";
 import styles from "./Login.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "apis/user";
+import { useDispatch } from "react-redux";
+import { setCurPage } from "stores/slices/page";
 
 function Login() {
   const [values, setValues] = useState({
@@ -11,6 +13,12 @@ function Login() {
     password: "",
   });
   const [loginFailed, setLoginFailed] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const changePage = useCallback(() => {
+    dispatch(setCurPage("login"));
+  }, [dispatch]);
 
   const navigate = useNavigate();
 
@@ -56,6 +64,7 @@ function Login() {
   useEffect(() => {
     const accessToken = sessionStorage.getItem("access-token");
     const refreshToken = sessionStorage.getItem("refresh-token");
+    changePage();
 
     if (accessToken && refreshToken) {
       navigate("/");
@@ -64,9 +73,9 @@ function Login() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
+      {/* <header className={styles.header}>
         <img className={styles.logoImg} src={logoWithName} alt="logo"></img>
-      </header>
+      </header> */}
       <div className={styles.content}>
         {/* <img className={styles.contentImg}></img> */}
         <div className={styles.unity}></div>

@@ -35,6 +35,7 @@ function UnityCarum({}, ref) {
     petCreate,
     sendDiaryWriteSignal,
     sendChangeRoomSignal,
+    handleUnityStart,
   }));
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
@@ -71,22 +72,25 @@ function UnityCarum({}, ref) {
     navigate(to);
   }, []);
 
+  const handleUnityStart = (json) => {
+    sendMessage("Connector", "StartUnity", JSON.stringify(json));
+  };
+
   const ReactCall = function () {
     this.sendTokenToUnity = function () {
-      console.log("토큰보낸다");
-      const token = {
-        accessToken: sessionStorage.getItem("access-token"),
-        refreshToken: sessionStorage.getItem("refresh-token"),
-      };
-      const param = {
-        mainRoomId: nowRoomId,
-        token,
-        petType: userInfo.petType ? userInfo.petType : "NONE",
-        dailyFace: userInfo.dailyFace,
-        dailyColor: userInfo.dailyColor,
-      };
-
-      sendMessage("Connector", "StartUnity", JSON.stringify(param));
+      // console.log("토큰보낸다");
+      // const token = {
+      //   accessToken: sessionStorage.getItem("access-token"),
+      //   refreshToken: sessionStorage.getItem("refresh-token"),
+      // };
+      // const param = {
+      //   mainRoomId: nowRoomId,
+      //   token,
+      //   petType: userInfo.petType ? userInfo.petType : "NONE",
+      //   dailyFace: userInfo.dailyFace,
+      //   dailyColor: userInfo.dailyColor,
+      // };
+      // sendMessage("Connector", "StartUnity", JSON.stringify(param));
     };
 
     this.closeUpPet = function () {
@@ -126,7 +130,7 @@ function UnityCarum({}, ref) {
     <div
       className={
         location.pathname !== "/login" && location.pathname !== "/signup"
-          ? styles.unityCarum
+          ? styles.unityCarumMain
           : location.pathname === "/signup"
           ? styles.unitySignup
           : null
@@ -147,7 +151,7 @@ function UnityCarum({}, ref) {
       {/* <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
       <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button> */}
-      <button onClick={() => handleClick()}>requestFullscreen</button>
+      {/* <button onClick={() => handleClick()}>requestFullscreen</button> */}
     </div>
   );
 }
