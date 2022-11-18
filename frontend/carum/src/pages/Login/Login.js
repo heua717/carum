@@ -1,11 +1,11 @@
 import Button from "../../components/Button";
-import logoWithName from "../../assets/logoWithName.png";
 import styles from "./Login.module.css";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "apis/user";
 import { useDispatch } from "react-redux";
 import { setCurPage } from "stores/slices/page";
+import { preventRefresh } from "utils/utils";
 
 function Login() {
   const [values, setValues] = useState({
@@ -65,6 +65,8 @@ function Login() {
     const accessToken = sessionStorage.getItem("access-token");
     const refreshToken = sessionStorage.getItem("refresh-token");
     changePage();
+
+    window.removeEventListener("beforeunload", preventRefresh);
 
     if (accessToken && refreshToken) {
       navigate("/");

@@ -80,6 +80,14 @@ function Main({
   const handleUserInfo = useCallback(
     (userInfo) => {
       dispatch(setUserInfo(userInfo));
+
+      const petInfo = {
+        petType: userInfo.petType,
+        dailyColor: userInfo.dailyColor,
+        dailyFace: userInfo.dailyFace,
+      };
+
+      localStorage.setItem("petInfo", JSON.stringify(petInfo));
     },
     [dispatch]
   );
@@ -129,10 +137,8 @@ function Main({
   };
 
   useEffect(() => {
-    if (location.pathname === "/") {
-      fetchProfile(fetchProfileSuccess, fetchProfileFail);
-    }
-  }, [location.pathname]);
+    fetchProfile(fetchProfileSuccess, fetchProfileFail);
+  }, []);
 
   // 펫 고르기
   const chooseMonthlyPetSuccess = (res, petType) => {

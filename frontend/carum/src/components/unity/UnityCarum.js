@@ -78,19 +78,25 @@ function UnityCarum({}, ref) {
 
   const ReactCall = function () {
     this.sendTokenToUnity = function () {
-      // console.log("토큰보낸다");
-      // const token = {
-      //   accessToken: sessionStorage.getItem("access-token"),
-      //   refreshToken: sessionStorage.getItem("refresh-token"),
-      // };
-      // const param = {
-      //   mainRoomId: nowRoomId,
-      //   token,
-      //   petType: userInfo.petType ? userInfo.petType : "NONE",
-      //   dailyFace: userInfo.dailyFace,
-      //   dailyColor: userInfo.dailyColor,
-      // };
-      // sendMessage("Connector", "StartUnity", JSON.stringify(param));
+      if (!!sessionStorage.getItem("access-token")) {
+        console.log("토큰보낸다");
+        const token = {
+          accessToken: sessionStorage.getItem("access-token"),
+          refreshToken: sessionStorage.getItem("refresh-token"),
+        };
+
+        const storedNowRoomId = JSON.parse(localStorage.getItem("nowRoomId"));
+        const storedPetInfo = JSON.parse(localStorage.getItem("petInfo"));
+
+        const param = {
+          mainRoomId: storedNowRoomId,
+          token,
+          petType: storedPetInfo.petType ? storedPetInfo.petType : "NONE",
+          dailyFace: storedPetInfo.dailyFace,
+          dailyColor: storedPetInfo.dailyColor,
+        };
+        sendMessage("Connector", "StartUnity", JSON.stringify(param));
+      }
     };
 
     this.closeUpPet = function () {
