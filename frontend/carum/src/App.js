@@ -40,6 +40,10 @@ function App() {
     childRef.current.handleUnityStart(json);
   };
 
+  const handleUnityLogout = () => {
+    childRef.current.handleUnityLogout();
+  };
+
   return (
     <div className={curPage !== "signup" ? styles.appContainer : null}>
       <Router>
@@ -61,6 +65,7 @@ function App() {
                   sendChangeRoomSignal={sendChangeRoomSignal}
                   sendDiaryWriteSignal={sendDiaryWriteSignal}
                   handleUnityStart={handleUnityStart}
+                  handleUnityLogout={handleUnityLogout}
                 />
               </CheckAuth>
             }

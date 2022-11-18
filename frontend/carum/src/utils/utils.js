@@ -218,6 +218,10 @@ const WEEK_DAY = [
   "토요일",
 ];
 
+const createImageUrl = (type, face) => {
+  return `https://k7a101.p.ssafy.io/api/image/${type}_${face}.png`;
+};
+
 export {
   useInterval,
   calWeeklyStartDate,
@@ -229,4 +233,5 @@ export {
   errorAlert,
   WEEK_DAY,
   goToMain,
+  createImageUrl,
 };
