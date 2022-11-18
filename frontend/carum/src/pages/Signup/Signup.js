@@ -29,6 +29,8 @@ function Signup() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
   const [checkCodeString, setCheckCodeString] = useState(null);
+  const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [passwordIsInvalid, setPasswordIsInvalid] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -66,15 +68,19 @@ function Signup() {
   };
 
   const handleIdCheck = () => {
-    const idCheck = /^[a-zA-Z0-9]/;
-    idCheck.test(values.id);
-    console.log(idCheck.test(values.id));
+    const idCheck = /^[a-zA-Z0-9]{1,20}$/g;
 
     if (values.id === "") {
       setValues({
         ...values,
         isIdInvalid: true,
         idHelperText: "아이디는 필수로 입력해야 합니다.",
+      });
+    } else if (values.id.length > 20) {
+      setValues({
+        ...values,
+        isIdInvalid: true,
+        idHelperText: "아이디는 최대 20자까지 가능합니다.",
       });
     } else if (!idCheck.test(values.id)) {
       setValues({
@@ -112,12 +118,38 @@ function Signup() {
         isNicknameInvalid: true,
         nicknameHelperText: "닉네임은 필수로 입력해야 합니다.",
       });
+    } else if (values.nickname.length > 30) {
+      setValues({
+        ...values,
+        isNicknameInvalid: true,
+        nicknameHelperText: "닉네임은 최대 30자까지 가능합니다.",
+      });
     } else {
       checkValidNickname(
         values.nickname,
         checkValidNicknameSuccess,
         checkValidNicknameFail
       );
+    }
+  };
+
+  const handlePasswordCheck = () => {
+    const passwordCheck =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]/g;
+    if (values.password === "") {
+      setPasswordIsInvalid(true);
+      setPasswordHelperText("비밀번호는 필수로 입력해야 합니다.");
+    } else if (!passwordCheck.test(values.password)) {
+      setPasswordIsInvalid(true);
+      setPasswordHelperText(
+        "비밀번호는 영어, 숫자, 특수문자를 모두 포함해야 합니다."
+      );
+    } else if (values.password.length < 8 || values.password.length > 20) {
+      setPasswordIsInvalid(true);
+      setPasswordHelperText("비밀번호는 8~20자 사이로 입력해야 합니다.");
+    } else {
+      setPasswordIsInvalid(false);
+      setPasswordHelperText("");
     }
   };
 
@@ -212,6 +244,9 @@ function Signup() {
         id="outlined-adornment-password"
         value={values.password}
         onChange={handleChange("password")}
+        error={passwordIsInvalid}
+        helperText={passwordHelperText}
+        onBlur={handlePasswordCheck}
       />
       <TextField
         className={styles.input}
