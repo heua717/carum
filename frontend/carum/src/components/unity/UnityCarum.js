@@ -36,6 +36,7 @@ function UnityCarum({}, ref) {
     sendDiaryWriteSignal,
     sendChangeRoomSignal,
     handleUnityStart,
+    handleUnityLogout,
   }));
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
@@ -76,6 +77,10 @@ function UnityCarum({}, ref) {
     sendMessage("Connector", "StartUnity", JSON.stringify(json));
   };
 
+  const handleUnityLogout = () => {
+    sendMessage("Connector", "Logout");
+  };
+
   const ReactCall = function () {
     this.sendTokenToUnity = function () {
       if (!!sessionStorage.getItem("access-token")) {
@@ -98,9 +103,9 @@ function UnityCarum({}, ref) {
         sendMessage("Connector", "StartUnity", JSON.stringify(param));
       }
     };
-    this.checkLogin = function() {
+    this.checkLogin = function () {
       if (!!sessionStorage.getItem("access-token")) {
-        sendMessage("Connector","MoveScene","SceneD");
+        sendMessage("Connector", "MoveScene", "SceneD");
       }
     };
   };

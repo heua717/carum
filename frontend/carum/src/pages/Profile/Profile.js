@@ -22,7 +22,7 @@ import { useAppDispatch } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
 import { setNowRoomId } from "stores/slices/room";
 
-function Profile() {
+function Profile({ handleUnityLogout }) {
   const [values, setValues] = useState({
     userInfo: null,
     isEditing: false,
@@ -186,6 +186,7 @@ function Profile() {
   const logoutSuccess = (res) => {
     sessionStorage.clear();
     exitRoom();
+    handleUnityLogout();
     navigate("/login");
   };
 

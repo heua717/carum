@@ -32,6 +32,7 @@ function Main({
   sendChangeRoomSignal,
   childRef,
   handleUnityStart,
+  handleUnityLogout,
 }) {
   const location = useLocation();
   // const childRef = useRef(null);
@@ -191,7 +192,10 @@ function Main({
             element={<Room sendChangeRoomSignal={sendChangeRoomSignal} />}
           />
           <Route path="shop" element={<Shop />} />
-          <Route path="profile" element={<Profile />} />
+          <Route
+            path="profile"
+            element={<Profile handleUnityLogout={handleUnityLogout} />}
+          />
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
           <Route path="*" element={<NotFound />} />
