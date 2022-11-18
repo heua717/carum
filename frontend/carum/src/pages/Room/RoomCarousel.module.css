@@ -12,7 +12,7 @@
   min-width: 360px;
   margin-left: auto;
   margin-right: auto;
-  min-height: 50vh;
+  min-height: 48vh;
   overflow: hidden;
 }
 
@@ -32,7 +32,7 @@
 
 .roomInfo {
   background-color: #e7e9fd;
-  min-height: 96px;
+  min-height: 92px;
   padding-bottom: 8px;
   display: flex;
   flex-direction: column;
@@ -56,12 +56,12 @@
 }
 
 .doorImage {
-  max-height: 33vh;
+  max-height: 31vh;
 }
 
 .using {
   position: absolute;
-  height: 33vh;
+  height: 31vh;
   width: 100%;
   background-color: rgba(44, 44, 44, 0.5);
   display: flex;

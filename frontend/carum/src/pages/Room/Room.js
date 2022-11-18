@@ -6,7 +6,7 @@ import { fetchRoomList } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import Button from "components/Button";
-import { preventRefresh, errorAlert } from "utils/utils";
+import { preventRefresh, errorAlert, goToMain } from "utils/utils";
 import { useNavigate } from "react-router-dom";
 
 function Room({ sendChangeRoomSignal }) {
@@ -80,6 +80,8 @@ function Room({ sendChangeRoomSignal }) {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

@@ -134,6 +134,10 @@
   font-size: 18px;
 }
 
+.noDataText {
+  text-align: center;
+}
+
 @media only screen and (min-width: 1224px) {
   .contentContainer {
     height: 70vh;

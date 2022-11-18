@@ -26,6 +26,7 @@ function Signup() {
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
+  const [checkCodeString, setCheckCodeString] = useState(null);
 
   const navigate = useNavigate();
 
@@ -146,7 +147,8 @@ function Signup() {
         userId: values.id,
         password: values.password,
         date: values.birthDate,
-        phoneNumber: phoneNumber,
+        phone: phoneNumber,
+        code: checkCodeString,
       };
       signup(payload, signupSuccess, signupFail);
       navigate("/");
@@ -254,6 +256,7 @@ function Signup() {
         open={values.isPhoneCheckModalOpened}
         handleClose={closePhoneCheckModal}
         setIsPhoneChecked={setIsPhoneChecked}
+        setCheckCodeString={setCheckCodeString}
       />
     </div>
   );

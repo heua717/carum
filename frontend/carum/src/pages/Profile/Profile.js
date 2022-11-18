@@ -17,7 +17,7 @@ import {
   changePassword,
 } from "apis/user";
 import Swal from "sweetalert2";
-import { preventRefresh, errorAlert } from "utils/utils";
+import { preventRefresh, errorAlert, goToMain } from "utils/utils";
 
 function Profile() {
   const [values, setValues] = useState({
@@ -212,6 +212,8 @@ function Profile() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   return (

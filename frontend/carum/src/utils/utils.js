@@ -191,6 +191,13 @@ const preventRefresh = (e) => {
   e.returnValue = "";
 };
 
+// 메인으로 보내는 함수
+const goToMain = () => {
+  if (window.performance.getEntriesByType("navigation")[0].type === "reload") {
+    window.location.replace("https://k7a101.p.ssafy.io/");
+  }
+};
+
 // 에러날 시 알림 띄우기
 const errorAlert = (text) => {
   Swal.fire({
@@ -221,4 +228,5 @@ export {
   preventRefresh,
   errorAlert,
   WEEK_DAY,
+  goToMain,
 };

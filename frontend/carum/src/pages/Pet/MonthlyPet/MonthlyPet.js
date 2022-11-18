@@ -12,14 +12,18 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
-import { preventRefresh, errorAlert } from "utils/utils";
+import { preventRefresh, errorAlert, goToMain } from "utils/utils";
 import cryImage from "assets/cry.png";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
+
+const RADIAN = Math.PI / 180;
 
 function MonthlyPet() {
   const { year, month } = useParams();
   const [yearState, setYearState] = useState(year);
   const [monthState, setMonthState] = useState(month);
   const [emotions, setEmotions] = useState(null);
+  const [chartType, setChartType] = useState("bar");
 
   const navigate = useNavigate();
 
@@ -33,16 +37,20 @@ function MonthlyPet() {
   const fetchMonthlyPetSuccess = (res) => {
     console.log(res.data);
     const emotionList = [
-      { name: "angry", count: res.data.emotionMap.ANGRY },
-      { name: "peace", count: res.data.emotionMap.PEACE },
-      { name: "happy", count: res.data.emotionMap.HAPPY },
-      { name: "sad", count: res.data.emotionMap.SAD },
-      { name: "surprise", count: res.data.emotionMap.SURPRISE },
-      { name: "worry", count: res.data.emotionMap.WORRY },
+      { name: "angry", value: res.data.emotionMap.ANGRY, color: "#C23C3C" },
+      { name: "peace", value: res.data.emotionMap.PEACE, color: "#5EB88A" },
+      { name: "happy", value: res.data.emotionMap.HAPPY, color: "#E8CA51" },
+      { name: "sad", value: res.data.emotionMap.SAD, color: "#395796" },
+      {
+        name: "surprise",
+        value: res.data.emotionMap.SURPRISE,
+        color: "#D8D8D8",
+      },
+      { name: "worry", value: res.data.emotionMap.WORRY, color: "#6649AF" },
     ];
 
     emotionList.sort((a, b) => {
-      return b.count - a.count;
+      return b.value - a.value;
     });
 
     setEmotions(emotionList);
@@ -91,6 +99,8 @@ function MonthlyPet() {
   // 새로고침 방지
   useEffect(() => {
     window.addEventListener("beforeunload", preventRefresh);
+
+    goToMain();
   }, []);
 
   // 가장 높은 감정 이미지 반환 함수
@@ -107,6 +117,14 @@ function MonthlyPet() {
       return happyImg;
     } else if (emotion === "surprise") {
       return surpriseImg;
+    }
+  };
+
+  const handleChartChange = () => {
+    if (chartType === "bar") {
+      setChartType("pie");
+    } else {
+      setChartType("bar");
     }
   };
 
@@ -135,13 +153,46 @@ function MonthlyPet() {
               src={bestEmotion(emotions?.[0].name)}
               alt="emotion"
             />
-            {emotions?.map((e) => (
-              <EmotionProgressBar
-                count={e.count}
-                maxCount={emotions?.[0].count}
-                emotion={e.name}
-              />
-            ))}
+            <div className={styles.chartBox} onClick={handleChartChange}>
+              {chartType === "bar" ? (
+                emotions?.map((e) => (
+                  <EmotionProgressBar
+                    count={e.value}
+                    maxCount={emotions?.[0].value}
+                    emotion={e.name}
+                  />
+                ))
+              ) : (
+                <div className={styles.pieChartContainer}>
+                  <PieChart width={300} height={260}>
+                    <Pie
+                      data={emotions}
+                      cx={150}
+                      cy={120}
+                      labelLine={false}
+                      label={renderCustomizedLabel}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {emotions.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                  <div className={styles.emotionMarks}>
+                    {emotions?.map((emotion, index) => {
+                      return (
+                        <EmotionMark
+                          name={emotion.name}
+                          key={`emotion-${index}`}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       ) : (
@@ -150,6 +201,73 @@ function MonthlyPet() {
           <p className={styles.noDataText}>펫이 없어요 ㅠㅠ</p>
         </div>
       )}
+    </div>
+  );
+}
+
+const renderCustomizedLabel = ({
+  cx,
+  cy,
+  midAngle,
+  innerRadius,
+  outerRadius,
+  percent,
+  index,
+}) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text
+      x={x}
+      y={y}
+      fill="white"
+      textAnchor={x > cx ? "start" : "end"}
+      dominantBaseline="central"
+    >
+      {percent !== 0 ? `${(percent * 100).toFixed(0)}%` : ""}
+    </text>
+  );
+};
+
+function EmotionMark({ name }) {
+  const translateName = (name) => {
+    if (name === "angry") {
+      return "분노";
+    } else if (name === "sad") {
+      return "슬픔";
+    } else if (name === "happy") {
+      return "행복";
+    } else if (name === "peace") {
+      return "평화";
+    } else if (name === "worry") {
+      return "걱정";
+    } else if (name === "surprise") {
+      return "놀람";
+    }
+  };
+
+  return (
+    <div className={styles.emotionMark}>
+      <div
+        className={`${styles.emotionDot} ${
+          name === "angry"
+            ? styles.angryDot
+            : name === "happy"
+            ? styles.happyDot
+            : name === "sad"
+            ? styles.sadDot
+            : name === "surprise"
+            ? styles.surpriseDot
+            : name === "peace"
+            ? styles.peaceDot
+            : name === "worry"
+            ? styles.worryDot
+            : null
+        }`}
+      ></div>
+      <p className={styles.emotionName}>{translateName(name)}</p>
     </div>
   );
 }
