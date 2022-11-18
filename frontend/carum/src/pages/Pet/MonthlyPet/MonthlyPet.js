@@ -12,7 +12,12 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
-import { preventRefresh, errorAlert, goToMain } from "utils/utils";
+import {
+  preventRefresh,
+  errorAlert,
+  goToMain,
+  createImageUrl,
+} from "utils/utils";
 import cryImage from "assets/cry.png";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
@@ -24,6 +29,7 @@ function MonthlyPet() {
   const [monthState, setMonthState] = useState(month);
   const [emotions, setEmotions] = useState(null);
   const [chartType, setChartType] = useState("bar");
+  const [petInformation, setPetInformation] = useState(null);
 
   const navigate = useNavigate();
 
@@ -53,6 +59,12 @@ function MonthlyPet() {
       return b.value - a.value;
     });
 
+    const pet = {
+      type: res.data.type,
+      face: res.data.face,
+    };
+
+    setPetInformation(pet);
     setEmotions(emotionList);
   };
 
@@ -146,7 +158,16 @@ function MonthlyPet() {
       </div>
       {emotions ? (
         <div className={styles.contentContainer}>
-          <div className={styles.pet}></div>
+          <div className={styles.pet}>
+            <img
+              src={`${createImageUrl(
+                petInformation?.type,
+                petInformation?.face
+              )}`}
+              alt="pet"
+              className={styles.petImage}
+            />
+          </div>
           <div className={styles.statisticsBox}>
             <img
               className={styles.bestEmotionImage}

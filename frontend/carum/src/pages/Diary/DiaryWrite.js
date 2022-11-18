@@ -27,6 +27,7 @@ import {
   preventRefresh,
   errorAlert,
   goToMain,
+  createImageUrl,
 } from "utils/utils";
 import { useAppSelector } from "stores/store";
 import whaleImage from "assets/whale.png";
@@ -170,10 +171,13 @@ function DiaryWrite({
       });
     } else if (res.data.result === "SAD") {
       Swal.fire({
-        imageUrl: whaleImage,
-        html: `요즘 자주 슬퍼하시는 것 같아 마음이 아파요 ㅠㅠ 
-        <br> 한 번 마음 상태를 진단해 보시는 건 어떨까요? <br>`,
+        imageUrl: createImageUrl(userInfo.petType, "SAD"),
+        imageHeight: "20vh",
+        html: `<h3 style='margin-bottom: 4px;'>요즘 자주 슬퍼하시는 것 같아 </h3> <h3>마음이 아파요 ㅠㅠ</h3> 
+        <br><h3 style='margin-bottom: 4px;'>한 번 마음상태를</h3> <h3>진단해 보시는 건 어떨까요?</h3> <br>`,
         confirmButtonText: "자가진단 하러 가기",
+        cancelButtonText: "다음에 할게",
+        showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
           window.open("https://nct.go.kr/distMental/rating/rating02_2.do");
@@ -181,10 +185,13 @@ function DiaryWrite({
       });
     } else if (res.data.result === "WORRY") {
       Swal.fire({
-        imageUrl: whaleImage,
-        html: `불안함을 많이 느끼고 계시네요...
-        <br> 마음을 진단하고 도움을 받아보는 건 어떠세요? <br>`,
+        imageUrl: createImageUrl(userInfo.petType, "WORRY"),
+        imageHeight: "20vh",
+        html: `<h3>불안함을 많이 느끼고 계시네요...</h3>
+        <br><h3>마음을 진단하고 도움을 받아보는 건 어떠세요?</h3>`,
         confirmButtonText: "자가진단 하러 가기",
+        cancelButtonText: "다음에 할게",
+        showCancelButton: true,
       }).then((result) => {
         if (result.isConfirmed) {
           window.open("https://nct.go.kr/distMental/rating/rating02_3.do");
@@ -478,7 +485,6 @@ function DiaryWrite({
             </div>
           </div>
         </div>
-        <button onClick={touchPet}>펫 클릭</button>
         <Button
           onClick={handleWriteDiary}
           size="big"
