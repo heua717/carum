@@ -6,12 +6,15 @@ import MeetingRoomIcon from "@mui/icons-material/MeetingRoom";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { useAppSelector } from "stores/store";
 
 function Menu({ user }) {
   const navigate = useNavigate();
 
+  const { userInfo } = useAppSelector((state) => state.user);
+
   const openPage = (page) => {
-    if (page === "write" && user.todayDiary) {
+    if (page === "write" && userInfo?.todayDiary) {
       Swal.fire({
         icon: "warning",
         title: "이미 일기를 작성했습니다",
@@ -73,8 +76,10 @@ function Menu({ user }) {
       </div>
       <div className={styles.infoBox}>
         <div className={styles.diaryInfoRow}>
-          <p className={styles.nicknameText}>{user?.nickname}님 안녕하세요!</p>
-          {user?.todayDiary ? (
+          <p className={styles.nicknameText}>
+            {userInfo?.nickname}님 안녕하세요!
+          </p>
+          {userInfo?.todayDiary ? (
             <div className={styles.diaryCheckedBox}>
               <p className={styles.diaryCheckedText}>일기 작성 완료</p>
             </div>
@@ -91,7 +96,7 @@ function Menu({ user }) {
         </div>
         <div className={styles.infoRow}>
           <p className={styles.infoText}>내 포인트</p>
-          <p className={styles.infoText}>{user?.money} Point</p>
+          <p className={styles.infoText}>{userInfo?.money} Point</p>
         </div>
       </div>
     </div>

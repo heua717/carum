@@ -59,7 +59,6 @@ function Main({
   //   childRef.current.sendChangeRoomSignal(json);
   // };
 
-  const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
@@ -110,7 +109,6 @@ function Main({
       changeRoom(res.data.mainRoom.id);
     }
 
-    setUser(tmpUserInfo);
     handleUserInfo(tmpUserInfo);
 
     const token = {
@@ -136,10 +134,10 @@ function Main({
 
   // 다이어리 작성 후 일기 작성 감지
   useEffect(() => {
-    if (location.pathname === "/") {
+    if (!userInfo) {
       fetchProfile(fetchProfileSuccess, fetchProfileFail);
     }
-  }, [location.pathname]);
+  }, []);
 
   // 펫 고르기
   const chooseMonthlyPetSuccess = (res, petType) => {
@@ -197,7 +195,7 @@ function Main({
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {location.pathname === "/" ? <Menu user={user} /> : null}
+        {location.pathname === "/" ? <Menu /> : null}
       </div>
       <Dialog open={petChooseModalOpen}>
         <div className={styles.petChooseModal}>
