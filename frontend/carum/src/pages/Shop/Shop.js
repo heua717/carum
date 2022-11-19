@@ -43,7 +43,6 @@ function Shop() {
 
   // 가구 불러오기
   const fetchShopItemSuccess = (res) => {
-    console.log(res.data);
     setFurnitureList(res.data.furnitureList);
     setMoney(res.data.money);
 
@@ -56,7 +55,6 @@ function Shop() {
   };
 
   const fetchShopItemFail = (err) => {
-    console.log(err);
     errorAlert("가구를 불러오지 못했어요");
     setPlace("category");
   };
@@ -108,7 +106,6 @@ function Shop() {
   // 가구점, 내 가구 이동
   const movePlace = () => {
     if (place === "inventory") {
-      console.log(categoryIndex);
       if (categoryIndex) {
         setPlace("shop");
       } else {
@@ -139,7 +136,6 @@ function Shop() {
 
   // 가구 구매
   const purchaseFurnitureSuccess = (res) => {
-    console.log(res);
     Swal.fire({
       icon: "success",
       title: "구매가 완료됐습니다.",
@@ -154,7 +150,6 @@ function Shop() {
   };
 
   const purchaseFurnitureFail = (err) => {
-    console.log(err);
     if (err.status === 412) {
       errorAlert("돈이 부족해요...");
     } else {

@@ -11,7 +11,6 @@ import CalendarDiary from "../Diary/CalendarDiary/CalendarDiary";
 import Menu from "./Menu";
 import { useEffect, useState, useCallback } from "react";
 import { fetchProfile } from "apis/user";
-import UnityCarum from "../../components/unity/UnityCarum";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import { setUserInfo } from "stores/slices/user";
@@ -21,37 +20,50 @@ import { chooseMonthlyPet } from "apis/pet";
 import dinoImage from "assets/dino.png";
 import whaleImage from "assets/whale.png";
 import NotFound from "components/NotFound";
+import { preventRefresh, goToMain } from "utils/utils";
+import { setCurPage } from "stores/slices/page";
 
-function Main() {
+function Main({
+  enterCloseUp,
+  exitCloseUp,
+  petConversation,
+  petCreate,
+  sendDiaryWriteSignal,
+  sendChangeRoomSignal,
+  childRef,
+  handleUnityStart,
+  handleUnityLogout,
+}) {
   const location = useLocation();
-  const childRef = useRef(null);
+  // const childRef = useRef(null);
 
-  const enterCloseUp = () => {
-    childRef.current.enterCloseUp();
-  };
-  const exitCloseUp = () => {
-    childRef.current.exitCloseUp();
-  };
-  const petConversation = (json) => {
-    childRef.current.petConversation(json);
-  };
+  // const enterCloseUp = () => {
+  //   childRef.current.enterCloseUp();
+  // };
+  // const exitCloseUp = () => {
+  //   childRef.current.exitCloseUp();
+  // };
+  // const petConversation = (json) => {
+  //   childRef.current.petConversation(json);
+  // };
 
-  const petCreate = (json) => {
-    childRef.current.petCreate(json);
-  };
+  // const petCreate = (json) => {
+  //   childRef.current.petCreate(json);
+  // };
 
-  const sendDiaryWriteSignal = () => {
-    childRef.current.sendDiaryWriteSignal();
-  };
+  // const sendDiaryWriteSignal = () => {
+  //   childRef.current.sendDiaryWriteSignal();
+  // };
 
-  const sendChangeRoomSignal = (json) => {
-    childRef.current.sendChangeRoomSignal(json);
-  };
+  // const sendChangeRoomSignal = (json) => {
+  //   childRef.current.sendChangeRoomSignal(json);
+  // };
 
   const [user, setUser] = useState(null);
   const [petChooseModalOpen, setPetChooseModalOpen] = useState(false);
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
+  const { userInfo } = useAppDispatch((state) => state);
   const dispatch = useAppDispatch();
 
   const changeRoom = useCallback(
@@ -62,16 +74,27 @@ function Main() {
     [dispatch]
   );
 
+  const changePage = useCallback(() => {
+    dispatch(setCurPage("main"));
+  }, [dispatch]);
+
   const handleUserInfo = useCallback(
     (userInfo) => {
       dispatch(setUserInfo(userInfo));
+
+      const petInfo = {
+        petType: userInfo.petType,
+        dailyColor: userInfo.dailyColor,
+        dailyFace: userInfo.dailyFace,
+      };
+
+      localStorage.setItem("petInfo", JSON.stringify(petInfo));
     },
     [dispatch]
   );
 
   const fetchProfileSuccess = (res) => {
-    console.log(res);
-    const userInfo = {
+    const tmpUserInfo = {
       nickname: res.data.nickName,
       id: res.data.userId,
       birth: res.data.birth,
@@ -86,18 +109,32 @@ function Main() {
     if (!nowRoomId) {
       changeRoom(res.data.mainRoom.id);
     }
-    setUser(userInfo);
-    handleUserInfo(userInfo);
+
+    setUser(tmpUserInfo);
+    handleUserInfo(tmpUserInfo);
+
+    const token = {
+      accessToken: sessionStorage.getItem("access-token"),
+      refreshToken: sessionStorage.getItem("refresh-token"),
+    };
+    const param = {
+      mainRoomId: nowRoomId ? nowRoomId : res.data.mainRoom.id,
+      token,
+      petType: tmpUserInfo.petType ? tmpUserInfo.petType : "NONE",
+      dailyFace: tmpUserInfo.dailyFace,
+      dailyColor: tmpUserInfo.dailyColor,
+    };
+
+    handleUnityStart(param);
 
     if (!res.data.petType) {
       setPetChooseModalOpen(true);
     }
   };
 
-  const fetchProfileFail = (err) => {
-    console.log(err);
-  };
+  const fetchProfileFail = (err) => {};
 
+  // 다이어리 작성 후 일기 작성 감지
   useEffect(() => {
     if (location.pathname === "/") {
       fetchProfile(fetchProfileSuccess, fetchProfileFail);
@@ -106,7 +143,6 @@ function Main() {
 
   // 펫 고르기
   const chooseMonthlyPetSuccess = (res, petType) => {
-    console.log(res);
     setPetChooseModalOpen(false);
 
     const petInfoParams = {
@@ -118,19 +154,21 @@ function Main() {
     petCreate(petInfoParams);
   };
 
-  const chooseMonthlyPetFail = (err) => {
-    console.log(err);
-  };
+  const chooseMonthlyPetFail = (err) => {};
 
   const handleChoosePet = (type) => {
     chooseMonthlyPet(type, chooseMonthlyPetSuccess, chooseMonthlyPetFail);
   };
 
+  // 새로고침 방지
+  useEffect(() => {
+    window.addEventListener("beforeunload", preventRefresh);
+    changePage();
+    goToMain();
+  }, []);
+
   return (
     <div className={styles.container}>
-      <div className={styles.unity}>
-        <UnityCarum ref={childRef} />
-      </div>
       <div className={location.pathname === "/" ? styles.contentBox : null}>
         <Routes>
           <Route
@@ -151,7 +189,10 @@ function Main() {
             element={<Room sendChangeRoomSignal={sendChangeRoomSignal} />}
           />
           <Route path="shop" element={<Shop />} />
-          <Route path="profile" element={<Profile />} />
+          <Route
+            path="profile"
+            element={<Profile handleUnityLogout={handleUnityLogout} />}
+          />
           <Route path="yearly-pet/:year" element={<YearlyPet />} />
           <Route path="monthly-pet/:year/:month" element={<MonthlyPet />} />
           <Route path="*" element={<NotFound />} />

@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import React, {
   useEffect,
@@ -26,6 +26,7 @@ function UnityCarum({}, ref) {
     codeUrl: "build/" + buildTarget + ".wasm",
   });
   const navigate = useNavigate();
+  const location = useLocation();
   // 첫번째 방법
   useImperativeHandle(ref, () => ({
     enterCloseUp,
@@ -34,6 +35,8 @@ function UnityCarum({}, ref) {
     petCreate,
     sendDiaryWriteSignal,
     sendChangeRoomSignal,
+    handleUnityStart,
+    handleUnityLogout,
   }));
 
   const { nowRoomId } = useAppSelector((state) => state.roomInfo);
@@ -61,35 +64,46 @@ function UnityCarum({}, ref) {
   }
 
   function handleSceneTransition(sceneName) {
-    console.log("move to " + sceneName);
     sendMessage("TestCanvas", "MoveSceneTo", sceneName);
   }
 
   const handleReactRouting = useCallback((to) => {
-    console.log("move to :" + to);
     navigate(to);
   }, []);
 
+  const handleUnityStart = (json) => {
+    sendMessage("Connector", "StartUnity", JSON.stringify(json));
+  };
+
+  const handleUnityLogout = () => {
+    sendMessage("Connector", "Logout");
+  };
+
   const ReactCall = function () {
     this.sendTokenToUnity = function () {
-      console.log("토큰보낸다");
-      const token = {
-        accessToken: sessionStorage.getItem("access-token"),
-        refreshToken: sessionStorage.getItem("refresh-token"),
-      };
-      const param = {
-        mainRoomId: nowRoomId,
-        token,
-        petType: userInfo.petType ? userInfo.petType : "NONE",
-        dailyFace: userInfo.dailyFace,
-        dailyColor: userInfo.dailyColor,
-      };
+      if (!!sessionStorage.getItem("access-token")) {
+        const token = {
+          accessToken: sessionStorage.getItem("access-token"),
+          refreshToken: sessionStorage.getItem("refresh-token"),
+        };
 
-      sendMessage("Connector", "StartUnity", JSON.stringify(param));
+        const storedNowRoomId = JSON.parse(localStorage.getItem("nowRoomId"));
+        const storedPetInfo = JSON.parse(localStorage.getItem("petInfo"));
+
+        const param = {
+          mainRoomId: storedNowRoomId,
+          token,
+          petType: storedPetInfo.petType ? storedPetInfo.petType : "NONE",
+          dailyFace: storedPetInfo.dailyFace,
+          dailyColor: storedPetInfo.dailyColor,
+        };
+        sendMessage("Connector", "StartUnity", JSON.stringify(param));
+      }
     };
-
-    this.closeUpPet = function () {
-      alert("클로즈업");
+    this.checkLogin = function () {
+      if (!!sessionStorage.getItem("access-token")) {
+        sendMessage("Connector", "MoveScene", "SceneD");
+      }
     };
   };
 
@@ -100,14 +114,12 @@ function UnityCarum({}, ref) {
 
     addEventListener("ReactRouting", handleReactRouting);
     addEventListener("handleUnityCall", (functionName) => {
-      console.log("인자:" + functionName);
       reactCall[functionName]();
     });
 
     return () => {
       removeEventListener("ReactRouting", handleReactRouting);
       removeEventListener("handleUnityCall");
-      console.log("remove");
     };
   }, [
     addEventListener,
@@ -122,9 +134,23 @@ function UnityCarum({}, ref) {
   }
 
   return (
-    <div className={styles.unityCarum}>
+    <div
+      className={
+        location.pathname !== "/signup"
+          ? styles.unityCarumMain
+          : location.pathname === "/signup"
+          ? styles.unitySignup
+          : null
+      }
+    >
       <Unity
-        className={styles.unity}
+        className={
+          location.pathname !== "/signup"
+            ? `${styles.unityMain}`
+            : location.pathname === "/login"
+            ? `${styles.unityLogin}`
+            : styles.unitySignup
+        }
         style={{ visibility: isLoaded ? "visible" : "hidden" }}
         unityProvider={unityProvider}
       />
@@ -132,7 +158,7 @@ function UnityCarum({}, ref) {
       {/* <button onClick={()=>handleSceneTransition("SceneA")}>SceneA</button>
       <button onClick={()=>handleSceneTransition("SceneB")}>SceneB</button>
       <button onClick={()=>reactCall["sendTokenToUnity"]()}>Send Token</button> */}
-      <button onClick={() => handleClick()}>requestFullscreen</button>
+      {/* <button onClick={() => handleClick()}>requestFullscreen</button> */}
     </div>
   );
 }

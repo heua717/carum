@@ -73,7 +73,6 @@ function Diary({ unityRef }) {
   };
 
   const fetchDiarySuccess = (res) => {
-    console.log(res);
     setDiary(res.data);
 
     const tmpColors = [...color];
@@ -90,7 +89,6 @@ function Diary({ unityRef }) {
   };
 
   const fetchDiaryFail = (err) => {
-    console.log(err);
     errorAlert("다이어리를 읽을 수 없어요ㅠㅠ");
     navigate("/calendar");
   };
@@ -108,10 +106,6 @@ function Diary({ unityRef }) {
 
     return () => {
       if (diaryRef.current?.background !== curBackgroundColorRef.current) {
-        console.log(
-          diaryRef.current?.background,
-          curBackgroundColorRef.current
-        );
         const payload = {
           content: diaryRef.current?.content,
           emotionTag: diaryRef.current?.emotionTag,
@@ -119,16 +113,10 @@ function Diary({ unityRef }) {
           diaryId: id,
         };
 
-        console.log("색깔 다르다");
-
         editDiary(
           payload,
-          (res) => {
-            console.log(res);
-          },
-          (err) => {
-            console.log(err);
-          }
+          (res) => {},
+          (err) => {}
         );
       }
     };
@@ -136,14 +124,11 @@ function Diary({ unityRef }) {
 
   // 다이어리 비우기
   const deleteDiaryContentSuccess = (res) => {
-    console.log(res);
     setDiary(null);
     fetchDiary(id, fetchDiarySuccess, fetchDiaryFail);
   };
 
-  const deleteDiaryContentFail = (err) => {
-    console.log(err);
-  };
+  const deleteDiaryContentFail = (err) => {};
 
   const handleDeleteContent = () => {
     Swal.fire({

@@ -3,6 +3,7 @@ import styles from "./MonthlyPetButton.module.css";
 import eggImage from "assets/egg.png";
 import cryImage from "assets/cry.png";
 import moment from "moment";
+import { createImageUrl } from "utils/utils";
 
 function MonthlyPetButton({ year, month, pet }) {
   const navigate = useNavigate();
@@ -18,7 +19,13 @@ function MonthlyPetButton({ year, month, pet }) {
       onClick={handleClick}
     >
       {pet ? (
-        <div className={styles.pet}></div>
+        <div className={styles.pet}>
+          <img
+            className={styles.petImage}
+            src={`${createImageUrl(pet.type, pet.face)}`}
+            alt="pet"
+          />
+        </div>
       ) : moment(new Date()).format("YYYY-MM") <=
         `${year}-${month > 9 ? month : "0" + month}` ? (
         <img src={eggImage} alt="egg" className={styles.eggImage} />

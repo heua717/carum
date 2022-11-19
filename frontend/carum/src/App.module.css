@@ -1,0 +1,13 @@
+@media only screen and (min-width: 1224px) {
+  .appContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 5vh;
+    margin-left: 1vw;
+  }
+
+  .unity {
+    width: 65vw;
+    height: 90vh;
+  }
+}

@@ -12,7 +12,12 @@ import surpriseImg from "assets/surprise.svg";
 import peaceImg from "assets/peace.svg";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchMonthlyPet } from "apis/pet";
-import { preventRefresh, errorAlert, goToMain } from "utils/utils";
+import {
+  preventRefresh,
+  errorAlert,
+  goToMain,
+  createImageUrl,
+} from "utils/utils";
 import cryImage from "assets/cry.png";
 import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from "recharts";
 
@@ -24,6 +29,7 @@ function MonthlyPet() {
   const [monthState, setMonthState] = useState(month);
   const [emotions, setEmotions] = useState(null);
   const [chartType, setChartType] = useState("bar");
+  const [petInformation, setPetInformation] = useState(null);
 
   const navigate = useNavigate();
 
@@ -35,7 +41,6 @@ function MonthlyPet() {
 
   // 월별 펫 상태 조회
   const fetchMonthlyPetSuccess = (res) => {
-    console.log(res.data);
     const emotionList = [
       { name: "angry", value: res.data.emotionMap.ANGRY, color: "#C23C3C" },
       { name: "peace", value: res.data.emotionMap.PEACE, color: "#5EB88A" },
@@ -53,11 +58,16 @@ function MonthlyPet() {
       return b.value - a.value;
     });
 
+    const pet = {
+      type: res.data.type,
+      face: res.data.face,
+    };
+
+    setPetInformation(pet);
     setEmotions(emotionList);
   };
 
   const fetchMonthlyPetFail = (err) => {
-    console.log(err);
     setEmotions(null);
     errorAlert("펫을 데려오지 못했어요 ㅠㅠ");
     navigate(-1);
@@ -146,7 +156,16 @@ function MonthlyPet() {
       </div>
       {emotions ? (
         <div className={styles.contentContainer}>
-          <div className={styles.pet}></div>
+          <div className={styles.pet}>
+            <img
+              src={`${createImageUrl(
+                petInformation?.type,
+                petInformation?.face
+              )}`}
+              alt="pet"
+              className={styles.petImage}
+            />
+          </div>
           <div className={styles.statisticsBox}>
             <img
               className={styles.bestEmotionImage}
@@ -155,11 +174,12 @@ function MonthlyPet() {
             />
             <div className={styles.chartBox} onClick={handleChartChange}>
               {chartType === "bar" ? (
-                emotions?.map((e) => (
+                emotions?.map((e, idx) => (
                   <EmotionProgressBar
                     count={e.value}
                     maxCount={emotions?.[0].value}
                     emotion={e.name}
+                    key={`${e.name}-${idx}`}
                   />
                 ))
               ) : (

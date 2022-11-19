@@ -34,7 +34,6 @@ function PhoneCheck({
   };
 
   const phoneCertificateFail = (err) => {
-    console.log(err);
     setPhoneNumberError(true);
   };
 

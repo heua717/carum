@@ -2,7 +2,7 @@ import styles from "./Profile.module.css";
 import TopNav from "../../components/TopNav";
 import Button from "../../components/Button";
 import { TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { Button as MUIButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +18,11 @@ import {
 } from "apis/user";
 import Swal from "sweetalert2";
 import { preventRefresh, errorAlert, goToMain } from "utils/utils";
+import { useAppDispatch } from "stores/store";
+import { setUserInfo } from "stores/slices/user";
+import { setNowRoomId } from "stores/slices/room";
 
-function Profile() {
+function Profile({ handleUnityLogout }) {
   const [values, setValues] = useState({
     userInfo: null,
     isEditing: false,
@@ -36,10 +39,18 @@ function Profile() {
 
   const navigate = useNavigate();
 
+  // redux
+  const dispatch = useAppDispatch();
+
+  const exitRoom = useCallback(() => {
+    dispatch(setNowRoomId(null));
+    dispatch(setUserInfo(null));
+    localStorage.clear();
+  }, [dispatch]);
+
   // 회원 정보 조회
 
   const fetchProfileSuccess = (res) => {
-    console.log(res);
     const userInfo = {
       nickname: res.data.nickName,
       id: res.data.userId,
@@ -52,7 +63,6 @@ function Profile() {
   };
 
   const fetchProfileFail = (err) => {
-    console.log(err);
     errorAlert("회원 정보를 불러오지 못했어요 ㅠㅠ");
     navigate("/");
   };
@@ -86,7 +96,6 @@ function Profile() {
 
   // 닉네임 수정
   const editNicknameSuccess = (res) => {
-    console.log("수정수정");
     const newUserInfo = values.userInfo;
     newUserInfo.nickname = values.newNickname;
     setValues({
@@ -98,9 +107,7 @@ function Profile() {
     setNicknameErrorText("");
   };
 
-  const editNicknameFail = (err) => {
-    console.log(err);
-  };
+  const editNicknameFail = (err) => {};
 
   const handleEditNickname = (state) => {
     if (state === "edit") {
@@ -152,7 +159,6 @@ function Profile() {
   };
 
   const changePasswordFail = (err) => {
-    console.log(err);
     setValues({ ...values, isOldPasswordValid: false });
   };
 
@@ -172,13 +178,14 @@ function Profile() {
 
   // 로그아웃
   const logoutSuccess = (res) => {
-    sessionStorage.removeItem("access-token");
-    sessionStorage.removeItem("refresh-token");
+    sessionStorage.clear();
+    exitRoom();
+    handleUnityLogout();
     navigate("/login");
   };
 
   const logoutFail = (err) => {
-    console.log(err);
+    errorAlert("다시 로그아웃해주세요.");
   };
 
   const handleLogout = () => {
@@ -187,14 +194,13 @@ function Profile() {
 
   // 회원 탈퇴
   const deleteAccountSuccess = (res) => {
-    console.log(res);
     sessionStorage.removeItem("access-token");
     sessionStorage.removeItem("refresh-token");
     navigate("/");
   };
 
   const deleteAccountFail = (err) => {
-    console.log(err);
+    errorAlert("탈퇴하지 못했습니다. 다시 시도해주세요.");
   };
   const handleDeleteAccount = () => {
     deleteAccount(deleteAccountSuccess, deleteAccountFail);

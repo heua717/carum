@@ -20,7 +20,9 @@ import {
   preventRefresh,
   errorAlert,
   goToMain,
+  createImageUrl,
 } from "utils/utils";
+import Swal from "sweetalert2";
 
 function CalendarDiary() {
   const [value, setValue] = useState(new Date());
@@ -36,9 +38,7 @@ function CalendarDiary() {
 
   // 달력 조회
   const fetchCalendarSuccess = (res) => {
-    console.log(res);
     setDiary(res.data.diaryList);
-    console.log("월간");
 
     if (isMonthly) {
       const emotionName = [
@@ -62,7 +62,6 @@ function CalendarDiary() {
   };
 
   const fetchCalendarFail = (err) => {
-    console.log(err);
     errorAlert("달력을 불러올 수 없어요");
     navigate("/");
   };
@@ -97,7 +96,6 @@ function CalendarDiary() {
       navigate(`/diary/${diary[idx].id}`);
     }
     setValue(e);
-    console.log(e);
   };
 
   // 달력 월 클릭 시

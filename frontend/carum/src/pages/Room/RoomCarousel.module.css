@@ -59,6 +59,10 @@
   max-height: 31vh;
 }
 
+.doorImage:hover {
+  cursor: pointer;
+}
+
 .using {
   position: absolute;
   height: 31vh;

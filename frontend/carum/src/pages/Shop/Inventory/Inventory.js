@@ -24,7 +24,6 @@ function Inventory({ place, setPlace }) {
   const [newTotalPage, setNewTotalPage] = useState(1);
 
   const fetchMyItemSuccess = (res) => {
-    console.log(res.data);
     setInventory(res.data.furnitureList);
     setNewTotalPage(
       res.data.furnitureList.length % 9
@@ -34,7 +33,6 @@ function Inventory({ place, setPlace }) {
   };
 
   const fetchMyItemFail = (err) => {
-    console.log(err);
     errorAlert("가구를 불러오지 못했어요.");
     setPlace("category");
   };

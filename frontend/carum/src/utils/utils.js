@@ -112,7 +112,7 @@ const furnitureCategory = [
   { name: "생활 소품", type: "LIFE" },
   { name: "음악 소품", type: "MUSIC" },
   { name: "의자, 테이블, 소파", type: "CHAIR_TABLE" },
-  { name: "스탠드", type: "STAND" },
+  { name: "수납장", type: "CABINET" },
   { name: "전자기기", type: "ELECTRIC" },
   { name: "바구니, 박스", type: "BOX" },
   { name: "동물, 식물", type: "ANIMAL_PLANT" },
@@ -166,7 +166,6 @@ const petTalk = (emotion, nickname) => {
       "어질어질한 하루를 보내셨군요.",
       "쉽지 않은 하루였네요.",
       "힘든 하루를 보내셨네요. 오늘은 푹 쉬세요.",
-      "으으으…",
     ],
     NORMAL: [
       "나쁘지 않은 하루였길 바라요.",
@@ -194,7 +193,7 @@ const preventRefresh = (e) => {
 // 메인으로 보내는 함수
 const goToMain = () => {
   if (window.performance.getEntriesByType("navigation")[0].type === "reload") {
-    window.location.replace("https://k7a101.p.ssafy.io/");
+    window.location.replace("https://k7a101.p.ssafy.io/login");
   }
 };
 
@@ -218,6 +217,10 @@ const WEEK_DAY = [
   "토요일",
 ];
 
+const createImageUrl = (type, face) => {
+  return `https://k7a101.p.ssafy.io/api/image/${type}_${face}.png`;
+};
+
 export {
   useInterval,
   calWeeklyStartDate,
@@ -229,4 +232,5 @@ export {
   errorAlert,
   WEEK_DAY,
   goToMain,
+  createImageUrl,
 };

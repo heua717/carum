@@ -14,6 +14,8 @@ import RoomSetting from "./RoomSetting";
 import { changeMainRoom } from "apis/room";
 import { setNowRoomId } from "stores/slices/room";
 import { useAppDispatch, useAppSelector } from "stores/store";
+import Swal from "sweetalert2";
+import { errorAlert } from "utils/utils";
 
 function RoomCarousel(props) {
   return (
@@ -67,7 +69,6 @@ function Item(props) {
   // 방 이동
   const handleChangeRoom = (roomId) => {
     //roomId에 따라 유니티 방 바꿔주기 실행하가
-    console.log(roomId);
     if (roomId !== nowRoomId) {
       changeRoom(roomId);
       localStorage.setItem("nowRoomId", roomId);
@@ -78,12 +79,17 @@ function Item(props) {
   };
 
   const changeMainRoomSuccess = (res) => {
-    console.log(res);
+    Swal.fire({
+      icon: "success",
+      title: "메인 방이 변경됐어요!",
+      showConfirmButton: false,
+      timer: 900,
+    });
   };
 
   // 메인 방 변경
   const changeMainRoomFail = (err) => {
-    console.log(err);
+    errorAlert("메인 방을 변경하지 못했어요.");
   };
 
   const handleChangeMainRoom = () => {
