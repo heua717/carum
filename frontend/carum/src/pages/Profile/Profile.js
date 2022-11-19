@@ -51,7 +51,6 @@ function Profile({ handleUnityLogout }) {
   // 회원 정보 조회
 
   const fetchProfileSuccess = (res) => {
-    console.log(res);
     const userInfo = {
       nickname: res.data.nickName,
       id: res.data.userId,
@@ -64,7 +63,6 @@ function Profile({ handleUnityLogout }) {
   };
 
   const fetchProfileFail = (err) => {
-    console.log(err);
     errorAlert("회원 정보를 불러오지 못했어요 ㅠㅠ");
     navigate("/");
   };
@@ -98,7 +96,6 @@ function Profile({ handleUnityLogout }) {
 
   // 닉네임 수정
   const editNicknameSuccess = (res) => {
-    console.log("수정수정");
     const newUserInfo = values.userInfo;
     newUserInfo.nickname = values.newNickname;
     setValues({
@@ -110,9 +107,7 @@ function Profile({ handleUnityLogout }) {
     setNicknameErrorText("");
   };
 
-  const editNicknameFail = (err) => {
-    console.log(err);
-  };
+  const editNicknameFail = (err) => {};
 
   const handleEditNickname = (state) => {
     if (state === "edit") {
@@ -164,7 +159,6 @@ function Profile({ handleUnityLogout }) {
   };
 
   const changePasswordFail = (err) => {
-    console.log(err);
     setValues({ ...values, isOldPasswordValid: false });
   };
 
@@ -191,7 +185,7 @@ function Profile({ handleUnityLogout }) {
   };
 
   const logoutFail = (err) => {
-    console.log(err);
+    errorAlert("다시 로그아웃해주세요.");
   };
 
   const handleLogout = () => {
@@ -200,14 +194,13 @@ function Profile({ handleUnityLogout }) {
 
   // 회원 탈퇴
   const deleteAccountSuccess = (res) => {
-    console.log(res);
     sessionStorage.removeItem("access-token");
     sessionStorage.removeItem("refresh-token");
     navigate("/");
   };
 
   const deleteAccountFail = (err) => {
-    console.log(err);
+    errorAlert("탈퇴하지 못했습니다. 다시 시도해주세요.");
   };
   const handleDeleteAccount = () => {
     deleteAccount(deleteAccountSuccess, deleteAccountFail);

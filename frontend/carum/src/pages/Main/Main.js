@@ -94,7 +94,6 @@ function Main({
   );
 
   const fetchProfileSuccess = (res) => {
-    console.log(res);
     const tmpUserInfo = {
       nickname: res.data.nickName,
       id: res.data.userId,
@@ -133,9 +132,7 @@ function Main({
     }
   };
 
-  const fetchProfileFail = (err) => {
-    console.log(err);
-  };
+  const fetchProfileFail = (err) => {};
 
   // 다이어리 작성 후 일기 작성 감지
   useEffect(() => {
@@ -146,7 +143,6 @@ function Main({
 
   // 펫 고르기
   const chooseMonthlyPetSuccess = (res, petType) => {
-    console.log(res);
     setPetChooseModalOpen(false);
 
     const petInfoParams = {
@@ -158,9 +154,7 @@ function Main({
     petCreate(petInfoParams);
   };
 
-  const chooseMonthlyPetFail = (err) => {
-    console.log(err);
-  };
+  const chooseMonthlyPetFail = (err) => {};
 
   const handleChoosePet = (type) => {
     chooseMonthlyPet(type, chooseMonthlyPetSuccess, chooseMonthlyPetFail);

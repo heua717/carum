@@ -32,8 +32,6 @@ function Room({ sendChangeRoomSignal }) {
 
   // 방 정보 호출
   const fetchRoomListSuccess = (res) => {
-    console.log(res.data);
-
     // 현재 방 id가 없으면 메인룸을 현재 방으로 지정
     if (!nowRoomId) {
       changeRoom(res.data.mainRoomId);
@@ -61,7 +59,6 @@ function Room({ sendChangeRoomSignal }) {
   };
 
   const fetchRoomListFail = (err) => {
-    console.log(err);
     errorAlert("방 정보를 불러오지 못했어요");
     navigate("/");
   };

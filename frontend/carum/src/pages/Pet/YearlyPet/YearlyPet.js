@@ -17,12 +17,10 @@ function YearlyPet() {
 
   // 년별 펫 데이터 불러오기
   const fetchYearlyPetSuccess = (res) => {
-    console.log(res.data);
     setPetList(res.data.petList);
   };
 
   const fetchYearlyPetFail = (err) => {
-    console.log(err);
     errorAlert("펫들을 불러오지 못했어요");
     navigate("/");
   };

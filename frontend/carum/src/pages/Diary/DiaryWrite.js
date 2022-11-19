@@ -30,7 +30,6 @@ import {
   createImageUrl,
 } from "utils/utils";
 import { useAppSelector } from "stores/store";
-import whaleImage from "assets/whale.png";
 
 const EMOTION_VALUE = {
   SAD: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
@@ -84,7 +83,7 @@ function DiaryWrite({
 }) {
   const [values, setValues] = useState({
     isSelecting: true,
-    selectedEmotion: "ANGRY",
+    selectedEmotion: diary ? diary.emotionTag[0] : "ANGRY",
     selectedEmotionList: diary ? diary.emotionTag : [],
   });
   const [tmpContent, setTmpContent] = useState(
@@ -161,7 +160,6 @@ function DiaryWrite({
 
   // 2주간 유저 감정 분석
   const fetchUserEmotionSuccess = (res) => {
-    console.log(res);
     if (res.data.result === "NORMAL") {
       Swal.fire({
         title: "일기를 작성했어요!",
@@ -200,25 +198,19 @@ function DiaryWrite({
     }
   };
 
-  const fetchUserEmotionFail = (err) => {
-    console.log(err);
-  };
+  const fetchUserEmotionFail = (err) => {};
 
   // 다이어리 저장
   const writeDiarySuccess = (res) => {
-    console.log(res);
     fetchUserEmotion(fetchUserEmotionSuccess, fetchUserEmotionFail);
     sendDiaryWriteSignal();
     navigate("/calendar");
   };
 
-  const writeDiaryFail = (err) => {
-    console.log(err);
-  };
+  const writeDiaryFail = (err) => {};
 
   // 다이어리 수정
   const editDiarySuccess = (res) => {
-    console.log(res);
     sendDiaryWriteSignal();
     setDiary(null);
     setCurState("read");
@@ -231,7 +223,6 @@ function DiaryWrite({
   };
 
   const editDiaryFail = (err) => {
-    console.log(err);
     errorAlert("일기를 수정하지 못했어요 ㅠㅠ");
     setCurState("read");
   };
@@ -301,25 +292,6 @@ function DiaryWrite({
         }
       )
       .then((res) => {
-        console.log(res);
-        console.log(
-          calEmotion(
-            res.data.document.confidence.positive,
-            res.data.document.confidence.negative,
-            res.data.document.confidence.neutral
-          )
-        );
-        console.log(
-          petTalk(
-            calEmotion(
-              res.data.document.confidence.positive,
-              res.data.document.confidence.negative,
-              res.data.document.confidence.neutral
-            ),
-            userInfo.nickname
-          )
-        );
-        console.log(userInfo.nickname);
         const calc = calEmotion(
           res.data.document.confidence.positive,
           res.data.document.confidence.negative,
@@ -335,7 +307,6 @@ function DiaryWrite({
         setTimer(1000);
       })
       .catch((err) => {
-        console.log(err);
         setTotalTime(TIME);
         setTimer(1000);
       });
@@ -350,26 +321,18 @@ function DiaryWrite({
         .getInstance()
         .getHTML()
         .replace(/<[^>]*>?/g, "");
-
-      console.log("data: ", data);
-      console.log("tmpContent: ", tmpContent);
-
       if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
         sendSentiment(data);
         setTmpContent(data);
-        console.log("감정분석 함");
       } else {
-        console.log("감정분석 안 함");
         setTotalTime(TIME);
       }
     }
-    console.log(totalTime);
   }, timer);
 
   useInterval(() => {
     if (coolTime > 0) {
       setCoolTime(coolTime - 1);
-      console.log("cooltime", coolTime);
     } else {
       setPetTimer(null);
       setCanTalk(true);
@@ -385,17 +348,12 @@ function DiaryWrite({
         .getHTML()
         .replace(/<[^>]*>?/g, "");
 
-      console.log("data: ", data);
-      console.log("tmpContent: ", tmpContent);
-
       if (data.trim().length >= 30 && data.trim() !== tmpContent.trim()) {
-        console.log("감정분석 함");
         sendSentiment(data);
         setCanTalk(false);
         setTmpContent(data);
         setPetTimer(1000);
       } else {
-        console.log("감정 분석 안 함");
       }
     }
   };

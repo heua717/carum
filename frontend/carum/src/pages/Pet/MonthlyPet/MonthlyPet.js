@@ -41,7 +41,6 @@ function MonthlyPet() {
 
   // 월별 펫 상태 조회
   const fetchMonthlyPetSuccess = (res) => {
-    console.log(res.data);
     const emotionList = [
       { name: "angry", value: res.data.emotionMap.ANGRY, color: "#C23C3C" },
       { name: "peace", value: res.data.emotionMap.PEACE, color: "#5EB88A" },
@@ -69,7 +68,6 @@ function MonthlyPet() {
   };
 
   const fetchMonthlyPetFail = (err) => {
-    console.log(err);
     setEmotions(null);
     errorAlert("펫을 데려오지 못했어요 ㅠㅠ");
     navigate(-1);
@@ -176,11 +174,12 @@ function MonthlyPet() {
             />
             <div className={styles.chartBox} onClick={handleChartChange}>
               {chartType === "bar" ? (
-                emotions?.map((e) => (
+                emotions?.map((e, idx) => (
                   <EmotionProgressBar
                     count={e.value}
                     maxCount={emotions?.[0].value}
                     emotion={e.name}
+                    key={`${e.name}-${idx}`}
                   />
                 ))
               ) : (

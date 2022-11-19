@@ -64,12 +64,10 @@ function UnityCarum({}, ref) {
   }
 
   function handleSceneTransition(sceneName) {
-    console.log("move to " + sceneName);
     sendMessage("TestCanvas", "MoveSceneTo", sceneName);
   }
 
   const handleReactRouting = useCallback((to) => {
-    console.log("move to :" + to);
     navigate(to);
   }, []);
 
@@ -84,7 +82,6 @@ function UnityCarum({}, ref) {
   const ReactCall = function () {
     this.sendTokenToUnity = function () {
       if (!!sessionStorage.getItem("access-token")) {
-        console.log("토큰보낸다");
         const token = {
           accessToken: sessionStorage.getItem("access-token"),
           refreshToken: sessionStorage.getItem("refresh-token"),
@@ -117,14 +114,12 @@ function UnityCarum({}, ref) {
 
     addEventListener("ReactRouting", handleReactRouting);
     addEventListener("handleUnityCall", (functionName) => {
-      console.log("인자:" + functionName);
       reactCall[functionName]();
     });
 
     return () => {
       removeEventListener("ReactRouting", handleReactRouting);
       removeEventListener("handleUnityCall");
-      console.log("remove");
     };
   }, [
     addEventListener,

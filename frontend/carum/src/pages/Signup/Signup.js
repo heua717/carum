@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAppDispatch } from "stores/store";
 import { setCurPage } from "stores/slices/page";
+import { errorAlert } from "utils/utils";
 
 function Signup() {
   const [values, setValues] = useState({
@@ -49,7 +50,6 @@ function Signup() {
   };
 
   const checkValidIdSuccess = (res) => {
-    console.log(res);
     if (res.status === 200) {
       setValues({
         ...values,
@@ -165,7 +165,6 @@ function Signup() {
 
   // 회원가입
   const signupSuccess = (res) => {
-    console.log(res);
     Swal.fire({
       showConfirmButton: false,
       title: "가입되었습니다!",
@@ -175,7 +174,7 @@ function Signup() {
   };
 
   const signupFail = (err) => {
-    console.log(err);
+    errorAlert("회원가입에 실패했습니다. 다시 시도해주세요.");
   };
 
   const handleSignup = () => {

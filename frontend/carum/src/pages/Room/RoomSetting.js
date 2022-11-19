@@ -28,7 +28,6 @@ function RoomSetting({ roomList, curDoorIndex, closeModal }) {
     return false;
   };
 
-  //console.log(values.emotion);
   const handleNameChange = (event) => {
     setNewRoomName(event.target.value);
   };
@@ -49,12 +48,10 @@ function RoomSetting({ roomList, curDoorIndex, closeModal }) {
   };
 
   const editRoomInfoSuccess = (res) => {
-    console.log(res);
     closeModal();
   };
 
   const editRoomInfoFail = (err) => {
-    console.log(err);
     errorAlert("방 정보 수정에 실패했습니다 ㅠㅠ");
   };
 

@@ -30,7 +30,6 @@ function Login() {
   };
 
   const loginFail = (err) => {
-    console.log(err);
     setLoginFailed(true);
     setValues({ ...values, password: "" });
   };
