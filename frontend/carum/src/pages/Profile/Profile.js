@@ -2,7 +2,7 @@ import styles from "./Profile.module.css";
 import TopNav from "../../components/TopNav";
 import Button from "../../components/Button";
 import { TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EditIcon from "@material-ui/icons/Edit";
 import { Button as MUIButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -18,8 +18,11 @@ import {
 } from "apis/user";
 import Swal from "sweetalert2";
 import { preventRefresh, errorAlert, goToMain } from "utils/utils";
+import { useAppDispatch } from "stores/store";
+import { setUserInfo } from "stores/slices/user";
+import { setNowRoomId } from "stores/slices/room";
 
-function Profile() {
+function Profile({ handleUnityLogout }) {
   const [values, setValues] = useState({
     userInfo: null,
     isEditing: false,
@@ -35,6 +38,15 @@ function Profile() {
   const [nicknameErrorText, setNicknameErrorText] = useState("");
 
   const navigate = useNavigate();
+
+  // redux
+  const dispatch = useAppDispatch();
+
+  const exitRoom = useCallback(() => {
+    dispatch(setNowRoomId(null));
+    dispatch(setUserInfo(null));
+    localStorage.clear();
+  }, [dispatch]);
 
   // 회원 정보 조회
 
@@ -172,8 +184,9 @@ function Profile() {
 
   // 로그아웃
   const logoutSuccess = (res) => {
-    sessionStorage.removeItem("access-token");
-    sessionStorage.removeItem("refresh-token");
+    sessionStorage.clear();
+    exitRoom();
+    handleUnityLogout();
     navigate("/login");
   };
 

@@ -60,6 +60,17 @@
   align-items: center;
 }
 
+.pet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.petImage {
+  width: 50%;
+  margin: 0 auto;
+}
+
 .bestEmotionImage {
   width: 72px;
   height: 72px;
@@ -162,10 +173,18 @@
   }
 
   .pet {
-    height: 34%;
+    height: 28%;
+  }
+
+  .petImage {
+    width: 28%;
   }
 
   .statisticsBox {
     padding: 2vh 2vw;
+  }
+
+  .chartBox:hover {
+    cursor: pointer;
   }
 }
