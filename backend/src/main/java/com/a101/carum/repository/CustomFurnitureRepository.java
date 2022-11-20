@@ -73,6 +73,7 @@ public class CustomFurnitureRepository extends QuerydslRepositorySupport {
                             .price(f.getPrice())
                             .type(f.getType())
                             .have(have)
+                            .image(f.getImage())
                             .build());
         }
 

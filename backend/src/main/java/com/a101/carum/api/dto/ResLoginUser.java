@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResLoginUser {
-    String accessToken, refreshToken;
+    private String accessToken, refreshToken;
 }

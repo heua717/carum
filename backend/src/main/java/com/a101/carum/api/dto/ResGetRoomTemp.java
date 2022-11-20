@@ -10,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ResGetRoomTemp {
-    Long id;
-    String name, emotionTag, background;
+    private Long id;
+    private String name, emotionTag;
+    private Integer background, frame;
 }

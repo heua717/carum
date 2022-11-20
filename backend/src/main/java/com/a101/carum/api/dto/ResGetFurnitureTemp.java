@@ -9,6 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ResGetFurnitureTemp {
-    Furniture furniture;
-    Long count;
+    private Furniture furniture;
+    private Long count;
 }

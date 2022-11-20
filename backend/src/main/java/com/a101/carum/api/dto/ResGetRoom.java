@@ -10,7 +10,8 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ResGetRoom {
-    Long id;
-    String name;
-    List<String> emotionTag, background;
+    private Long id;
+    private String name;
+    private List<String> emotionTag;
+    private Integer background, frame;
 }

@@ -1,7 +1,3 @@
-.container {
-  padding: 12px 0;
-}
-
 .contentContainer {
   width: 300px;
   height: 45vh;
@@ -44,6 +40,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 4px;
 }
 
 .emotions {
@@ -61,6 +58,9 @@
 .emotionExplainBox {
   height: 68px;
   border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 .angryBg {
@@ -84,12 +84,13 @@
 }
 
 .surpriseBg {
-  background-color: #ffdfec;
+  background-color: #e7e7e7;
 }
 
 .emotionExplainRow {
   display: flex;
   justify-content: space-around;
+  align-items: center;
 }
 
 .emotionExplain {
@@ -102,4 +103,28 @@
 
 .btn {
   margin-bottom: 12px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentContainer {
+    height: 80vh;
+    width: 28vw;
+  }
+
+  .editor {
+    width: 100%;
+    border: 1px solid #8682ce;
+    padding: 2px;
+    border-radius: 8px;
+  }
+
+  .emotionCheckBox {
+    width: 28vw;
+  }
+
+  .emotionImg {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
 }

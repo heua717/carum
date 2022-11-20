@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ReqPutRoomDetail {
-    Long interiorId, furnitureId;
-    Float x,y,z,rotX,rotY,rotZ;
-    ActionType action;
+    private Long interiorId, furnitureId;
+    private Float x,y,z,rotX,rotY,rotZ;
+    private ActionType action;
 }

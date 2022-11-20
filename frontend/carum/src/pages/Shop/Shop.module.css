@@ -1,34 +1,157 @@
+.contentContainer {
+  height: 48vh;
+  overflow: auto;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 4px 8px;
+}
+
+.goBack {
+  display: flex;
+  align-items: center;
+}
+
+.backBtn {
+  border: 0;
+  background-color: white;
+}
+
+.backBtn {
+  cursor: pointer;
+}
+
+.buttonBox {
+  min-width: 64px;
+}
+
 .searchBox {
   display: flex;
+  max-width: 300px;
+  margin: 0 auto;
   justify-content: space-around;
+  padding: 4px 0;
 }
 
 .inputBox {
+  border: none;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+  width: 260px;
+  height: 28px;
+  border-radius: 8px;
+  padding: 0 8px;
 }
 
 .contentBox {
   width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  margin: 4px auto;
+  overflow: auto;
 }
 
-.furnitureRow {
+.contentBox::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryName {
+  text-align: center;
+  font-size: 16px;
+}
+
+.furnitures {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 4%;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 99%;
 }
 
 .pagination {
   margin-left: auto;
   margin-right: auto;
-  width: 260px;
 }
 
-.pointBox {
+.dialog {
+  padding: 12px;
+  min-width: 272px;
+  min-height: 440px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
-.pointText {
+.closeBtn {
+  align-self: flex-end;
+}
+
+.detailPriceTag {
+  background-color: #48367d;
+  width: 40%;
+  color: white;
+  text-align: center;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 10px;
+}
+
+.furniture {
+  height: 200px;
+}
+
+.furnitureImage {
+  height: 100%;
+}
+
+.detailPriceText {
+  color: white;
+}
+
+.myPointBox {
+  display: flex;
+  justify-content: space-between;
+  width: 90%;
+  align-items: center;
+}
+
+.myPointText {
+  font-size: 20px;
+}
+
+.inventoryNoDataText {
+  text-align: center;
+  font-size: 18px;
+}
+
+.noDataText {
+  text-align: center;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentContainer {
+    height: 70vh;
+  }
+
+  .searchBox {
+    margin-bottom: 12px;
+  }
+
+  .furnitures {
+    margin-bottom: 12px;
+  }
+
+  .contentBox {
+    width: 30vw;
+  }
 }

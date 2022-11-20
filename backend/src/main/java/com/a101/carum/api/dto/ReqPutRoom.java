@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPutRoom {
-    List<String> background;
-    List<ReqPutRoomDetail> interiorList;
+    private Integer background;
+    private Integer frame;
+    private List<ReqPutRoomDetail> interiorList;
 }

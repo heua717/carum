@@ -45,13 +45,13 @@ public class UserController {
     }
 
     @GetMapping("userid")
-    public ResponseEntity readUserId(ReqGetUserId reqGetUserId) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity readUserId(@ModelAttribute ReqGetUserId reqGetUserId) throws SQLIntegrityConstraintViolationException {
         userService.readUserId(reqGetUserId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("nickname")
-    public ResponseEntity readNickName(ReqGetNickName reqGetNickName) throws SQLIntegrityConstraintViolationException {
+    public ResponseEntity readNickName(@ModelAttribute ReqGetNickName reqGetNickName) throws SQLIntegrityConstraintViolationException {
         userService.readNickName(reqGetNickName);
         return ResponseEntity.ok().build();
     }

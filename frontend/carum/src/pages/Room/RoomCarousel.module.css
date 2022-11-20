@@ -1,0 +1,106 @@
+.emotionImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
+.carousel {
+  text-align: center;
+  min-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 48vh;
+  overflow: hidden;
+}
+
+.starImage {
+  font-size: 32px;
+  margin-bottom: 4px;
+  color: #f2e03c;
+}
+
+.doorImageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+}
+
+.roomInfo {
+  background-color: #e7e9fd;
+  min-height: 92px;
+  padding-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 0 12px 12px;
+  gap: 4px;
+}
+
+.roomDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.roomName {
+  font-size: 25px;
+  font-weight: 900;
+}
+
+.button {
+}
+
+.doorImage {
+  max-height: 31vh;
+}
+
+.doorImage:hover {
+  cursor: pointer;
+}
+
+.using {
+  position: absolute;
+  height: 31vh;
+  width: 100%;
+  background-color: rgba(44, 44, 44, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px 12px 0 0;
+}
+
+.usingText {
+  color: white;
+  font-size: 24px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .carousel {
+    min-height: 70vh;
+  }
+
+  .doorImageContainer {
+    height: 50vh;
+  }
+
+  .doorImage {
+    max-height: 100%;
+  }
+
+  .using {
+    height: 100%;
+  }
+
+  .roomInfo {
+    min-height: 104px;
+  }
+
+  .roomName {
+    font-size: 30px;
+  }
+}

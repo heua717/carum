@@ -9,6 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPostImage {
-    String name;
-    MultipartFile image;
+    private String name;
+    private MultipartFile image;
 }

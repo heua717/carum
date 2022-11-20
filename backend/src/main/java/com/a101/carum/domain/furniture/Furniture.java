@@ -32,4 +32,7 @@ public class Furniture {
     @Column(name = "type", length = 20)
     @Enumerated(EnumType.STRING)
     private FurnitureType type;
+
+    @Column(name = "image")
+    private String image;
 }

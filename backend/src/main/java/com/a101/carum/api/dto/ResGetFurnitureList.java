@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetFurnitureList {
-    List<ResGetFurniture> furnitureList;
-    Long money, furnitureCount;
+    private List<ResGetFurniture> furnitureList;
+    private Long money, furnitureCount;
 }

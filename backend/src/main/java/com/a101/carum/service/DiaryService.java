@@ -6,17 +6,18 @@ import com.a101.carum.api.dto.ResGetDiary;
 import com.a101.carum.api.dto.ResGetDiaryList;
 import com.a101.carum.common.exception.UnAuthorizedException;
 import com.a101.carum.domain.diary.Diary;
+import com.a101.carum.domain.history.History;
+import com.a101.carum.domain.pet.PetDaily;
 import com.a101.carum.domain.user.User;
-import com.a101.carum.repository.DiaryRepository;
-import com.a101.carum.repository.UserRepository;
+import com.a101.carum.domain.user.UserDetail;
+import com.a101.carum.repository.*;
+import com.a101.carum.util.DateUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -27,21 +28,49 @@ public class DiaryService {
 
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
+    private final UserDetailRepository userDetailRepository;
+    private final CustomPetDailyRepository petDailyRepository;
+    private final HistoryRepository historyRepository;
+    private final DateUtils dateUtils;
 
     @Transactional
     public void postDiary(ReqPostDiary reqPostDiary, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
-        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0,0)),LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59,59)),user);
+        User user = userRepository.findByIdAndIsDeleted(userId,false)
+                .orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다"));
+        Diary diary = diaryRepository.findByCreateDateBetweenAndUser(
+                dateUtils.startDateTime(LocalDate.now()),
+                dateUtils.endDateTime(LocalDate.now()),user)
+                .orElse(null);
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(()-> new NullPointerException("User정보가 손상 되었습니다."));
+        userDetail.updateMoney(100L, '+');
         if(diary!=null){
             throw new UnAuthorizedException("이미 Diary를 작성하였습니다.");
         }
         StringBuilder sb = new StringBuilder();
         if(reqPostDiary.getEmotionTag().size()!=0){
+            int cnt = 0;
             for (String a: reqPostDiary.getEmotionTag()) {
-                System.out.println(a);
-                sb.append(a).append(",");
+                if(cnt>0){
+                    sb.append(",");
+                }
+                sb.append(a);
+                cnt++;
             }
         }
+
+        PetDaily petDaily = petDailyRepository.getPetDaily(reqPostDiary.getEmotionTag(), userDetail.getPetType());
+        userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), LocalDate.now());
+
+        for(String emotion: reqPostDiary.getEmotionTag()) {
+            LocalDate today = LocalDate.now();
+            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(
+                            emotion, user, today.getMonthValue(), today.getYear()
+                    )
+                    .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+            history.plusCount();
+        }
+
         diary = Diary.builder()
                 .content(reqPostDiary.getContent())
                 .user(user)
@@ -54,20 +83,39 @@ public class DiaryService {
 
     @Transactional
     public void updateDiary(ReqPostDiary reqPostDiary, Long userId, Long diaryId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 칮을 수 없습니다"));
-        Diary diary = diaryRepository.findById(diaryId).orElseThrow(()-> new NullPointerException("Diary를 찾을 수 없습니다"));
+        User user = userRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(()-> new NullPointerException("User를 칮을 수 없습니다"));
+        UserDetail userDetail = userDetailRepository.findByUser(user)
+                .orElseThrow(() -> new NullPointerException("유저 정보가 손상되었습니다."));
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(()-> new NullPointerException("Diary를 찾을 수 없습니다"));
+
         if(!diary.getUser().equals(user)) {
             throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
         } else if(diary.getCreateDate().getDayOfMonth() != LocalDateTime.now().getDayOfMonth()){
             throw new UnAuthorizedException("일기는 당일 수정만 가능합니다.");
         }
+
+        PetDaily petDaily = petDailyRepository.getPetDaily(reqPostDiary.getEmotionTag(), userDetail.getPetType());
+        userDetail.updateDaily(petDaily.getFace(), petDaily.Color(petDaily.getColor()), userDetail.getLastDiary());
+
+        String[] emotionTag = diary.getEmotionTag().split(",");
+        for(String emotion: emotionTag){
+            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getMonthValue(), LocalDate.now().getYear())
+                    .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+            history.minusCount();
+        }
+
         StringBuilder sb = new StringBuilder();
         if(reqPostDiary.getEmotionTag().size()!=0){
-            for (String a: reqPostDiary.getEmotionTag()) {
-                System.out.println(a);
-                sb.append(a).append(",");
+            for (String emotion: reqPostDiary.getEmotionTag()) {
+                sb.append(emotion).append(",");
+                History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getMonthValue(), LocalDate.now().getYear())
+                        .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
+                history.plusCount();
             }
         }
+
         diary.updateDiary(reqPostDiary.getContent(), sb.toString() , reqPostDiary.getBackground());
         diaryRepository.save(diary);
 
@@ -76,8 +124,10 @@ public class DiaryService {
 
     @Transactional
     public ResGetDiary getDiary(Long diaryId, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다."));
-        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(()-> new NullPointerException("User를 찾을 수 없습니다."));
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
         if(!user.equals(diary.getUser())) {
             throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
         }
@@ -97,21 +147,21 @@ public class DiaryService {
 
     @Transactional
     public ResGetDiaryList getDiaryList(ReqGetDiaryList reqGetDiaryList, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
         List<Diary> diaryList;
         // request Day 값이 0이면 월간조회
         if(reqGetDiaryList.getDay()==0){
-             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
-                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),1)
-                            , LocalTime.of(0,0,0))
-                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(),Calendar.getInstance().getMaximum(reqGetDiaryList.getMonth()))
-                            , LocalTime.of(23,59,59)),user);
+            Calendar cal = Calendar.getInstance();
+            cal.set(reqGetDiaryList.getYear(), reqGetDiaryList.getMonth(),reqGetDiaryList.getDay());
+            reqGetDiaryList.setDay(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+            diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
+                    dateUtils.startDateTime(dateUtils.startDate(reqGetDiaryList))
+                    ,dateUtils.endDateTime(dateUtils.getDate(reqGetDiaryList)),user);
         } else { // Day의 값이 0보다 크면 day로부터 7일간 조회
             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
-                    LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
-                            , LocalTime.of(0,0,0))
-                    ,LocalDateTime.of(LocalDate.of(reqGetDiaryList.getYear(),reqGetDiaryList.getMonth(), reqGetDiaryList.getDay())
-                            , LocalTime.of(23,59,59)).plusDays(6),user);
+                    dateUtils.startDateTime(dateUtils.getDate(reqGetDiaryList))
+                    ,dateUtils.endDateTime(dateUtils.getDate(reqGetDiaryList)).plusDays(6),user);
         }
 
         ResGetDiaryList resGetDiaryList = new ResGetDiaryList();
@@ -136,14 +186,14 @@ public class DiaryService {
 
     @Transactional
     public void deleteDiary(Long diaryId, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
-        Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
+        User user = userRepository.findByIdAndIsDeleted(userId, false)
+                .orElseThrow(() -> new NullPointerException("User를 찾을 수 없습니다."));
+        Diary diary = diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new NullPointerException("Diary를 찾을 수 없습니다."));
         if(!diary.getUser().equals(user)) {
             throw new UnAuthorizedException("User가 작성한 Diary가 아닙니다.");
         }
         diary.deleteDiary("");
         diaryRepository.save(diary);
-
-
     }
 }

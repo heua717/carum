@@ -1,0 +1,74 @@
+* {
+  box-sizing: border-box;
+}
+
+p {
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.header {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  background-color: #b7bdee;
+  width: 160px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 14px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.phoneCheck {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.input {
+  width: 300px;
+}
+
+.dateInput {
+  width: 300px;
+  height: 56px;
+  border-radius: 4px;
+  border: #c4c3c3 solid 1px;
+  padding: 0 12px;
+}
+
+.dateInput:valid::before {
+  display: none;
+}
+
+.dateInput::before {
+  content: attr(data-placeholder);
+  width: 100%;
+  color: #979797;
+  font-size: 14px;
+}
+
+.emotionTag {
+  max-width: 320px;
+}
+
+.emotionImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  margin: 15px;
+}
+
+.unchecked {
+  opacity: 30%;
+}
+.emotionTag {
+  text-align: center;
+}

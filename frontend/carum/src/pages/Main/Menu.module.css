@@ -1,6 +1,8 @@
 .menuBox {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
 .menuRow {
@@ -10,14 +12,46 @@
 }
 
 .infoBox {
-  height: 124px;
+  height: 144px;
   width: 300px;
   border-radius: 10px;
   background: #ffffff;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  margin-top: 12px;
+}
+
+.diaryInfoRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.nicknameText {
+  font-size: 18px;
+}
+
+.diaryInfoText {
+  text-align: center;
+  font-size: 14px;
+  margin: 4px;
+}
+
+.diaryCheckedBox {
+  border-radius: 12px;
+  width: 50%;
+  height: 40px;
+  background-color: #b7bdee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.diaryCheckedText {
+  color: white;
 }
 
 .infoRow {
@@ -35,4 +69,19 @@
   justify-content: space-around;
   align-items: center;
   padding-right: 6px;
+}
+
+.large {
+  font-size: 48px;
+}
+
+.diaryIcon {
+  color: #3b2a71;
+}
+
+.calendarIcon {
+  color: #3b2a71;
+}
+
+@media only screen and (min-width: 1224px) {
 }

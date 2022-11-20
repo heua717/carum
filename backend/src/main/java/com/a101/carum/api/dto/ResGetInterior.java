@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ResGetInterior {
-    Long interiorId, furnitureId;
-    String resource;
-    Float x,y,z,rotX,rotY,rotZ;
+    private Long interiorId, furnitureId;
+    private String resource;
+    private Float x,y,z,rotX,rotY,rotZ;
 }

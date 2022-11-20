@@ -1,5 +1,6 @@
 .container {
-  height: 100vh;
+  width: 30vw;
+  margin: 0 auto;
 }
 
 .header {
@@ -11,7 +12,9 @@
   border-radius: 0 0 12px 12px;
 }
 .content {
-  height: 80vh;
+  height: 47vh;
+  margin: 0 auto;
+  margin-top: 10vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,9 +51,25 @@
   display: block;
 }
 
+.loginFailedMessage {
+  color: #f12c2c;
+}
+
 .buttonBox {
   width: 100%;
+  min-width: 360px;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+}
+
+@media only screen and (min-width: 1224px) {
+  .content {
+    margin-top: 0;
+    width: 360px;
+  }
+
+  .container {
+    margin: 0;
+  }
 }

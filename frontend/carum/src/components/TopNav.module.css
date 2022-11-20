@@ -2,6 +2,7 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
+  padding: 4px 8px;
 }
 
 .goBack {
@@ -14,6 +15,16 @@
   background-color: white;
 }
 
+.backBtn {
+  cursor: pointer;
+}
+
 .buttonBox {
   min-width: 64px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .topNav {
+    padding: 0;
+  }
 }

@@ -1,15 +1,13 @@
 package com.a101.carum.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Setter
 @Getter
 @AllArgsConstructor
+@ToString
 public class ReqPostDiary {
 
     private String content;

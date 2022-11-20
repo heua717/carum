@@ -1,0 +1,190 @@
+.contentContainer {
+  width: 300px;
+  height: 44vh;
+  overflow: auto;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 12px 0;
+}
+
+.contentContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.navigationBar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  align-items: center;
+  width: 300px;
+  margin: 0 auto;
+  margin-bottom: 8px;
+}
+
+.navDate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.year {
+  font-size: 12px;
+}
+
+.month {
+  font-size: 18px;
+  font-weight: 550;
+}
+
+.pet {
+  height: 200px;
+}
+
+.statisticsBox {
+  width: 98%;
+  display: flex;
+  min-height: 396px;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 8px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+}
+
+.chartBox {
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pet {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.petImage {
+  width: 50%;
+  margin: 0 auto;
+}
+
+.bestEmotionImage {
+  width: 72px;
+  height: 72px;
+  border-radius: 12px;
+}
+
+.angryColor {
+  background-color: #ffe0e0;
+}
+
+.worryColor {
+  background-color: #ebe3ff;
+}
+
+.peaceColor {
+  background-color: #d5f3e4;
+}
+
+.happyColor {
+  background-color: #fff6d1;
+}
+
+.surpriseColor {
+  background-color: #ffdfec;
+}
+
+.sadColor {
+  background-color: #d8e4ff;
+}
+
+.noDataText {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.noData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cryImage {
+  width: 20%;
+  height: 20%;
+}
+
+.pieChartContainer {
+}
+
+.emotionMarks {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.emotionMark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.emotionDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.emotionName {
+}
+
+.angryDot {
+  background-color: #c23c3c;
+}
+
+.happyDot {
+  background-color: #e8ca51;
+}
+
+.sadDot {
+  background-color: #395796;
+}
+
+.surpriseDot {
+  background-color: #d8d8d8;
+}
+
+.peaceDot {
+  background-color: #5eb88a;
+}
+
+.worryDot {
+  background-color: #6649af;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentContainer {
+    width: 30vw;
+    height: 80vh;
+  }
+
+  .pet {
+    height: 28%;
+  }
+
+  .petImage {
+    width: 28%;
+  }
+
+  .statisticsBox {
+    padding: 2vh 2vw;
+  }
+
+  .chartBox:hover {
+    cursor: pointer;
+  }
+}

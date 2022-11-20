@@ -1,8 +1,9 @@
 import { Button as MUIButton } from "@mui/material";
 import { styled } from "@mui/system";
+import { useLocation } from "react-router-dom";
 
 const StyledButton = styled(MUIButton)(
-  ({ size, variant }) =>
+  ({ size, variant, location }) =>
     `
       width: ${getWidth(size)};
       height: ${getHeight(size)};
@@ -12,6 +13,15 @@ const StyledButton = styled(MUIButton)(
       &: focus{
         background-color: ${getColor(variant)};
       };
+      @media only screen and (min-width: 1224px) {
+        width: ${
+          location !== "signup" && size === "big"
+            ? "100%"
+            : location === "diary" && size === "small"
+            ? "48%"
+            : null
+        }
+      }
     `
 );
 
@@ -35,7 +45,7 @@ function getTextColor(variant) {
     case "primary":
       return "white";
     case "light":
-      return 'white';
+      return "white";
     default:
       return "black";
   }
@@ -50,9 +60,9 @@ function getWidth(size) {
     case "small":
       return "140px";
     case "extraSmall":
-      return "64px";
+      return "76px";
     default:
-      return "300px";
+      return "80px";
   }
 }
 
@@ -67,13 +77,20 @@ function getHeight(size) {
     case "extraSmall":
       return "32px";
     default:
-      return "48px";
+      return "32px";
   }
 }
 
-function Button({ text, size, variant, onClick }) {
+function Button({ text, size, variant, onClick, disabled }) {
+  const location = useLocation();
   return (
-    <StyledButton size={size} variant={variant} onClick={onClick}>
+    <StyledButton
+      size={size}
+      variant={variant}
+      onClick={onClick}
+      disabled={disabled}
+      location={location.pathname.split("/")[1]}
+    >
       {text}
     </StyledButton>
   );

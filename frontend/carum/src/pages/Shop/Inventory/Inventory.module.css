@@ -1,0 +1,41 @@
+.contentBox {
+  width: 300px;
+  height: 50vh;
+  margin: 4px auto;
+  overflow: auto;
+}
+
+.contentBox::-webkit-scrollbar {
+  display: none;
+}
+
+.furnitures {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 4%;
+  width: 99%;
+  margin: 0 auto;
+}
+
+.paginationBox {
+  display: flex;
+}
+
+.pagination {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inventoryNoDataText {
+  text-align: center;
+  font-size: 18px;
+}
+
+@media only screen and (min-width: 1224px) {
+  .contentBox {
+    height: 100%;
+    width: 30vw;
+  }
+}

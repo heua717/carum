@@ -22,10 +22,10 @@ public class User {
     @Column(name = "id", columnDefinition = "BIGINT(20) UNSIGNED")
     private Long id;
 
-    @Column(name = "user_id", nullable = false, unique = true, length = 30)
+    @Column(name = "user_id", nullable = false, length = 30)
     private String userId;
 
-    @Column(name = "nickname", nullable = false, unique = true, length = 30)
+    @Column(name = "nickname", nullable = false, length = 30)
     private String nickName;
 
     @Column(name = "password", nullable = false, length = 100)
@@ -39,6 +39,10 @@ public class User {
 
     @Column(name="is_deleted")
     private boolean isDeleted = false;
+
+    @Column(name="user_type", length = 10)
+    @Enumerated(EnumType.STRING)
+    private UserType userType = UserType.USER;
 
     @Builder
     public User(String userId, String nickName, String password, String phone, LocalDate birth){

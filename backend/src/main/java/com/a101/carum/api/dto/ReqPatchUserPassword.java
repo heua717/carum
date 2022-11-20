@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPatchUserPassword {
-    String oldPassword, newPassword;
+    private String oldPassword, newPassword;
 }

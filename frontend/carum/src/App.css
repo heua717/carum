@@ -1,4 +1,12 @@
+@font-face {
+  font-family: "LeeSeoyun";
+  src: url("assets/LeeSeoyun.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
+  font-family: "LeeSeoyun";
 }

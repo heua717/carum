@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReqPatchRoom {
-    String name;
-    List<String> emotionTags;
+    private String name;
+    private List<String> emotionTags;
 }

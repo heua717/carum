@@ -1,0 +1,55 @@
+.container {
+  width: 88px;
+  height: 100px;
+  background: linear-gradient(130deg, rgb(210, 224, 255), rgb(243, 203, 255));
+  border: 1px solid #b7bdee;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.hover {
+  cursor: pointer;
+}
+
+.pet {
+  padding: 0 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.petImage {
+  width: 60%;
+}
+
+.eggImage {
+  width: 50%;
+  height: 60%;
+}
+
+.friedEggImage {
+  width: 70%;
+  height: 40%;
+}
+
+.cryImage {
+  width: 50%;
+  height: 50%;
+}
+
+.noDataBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.text {
+}
+
+@media only screen and (min-width: 1224px) {
+}

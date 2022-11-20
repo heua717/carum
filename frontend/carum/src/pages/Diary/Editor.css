@@ -216,6 +216,7 @@ img.ProseMirror-separator {
 
 .toastui-editor-ww-container .toastui-editor-contents p {
   margin: 0;
+  font-size: 16px;
 }
 
 .toastui-editor-md-mode .toastui-editor-md-container,
@@ -495,6 +496,7 @@ img.ProseMirror-separator {
 .toastui-editor-popup {
   width: 400px;
   margin-right: auto;
+  margin-left: 8.4%;
   background: #fff;
   z-index: 30;
   position: absolute;

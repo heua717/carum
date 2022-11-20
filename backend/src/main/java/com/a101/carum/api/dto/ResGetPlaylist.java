@@ -10,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 public class ResGetPlaylist {
-    List<ResGetMusic> playlist;
+    private List<ResGetMusic> playlist;
 }

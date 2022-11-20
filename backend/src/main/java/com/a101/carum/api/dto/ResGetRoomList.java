@@ -12,6 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResGetRoomList {
-    Long mainRoomId;
-    List<ResGetRoom> roomList;
+    private Long mainRoomId;
+    private List<ResGetRoom> roomList;
 }
