@@ -103,22 +103,22 @@ function changeWeeklyDate(targetDay, state, num) {
 }
 
 const furnitureCategory = [
-  { name: "벽 소품", type: "WALL" },
-  { name: "바닥 소품", type: "FLOOR" },
-  { name: "침실 소품", type: "BED" },
-  { name: "부엌 소품", type: "KITCHEN" },
-  { name: "세탁실, 화장실 소품", type: "LAUNDRY_BATH" },
-  { name: "야외 소품", type: "OUTSIDE" },
-  { name: "생활 소품", type: "LIFE" },
-  { name: "음악 소품", type: "MUSIC" },
-  { name: "의자, 테이블, 소파", type: "CHAIR_TABLE" },
+  { name: "벽", type: "WALL" },
+  { name: "바닥", type: "FLOOR" },
+  { name: "침실", type: "BED" },
+  { name: "주방", type: "KITCHEN" },
+  { name: "욕실", type: "LAUNDRY_BATH" },
+  { name: "야외", type: "OUTSIDE" },
+  { name: "일상", type: "LIFE" },
+  { name: "음악", type: "MUSIC" },
+  { name: "책걸상", type: "CHAIR_TABLE" },
   { name: "수납장", type: "CABINET" },
-  { name: "전자기기", type: "ELECTRIC" },
-  { name: "바구니, 박스", type: "BOX" },
-  { name: "동물, 식물", type: "ANIMAL_PLANT" },
+  { name: "전자", type: "ELECTRIC" },
+  { name: "상자", type: "BOX" },
+  { name: "동식물", type: "ANIMAL_PLANT" },
   { name: "음식", type: "FOOD" },
   { name: "장난감", type: "TOY" },
-  { name: "의상", type: "CLOTH" },
+  { name: "의류", type: "CLOTH" },
 ];
 
 const calEmotion = (pos, nag, neu) => {

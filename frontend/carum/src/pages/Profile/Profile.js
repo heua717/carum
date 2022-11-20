@@ -48,9 +48,17 @@ function Profile({ handleUnityLogout }) {
     localStorage.clear();
   }, [dispatch]);
 
+  const changeUserInfo = useCallback(
+    (userInfo) => {
+      dispatch(setUserInfo(userInfo));
+    },
+    [dispatch]
+  );
+
   // 회원 정보 조회
 
   const fetchProfileSuccess = (res) => {
+    console.log(res.data);
     const userInfo = {
       nickname: res.data.nickName,
       id: res.data.userId,
@@ -58,7 +66,12 @@ function Profile({ handleUnityLogout }) {
       phone: res.data.phone,
       money: res.data.money,
       mainRoom: res.data.mainRoom,
+      todayDiary: res.data.todayDiary,
+      petType: res.data.petType,
+      dailyColor: res.data.dailyColor,
+      dailyFace: res.data.dailyFace,
     };
+    changeUserInfo(userInfo);
     setValues({ ...values, userInfo, newNickname: res.data.nickName });
   };
 

@@ -14,7 +14,7 @@ import worryImg from "../../assets/worry.svg";
 import happyImg from "../../assets/happy.svg";
 import surpriseImg from "../../assets/surprise.svg";
 import peaceImg from "../../assets/peace.svg";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { writeDiary, editDiary } from "apis/diary";
 import { fetchUserEmotion } from "apis/emotion";
@@ -29,7 +29,8 @@ import {
   goToMain,
   createImageUrl,
 } from "utils/utils";
-import { useAppSelector } from "stores/store";
+import { useAppSelector, useAppDispatch } from "stores/store";
+import { setUserInfo } from "stores/slices/user";
 
 const EMOTION_VALUE = {
   SAD: ["괴로운", "간절한", "우울한", "후회스런", "속상한", "안타까운"],
@@ -98,6 +99,14 @@ function DiaryWrite({
 
   // user redux
   const { userInfo } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  const changeUserInfo = useCallback(
+    (userInfo) => {
+      dispatch(setUserInfo(userInfo));
+    },
+    [dispatch, userInfo]
+  );
+
   const unityEnterCloseUp = () => {
     enterCloseUp();
   };
@@ -107,6 +116,7 @@ function DiaryWrite({
   const unityPetConversation = (json) => {
     petConversation(json);
   };
+
   useEffect(() => {
     unityEnterCloseUp();
     return () => {
@@ -204,6 +214,20 @@ function DiaryWrite({
   const writeDiarySuccess = (res) => {
     fetchUserEmotion(fetchUserEmotionSuccess, fetchUserEmotionFail);
     sendDiaryWriteSignal();
+    const newUserInfo = {
+      birth: userInfo.birth,
+      dailyColor: userInfo.dailyColor,
+      dailyFace: userInfo.dailyFace,
+      id: userInfo.id,
+      mainRoom: userInfo.mainRoom,
+      money: userInfo.money,
+      nickname: userInfo.nickname,
+      petType: userInfo.petType,
+      phone: userInfo.phone,
+      todayDiary: true,
+    };
+    newUserInfo.todayDiary = true;
+    changeUserInfo(newUserInfo);
     navigate("/calendar");
   };
 
@@ -381,7 +405,7 @@ function DiaryWrite({
             initialValue={diary ? diary.content : " "}
             initialEditType="wysiwyg"
             previewStyle="vertical"
-            height="260px"
+            height="280px"
             hideModeSwitch="true"
             toolbarItems={[
               ["heading", "bold", "italic", "strike"],
@@ -404,7 +428,7 @@ function DiaryWrite({
             </div>
           </div>
           <div className={styles.emotions}>
-            {EMOTION_IMAGE.map((emotionObj) => (
+            {EMOTION_IMAGE.map((emotionObj, idx) => (
               <img
                 onClick={() => clickEmotion(emotionObj.emotion)}
                 className={`${styles.emotionImg} ${
@@ -412,6 +436,7 @@ function DiaryWrite({
                 }`}
                 alt={emotionObj.emotion}
                 src={emotionObj.image}
+                key={`${emotionObj.emotion}-${idx}`}
               />
             ))}
           </div>

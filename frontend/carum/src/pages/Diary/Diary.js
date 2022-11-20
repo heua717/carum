@@ -67,6 +67,9 @@ function Diary({ unityRef }) {
   const exitCloseUp = () => {
     unityRef.current.exitCloseUp();
   };
+  const petConversation = (json) => {
+    unityRef.current.petConversation(json);
+  };
 
   const sendDiaryWriteSignal = () => {
     unityRef.current.sendDiaryWriteSignal();
@@ -256,6 +259,7 @@ function Diary({ unityRef }) {
           enterCloseUp={enterCloseUp}
           exitCloseUp={exitCloseUp}
           sendDiaryWriteSignal={sendDiaryWriteSignal}
+          petConversation={petConversation}
         />
       ) : null}
     </div>

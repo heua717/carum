@@ -15,6 +15,8 @@ import { setShopFurnitureList } from "stores/slices/shop";
 import { useAppDispatch, useAppSelector } from "stores/store";
 import Swal from "sweetalert2";
 import { errorAlert } from "utils/utils";
+import { fetchProfile } from "apis/user";
+import { setUserInfo } from "stores/slices/user";
 
 function Shop() {
   const [place, setPlace] = useState("category");
@@ -39,6 +41,13 @@ function Shop() {
       dispatch(setShopFurnitureList(furnitureList));
     },
     [dispatch, shopFurnitureList]
+  );
+
+  const changeUserInfo = useCallback(
+    (userInfo) => {
+      dispatch(setUserInfo(userInfo));
+    },
+    [dispatch]
   );
 
   // 가구 불러오기
@@ -147,6 +156,26 @@ function Shop() {
     newFurnitureList[currentFurnitureIndex].have = true;
     setFurnitureList(newFurnitureList);
     setIsOpened(false);
+
+    fetchProfile(
+      (res) => {
+        const tmpUserInfo = {
+          nickname: res.data.nickName,
+          id: res.data.userId,
+          birth: res.data.birth,
+          phone: res.data.phone,
+          money: res.data.money,
+          mainRoom: res.data.mainRoom,
+          todayDiary: res.data.todayDiary,
+          petType: res.data.petType,
+          dailyColor: res.data.dailyColor,
+          dailyFace: res.data.dailyFace,
+        };
+        setMoney(res.data.money);
+        changeUserInfo(tmpUserInfo);
+      },
+      (err) => {}
+    );
   };
 
   const purchaseFurnitureFail = (err) => {
