@@ -152,7 +152,9 @@ public class DiaryService {
         List<Diary> diaryList;
         // request Day 값이 0이면 월간조회
         if(reqGetDiaryList.getDay()==0){
-            reqGetDiaryList.setDay(Calendar.getInstance().getMaximum(reqGetDiaryList.getMonth()));
+            Calendar cal = Calendar.getInstance();
+            cal.set(reqGetDiaryList.getYear(), reqGetDiaryList.getMonth(),reqGetDiaryList.getDay());
+            reqGetDiaryList.setDay(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
             diaryList = diaryRepository.findAllByCreateDateBetweenAndUserOrderByCreateDateAsc(
                     dateUtils.startDateTime(dateUtils.startDate(reqGetDiaryList))
                     ,dateUtils.endDateTime(dateUtils.getDate(reqGetDiaryList)),user);
