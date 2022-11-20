@@ -186,10 +186,10 @@ function Signup() {
       isPhoneChecked
     ) {
       const payload = {
-        nickname: values.nickname,
+        nickName: values.nickname,
         userId: values.id,
         password: values.password,
-        date: values.birthDate,
+        birth: values.birthDate,
         phone: phoneNumber,
         code: checkCodeString,
       };
