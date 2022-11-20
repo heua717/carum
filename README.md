@@ -3,7 +3,7 @@
 
 # 카룸(Carum)
 
-![Group 89 (1).png](README%20f48f7b2b3198406e9e0c04204b842b59/Group_89_(1).png)
+![Group_89__1_](/uploads/d6bc44c1fbd0e32eb0f00585b16a2834/Group_89__1_.png)
 
 **소중한 나를 위한 방**
 
@@ -119,19 +119,19 @@
 
 ### 기능 명세서
 
-![Untitled](README%20f48f7b2b3198406e9e0c04204b842b59/Untitled.png)
-
-![Untitled](README%20f48f7b2b3198406e9e0c04204b842b59/Untitled%201.png)
+![Untitled](/uploads/bc1d4b4cd2b6da07e8b59bdf9335ac30/Untitled.png)
+![Untitled_1](/uploads/aa1b788f1e4abe3fac8e63eb7b8eb254/Untitled_1.png)
 
 ## 3. 개발 환경 및 구성
 
 ### 아키텍쳐
 
-![제목 없는 다이어그램.drawio (2).png](README%20f48f7b2b3198406e9e0c04204b842b59/%25EC%25A0%259C%25EB%25AA%25A9_%25EC%2597%2586%25EB%258A%2594_%25EB%258B%25A4%25EC%259D%25B4%25EC%2596%25B4%25EA%25B7%25B8%25EB%259E%25A8.drawio_(2).png)
+![_EC_A0_9C_EB_AA_A9__EC_97_86_EB_8A_94__EB_8B_A4_EC_9D_B4_EC_96_B4_EA_B7_B8_EB_9E_A8.drawio__2_](/uploads/2b18602c945c9c3b3caedaf2ed0d51eb/_EC_A0_9C_EB_AA_A9__EC_97_86_EB_8A_94__EB_8B_A4_EC_9D_B4_EC_96_B4_EA_B7_B8_EB_9E_A8.drawio__2_.png)
 
 ### 폴더 구조
 
-![file.png](README%20f48f7b2b3198406e9e0c04204b842b59/file.png)
+![file](/uploads/617c37e04a19a9f26f2b837f938f606f/file.png)
+
 
 ### 개발 환경
 
@@ -154,7 +154,7 @@
 
 ### API
 
-![Untitled](README%20f48f7b2b3198406e9e0c04204b842b59/Untitled%202.png)
+![Untitled_2](/uploads/8f5797b18df12a12fe4888b8c7941d74/Untitled_2.png)
 
 ## 4. 협업툴
 
@@ -195,4 +195,4 @@
 
 ## 5. 팀원 소개
 
-![팀원소개.PNG](README%20f48f7b2b3198406e9e0c04204b842b59/%25ED%258C%2580%25EC%259B%2590%25EC%2586%258C%25EA%25B0%259C.png)
+![_ED_8C_80_EC_9B_90_EC_86_8C_EA_B0_9C](/uploads/c744cc65755bd1f89697e0d131309a3b/_ED_8C_80_EC_9B_90_EC_86_8C_EA_B0_9C.png)
