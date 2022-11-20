@@ -110,7 +110,7 @@ public class DiaryService {
         if(reqPostDiary.getEmotionTag().size()!=0){
             for (String emotion: reqPostDiary.getEmotionTag()) {
                 sb.append(emotion).append(",");
-                History history = historyRepository.findByEmotionAndUser(emotion, user)
+                History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getYear(), LocalDate.now().getMonthValue())
                         .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
                 history.plusCount();
             }
