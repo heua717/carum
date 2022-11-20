@@ -101,7 +101,7 @@ public class DiaryService {
 
         String[] emotionTag = diary.getEmotionTag().split(",");
         for(String emotion: emotionTag){
-            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getYear(), LocalDate.now().getMonthValue())
+            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getMonthValue(), LocalDate.now().getYear())
                     .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
             history.minusCount();
         }
@@ -110,7 +110,7 @@ public class DiaryService {
         if(reqPostDiary.getEmotionTag().size()!=0){
             for (String emotion: reqPostDiary.getEmotionTag()) {
                 sb.append(emotion).append(",");
-                History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getYear(), LocalDate.now().getMonthValue())
+                History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getMonthValue(), LocalDate.now().getYear())
                         .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
                 history.plusCount();
             }
