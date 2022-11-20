@@ -101,7 +101,7 @@ public class DiaryService {
 
         String[] emotionTag = diary.getEmotionTag().split(",");
         for(String emotion: emotionTag){
-            History history = historyRepository.findByEmotionAndUser(emotion, user)
+            History history = historyRepository.findByEmotionAndUserAndMonthAndYear(emotion, user, LocalDate.now().getYear(), LocalDate.now().getMonthValue())
                     .orElseThrow(()-> new NullPointerException("emotion이 잘못되었습니다."));
             history.minusCount();
         }
