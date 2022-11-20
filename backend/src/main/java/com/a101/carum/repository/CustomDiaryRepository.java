@@ -49,9 +49,9 @@ public class CustomDiaryRepository extends QuerydslRepositorySupport {
                     .where(diary.emotionTag.contains("SAD"))
                     .fetchCount();
 
-            if (worry*100/diaryAll >= 70){
+            if (worry*100/diaryAll >= 50){
                 resGetEmotionBuilder.diaryCount(worry).result(FaceType.WORRY);
-            } else if (sad*100/diaryAll >= 80){
+            } else if (sad*100/diaryAll >= 50){
                 resGetEmotionBuilder.diaryCount(sad).result(FaceType.SAD);
             }
         }

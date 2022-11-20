@@ -25,4 +25,6 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
     Optional<History> findByEmotionAndUser(String emotion, User user);
 
     Optional<History> findByEmotionAndUserAndMonthAndYear(String emotion, User user, int monthValue, int year);
+
+    History findByEmotionAndYearAndMonthAndUser(String emotion, Integer year, Integer month, User user);
 }
