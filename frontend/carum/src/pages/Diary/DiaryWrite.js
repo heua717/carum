@@ -405,7 +405,7 @@ function DiaryWrite({
             initialValue={diary ? diary.content : " "}
             initialEditType="wysiwyg"
             previewStyle="vertical"
-            height="260px"
+            height="280px"
             hideModeSwitch="true"
             toolbarItems={[
               ["heading", "bold", "italic", "strike"],
