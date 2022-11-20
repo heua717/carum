@@ -163,7 +163,10 @@
 
 ✔ **Back-End**
 
-- 
+- spring boot 2.7.4
+- mysql 5.7
+- jdk 11
+- redis 
 
 ✔ **Front-End**
 
