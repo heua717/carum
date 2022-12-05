@@ -2,8 +2,7 @@
 ---
 
 # 카룸(Carum)
-
-![Group_89__1_](/uploads/d6bc44c1fbd0e32eb0f00585b16a2834/Group_89__1_.png)
+![image](https://user-images.githubusercontent.com/102236836/205561092-64b147ec-0ed8-4758-8f3e-f8d265762849.png)
 
 ### 소중한 나를 위한 방
 
@@ -49,7 +48,7 @@
 ---
 ### 시작 화면
 ---
-![login](/uploads/dca612727a529c79f60edb5d7e5f404f/login.gif)
+![login](https://user-images.githubusercontent.com/102236836/205561026-a1a40b1b-f485-4156-972d-caaa49a82272.gif)
 
 
 ---
