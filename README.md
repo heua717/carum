@@ -65,13 +65,12 @@
 - 하루 한 번 첫 일기를 쓰면 가구를 살 수 있는 포인트를 얻게 됩니다.
 
 
-![edit_diary](/uploads/eb8dbe4f46430c8d8f23702887774ca6/edit_diary.gif)
 
 - 당일 날 적은 일기는 수정할 수 있습니다.
 
 ### 기록 조회
 
-![calendar](/uploads/9ecc7b574a9d6f248dc46081fafeaf5d/calendar.gif)
+![calendar](https://user-images.githubusercontent.com/102236836/205564633-e5d9ed03-5dbe-420d-9a8a-1832d8bb9a3c.gif)
 
 - 월, 주 별로 일기를 조회할 수 있으며 감정 상태를 이모티콘으로 직관적으로 확인할 수 있습니다.
 - 날짜를 클릭하여 일기 상세보기 시 수정과 비우기 등이 가능합니다.
