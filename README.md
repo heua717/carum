@@ -113,6 +113,7 @@
 - 구매한 가구들로 방을 꾸밀 수 있습니다.
 - UI를 통해 가구들을 상점과 동일한 카테고리로 접근할 수 있습니다. 물건을 클릭하면 배치 모드로 들어갑니다.
 - 클릭을 통한 자동 배치, 축 이동 조작, 물체 회전 등의 다양하고 세밀한 동작들을 지원하여 방을 원하는 모습으로 마음껏 커스터마이징 할 수 있습니다.
+![Untitled_2](https://user-images.githubusercontent.com/102236836/225238899-0841c129-d280-496a-82a8-9e2678a96d79.png)
 
 ![re_interior](image&gif/re_interior.gif)
 
@@ -141,8 +142,8 @@
 
 ### 기능 명세서
 
-![Untitled](https://lab.ssafy.com/s07-final/S07P31A101/uploads/bc1d4b4cd2b6da07e8b59bdf9335ac30/Untitled.png)
-![Untitled_1](https://lab.ssafy.com/s07-final/S07P31A101/uploads/aa1b788f1e4abe3fac8e63eb7b8eb254/Untitled_1.png)
+![기능명세1](https://user-images.githubusercontent.com/102236836/225239939-c0f59325-45c5-45ff-896e-0bb6cad2175d.png)
+![기능명세2](https://user-images.githubusercontent.com/102236836/225239953-10f1fb51-fde9-4565-94ac-b3873291ac54.png)
 
 ---
 
@@ -152,11 +153,10 @@
 
 ### 아키텍쳐
 
-![architecture](https://lab.ssafy.com/s07-final/S07P31A101/uploads/2b18602c945c9c3b3caedaf2ed0d51eb/_EC_A0_9C_EB_AA_A9__EC_97_86_EB_8A_94__EB_8B_A4_EC_9D_B4_EC_96_B4_EA_B7_B8_EB_9E_A8.drawio__2_.png)
+![아키텍처](https://user-images.githubusercontent.com/102236836/225239996-95004650-fc8f-44a8-87be-cba520e49ae5.png)
 
 ### 폴더 구조
-
-![file](https://lab.ssafy.com/s07-final/S07P31A101/uploads/617c37e04a19a9f26f2b837f938f606f/file.png)
+![프로젝트폴더구조](https://user-images.githubusercontent.com/102236836/225240046-3b1229d2-6100-4b02-888c-e0d27647f135.png)
 
 ### 개발 환경
 
@@ -181,8 +181,7 @@
 - React-Router-Dom 6.3.0
 
 ### API
-
-![Untitled_2](https://lab.ssafy.com/s07-final/S07P31A101/uploads/8f5797b18df12a12fe4888b8c7941d74/Untitled_2.png)
+![API_Docs](https://user-images.githubusercontent.com/102236836/225239075-eddd7004-c585-4cf9-8eaf-0d25761cb1c8.png)
 
 ---
 
@@ -229,5 +228,5 @@
 ## 5. 팀원 소개
 
 ---
+![팀원소개](https://user-images.githubusercontent.com/102236836/225240162-16b788fc-e2a0-4764-ab5c-b0cad2f63bf0.png)
 
-![_ED_8C_80_EC_9B_90_EC_86_8C_EA_B0_9C](https://lab.ssafy.com/s07-final/S07P31A101/uploads/c744cc65755bd1f89697e0d131309a3b/_ED_8C_80_EC_9B_90_EC_86_8C_EA_B0_9C.png)
